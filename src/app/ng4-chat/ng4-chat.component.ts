@@ -10,7 +10,7 @@ export class NgChat implements OnInit {
     constructor() { }
 
     @Input()
-    public Title: string = "Friends";
+    public title: string = "Friends";
 
     ngOnInit() { }
 }
