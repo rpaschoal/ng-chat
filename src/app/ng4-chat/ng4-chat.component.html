@@ -1,20 +1,14 @@
 <div id="ng4-chat">
-    <div id="ng4-chat-people">
-        <div class="ng4-chat-title">
+    <div id="ng4-chat-people" [ngClass]="{'ng4-chat-people-collapsed':isCollapsed}">
+        <a href="javascript:void(0);" class="ng4-chat-title" (click)="onChatTitleClicked($event)">
             <span>
                 {{title}}
             </span>
-            <a href="javascript:void(0);" class="ng4-chat-close">X</a>
-        </div>
-        <ul id="ng4-chat-users">
-            <li>
-                <img alt="@rpaschoal" class="avatar" height="30" src="https://avatars1.githubusercontent.com/u/12396249?v=4&amp;s=40" width="30" />
-                <strong>Rafael Carvalho</strong>
-                <span class="ng4-chat-user-status"></span>
-            </li>
-            <li>
-                <img alt="@rpaschoal" class="avatar" height="30" src="https://avatars1.githubusercontent.com/u/12396249?v=4&amp;s=40" width="30" />
-                <strong>Rafael Carvalho</strong>
+        </a>
+        <ul id="ng4-chat-users" *ngIf="!isCollapsed">
+            <li *ngFor="let user of users">
+                <img alt="" class="avatar" height="30" width="30"  src="{{user.avatar}}"/>
+                <strong>{{user.displayName}}</strong>
                 <span class="ng4-chat-user-status"></span>
             </li>
         </ul>
@@ -50,7 +44,7 @@
                     </ul>
                 </div>
             </div>
-            <input type="text" />
+            <input type="text" (keypress)="onChatInputTyped($event)" />
         </li>
     </ul>
 </div>
