@@ -1,0 +1,105 @@
+#ng4-chat
+{
+    position:fixed;
+    z-index:999;
+    right:0;
+    bottom:0;
+    color: #5C5C5C;
+    height:360px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+#ng4-chat-people
+{
+    position: relative;
+    float: right;
+    width: 240px;
+    height:100%;
+    border: 1px solid #A3A3A3;
+    margin-right:20px;
+}
+.ng4-chat-close
+{
+    color: #5C5C5C;
+    text-decoration:none;
+    float:right;
+}
+.ng4-chat-title
+{
+    height:30px;
+    line-height: 30px;
+    font-size:16px;
+    padding: 0 10px;
+    background-color:#E3E3E3;
+}
+#ng4-chat-windows
+{
+    position: relative;
+    margin:0;
+    list-style: none;
+    float: right;
+    height:100%;
+}
+    #ng4-chat-windows .ng4-chat-window
+    {
+        float: right;
+        height:100%;
+        width:300px;
+        border:1px solid #A3A3A3;
+        margin-right:20px;
+    }
+        #ng4-chat-windows .ng4-chat-window > input
+        {
+            font-size:0.8em;
+            box-sizing: border-box;
+            padding:0 5px;
+            display:block;
+            height: calc(10%);
+            width:100%;
+            border: none;
+            border-top: 1px solid #A3A3A3;
+        }
+        #ng4-chat-windows .ng4-chat-window .ng4-chat-messages
+        {
+            height: calc(90% - 30px);
+        }
+            #ng4-chat-windows .ng4-chat-window .ng4-chat-messages .ng4-chat-messages-cluster
+            {
+                clear: both;
+                padding:10px;
+            }
+            #ng4-chat-windows .ng4-chat-window .ng4-chat-messages .ng4-chat-messages-cluster > img
+            {
+                float: left;
+                border-radius:25px;
+                padding-right: 5px;
+            }
+            #ng4-chat-windows .ng4-chat-window .ng4-chat-messages .ng4-chat-messages-cluster > ul
+            {
+                float: right;
+                list-style: none;
+                width: 65%;
+                padding:0;
+            }
+            #ng4-chat-windows .ng4-chat-window .ng4-chat-messages .ng4-chat-messages-cluster.ng4-chat-messages-cluster-received > ul
+            {
+                float: left;
+            }
+                #ng4-chat-windows .ng4-chat-window .ng4-chat-messages .ng4-chat-messages-cluster > ul li
+                {
+                    background-color:#E3E3E3;
+                    border-radius: 5px;
+                    padding:10px;
+                    margin:5px 0;
+                    font-size: 0.9em;
+                }
+                #ng4-chat-windows .ng4-chat-window .ng4-chat-messages .ng4-chat-messages-cluster.ng4-chat-messages-cluster-received > ul li
+                {
+                    padding-top:7px;
+                    padding-bottom:7px;
+                    background-color:#FFF;
+                    border:3px solid #E3E3E3;
+                }
+                #ng4-chat-windows .ng4-chat-window .ng4-chat-messages .ng4-chat-messages-cluster > ul li:nth-child(1)
+                {
+                    margin: 0;
+                }
