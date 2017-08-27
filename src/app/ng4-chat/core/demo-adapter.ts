@@ -15,6 +15,7 @@ export class DemoAdapter implements ChatAdapter
     messageReceivedHandlers: Array<(message: Message) => void> = [];
 
     private mockedUsers: User[] = [{
+        id: 1,
         displayName: "John Wayne",
         avatar: "https://avatars1.githubusercontent.com/u/12396249?v=4&amp;s=40",
         status: UserStatus.Online

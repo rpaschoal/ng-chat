@@ -47,6 +47,7 @@
         clear: both;
         margin-top: 10px;
         overflow: hidden;
+        cursor: pointer;
     }
     #ng4-chat-users li:nth-child(1)
     {
