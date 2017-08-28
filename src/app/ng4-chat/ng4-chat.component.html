@@ -22,25 +22,14 @@
                 <a href="javascript:void(0);" class="ng4-chat-close" (click)="onCloseChatWindow(window)">X</a>
             </div>
             <div class="ng4-chat-messages">
-                <div *ngFor="let message of window.messages" class="ng4-chat-message">
-                    <img alt="@rpaschoal" class="avatar" height="30" width="30" [src]="window.chattingTo.avatar" />
+                <div *ngFor="let message of window.messages; let i = index" [ngClass]="{'ng4-chat-message': true, 'ng4-chat-message-received': message.fromId != userId}">
+                    <img *ngIf="thumbnailVisible(window, message, i)" alt="@rpaschoal" class="avatar" height="30" width="30" [src]="window.chattingTo.avatar" />
                     <span>
                         {{message.message}}
                     </span>
                 </div>
-                <div class="ng4-chat-message ng4-chat-message-received">
-                    <img alt="@rpaschoal" class="avatar" height="30" src="https://avatars1.githubusercontent.com/u/12396249?v=4&amp;s=40" width="30" />
-                    <span>
-                        Just a long text just here to see what happens.
-                    </span>
-                </div>
-                <div class="ng4-chat-message ng4-chat-message">
-                    <span>
-                        Just a long text just here to see what happens.
-                    </span>
-                </div>
             </div>
-            <input type="text" (keypress)="onChatInputTyped($event)" />
+            <input [(ngModel)]="window.newMessage" type="text" (keypress)="onChatInputTyped($event, window)" />
         </li>
     </ul>
 </div>

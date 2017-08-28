@@ -29,6 +29,8 @@ export class NgChat implements OnInit {
 
     private windows: Window[] = [];
 
+    private currentChat: NgChat = this;
+
     ngOnInit() { 
         this.bootstrapChat();
     }
@@ -39,7 +41,7 @@ export class NgChat implements OnInit {
         if (this.adapter != null)
         {
             // Binding event listeners
-            this.adapter.onMessageReceived(this.onMessageReceived);
+            this.adapter.onMessageReceived((msg) => this.onMessageReceived(msg));
 
             // Loading current users list
             this.users = this.adapter.listFriends();
@@ -51,9 +53,14 @@ export class NgChat implements OnInit {
     {
         if (this.windows.findIndex(x => x.chattingTo.id == clickedUser.id) < 0)
         {
+            let history = this.adapter.getMessageHistory(); // TODO Should this be a promise?
+
+            if (history == null)
+                history = [];
+
             let newChatWindow: Window = {
                 chattingTo: clickedUser,
-                messages: this.adapter.getMessageHistory() // TODO Should this be a promise?
+                messages:  history
             };
 
             this.windows.push(newChatWindow);
@@ -63,19 +70,29 @@ export class NgChat implements OnInit {
     // Handles received messages by the adapter
     private onMessageReceived(message: Message)
     {
-        console.log(message);
+        let chatWindow = this.windows.find(x => x.chattingTo.id == message.fromId);
+
+        if (chatWindow){
+            chatWindow.messages.push(message);
+        }
     }
 
     // Monitors pressed keys on a chat window and dispatch a message when the enter key is typed
-    protected onChatInputTyped(event: any): void
+    protected onChatInputTyped(event: any, window: Window): void
     {
         if (event.keyCode == 13)
         {
             let message = new Message();
-            
-            message.message = 'test';
+             
+            message.fromId = this.userId;
+            message.toId = window.chattingTo.id;
+            message.message = window.newMessage;
+
+            window.messages.push(message);
 
             this.adapter.sendMessage(message);
+
+            window.newMessage = ""; // Resets the new message input
         }
     }
 
@@ -91,5 +108,22 @@ export class NgChat implements OnInit {
     protected onChatTitleClicked(event: any): void
     {
         this.isCollapsed = !this.isCollapsed;
+    }
+
+    protected thumbnailVisible(window: Window, message: Message, index: number): boolean
+    {
+        if (message.fromId != this.userId){
+            if (index == 0){
+                return true; // First message, good to show the thumbnail
+            }
+            else{
+                // Check if the previous message belongs to the same user, if it belongs there is no need to show the avatar again to form the message cluster
+                if (window.messages[index - 1].fromId != message.fromId){
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

@@ -129,8 +129,10 @@
                 background-color:#E3E3E3;
                 border-radius: 5px;
                 padding: 10px;
-                margin: 5px 0;
+                margin-top: 0;
+                margin-bottom: 5px;
                 font-size: 0.9em;
+                word-wrap: break-word;
             }
             #ng4-chat-windows .ng4-chat-window .ng4-chat-messages .ng4-chat-message.ng4-chat-message-received > span
             {

@@ -16,7 +16,7 @@ export class DemoAdapter implements ChatAdapter
 
     private mockedUsers: User[] = [{
         id: 1,
-        displayName: "John Wayne",
+        displayName: "Rafael Carvalho",
         avatar: "https://avatars1.githubusercontent.com/u/12396249?v=4&amp;s=40",
         status: UserStatus.Online
     }];
@@ -34,11 +34,13 @@ export class DemoAdapter implements ChatAdapter
             this.messageReceivedHandlers.forEach(handler => {
                 let replyMessage = new Message();
 
+                replyMessage.fromId = message.toId;
+                replyMessage.toId = message.fromId;
                 replyMessage.message = "You have typed => " + message.message;
                 
                 handler(replyMessage);
             });
-        }, 500);
+        }, 1000);
     }
     
     onFriendsListChanged(handler: (users: User[]) => void): void {
