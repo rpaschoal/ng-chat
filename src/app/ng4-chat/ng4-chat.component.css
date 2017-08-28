@@ -15,6 +15,8 @@
     border: 1px solid #A3A3A3;
     margin-right:20px;
     background-color: #FFF;
+    box-shadow: 0 4px 8px rgba(0,0,0,.25);
+    border-bottom:0;
 }
     #ng4-chat-people.ng4-chat-people-collapsed
     {
@@ -28,15 +30,23 @@
 }
 .ng4-chat-title
 {
+    position: relative;
+    z-index:2;
     height:30px;
     line-height: 30px;
-    font-size:16px;
+    font-size:0.9em;
     padding: 0 10px;
-    background-color:#E3E3E3;
+    background-color:#FAFAFA;
     display: block;
     text-decoration: none;
     color: inherit;
+    font-weight: 400;
+    /* box-shadow: 0 4px 8px rgba(0,0,0,.25); */
+    /* background-color:#FFF; */
 }
+    .ng4-chat-title > strong{
+        font-weight: 600;
+    }
 #ng4-chat-users
 {
     list-style: none;
@@ -92,6 +102,7 @@
         width:300px;
         border:1px solid #A3A3A3;
         margin-right:20px;
+        box-shadow: 0 4px 8px rgba(0,0,0,.25);
     }
         #ng4-chat-windows .ng4-chat-window > input
         {

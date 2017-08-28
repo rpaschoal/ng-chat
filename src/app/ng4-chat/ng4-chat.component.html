@@ -16,9 +16,9 @@
     <ul id="ng4-chat-windows">
         <li *ngFor="let window of windows" class="ng4-chat-window">
             <div class="ng4-chat-title">
-                <span>
+                <strong>
                     {{window.chattingTo.displayName}}
-                </span>
+                </strong>
                 <a href="javascript:void(0);" class="ng4-chat-close" (click)="onCloseChatWindow(window)">X</a>
             </div>
             <div #chatMessages class="ng4-chat-messages">
@@ -29,7 +29,7 @@
                     </span>
                 </div>
             </div>
-            <input [(ngModel)]="window.newMessage" type="text" (keypress)="onChatInputTyped($event, window)" />
+            <input [(ngModel)]="window.newMessage" type="text" (keypress)="onChatInputTyped($event, window)" [placeholder]="messagePlaceholder"/>
         </li>
     </ul>
 </div>

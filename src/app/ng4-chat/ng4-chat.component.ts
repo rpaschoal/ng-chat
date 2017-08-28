@@ -21,7 +21,10 @@ export class NgChat implements OnInit {
     public adapter: ChatAdapter = new DemoAdapter(); // TODO: Remove this, testing purposes only
 
     @Input()
-    public userId: any = 123; // TODO: Remove this, testing purposes only
+    public userId: any = 123; // The user id that is using the chat instance
+
+    @Input()
+    public messagePlaceholder: string = "Type a message";
 
     public isCollapsed: boolean = false;
 
