@@ -21,9 +21,9 @@
                 </span>
                 <a href="javascript:void(0);" class="ng4-chat-close" (click)="onCloseChatWindow(window)">X</a>
             </div>
-            <div class="ng4-chat-messages">
+            <div #chatMessages class="ng4-chat-messages">
                 <div *ngFor="let message of window.messages; let i = index" [ngClass]="{'ng4-chat-message': true, 'ng4-chat-message-received': message.fromId != userId}">
-                    <img *ngIf="thumbnailVisible(window, message, i)" alt="@rpaschoal" class="avatar" height="30" width="30" [src]="window.chattingTo.avatar" />
+                    <img *ngIf="isAvatarVisible(window, message, i)" alt="@rpaschoal" class="avatar" height="30" width="30" [src]="window.chattingTo.avatar" />
                     <span>
                         {{message.message}}
                     </span>

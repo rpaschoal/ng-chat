@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChildren } from '@angular/core';
 import { ChatAdapter } from './core/chat-adapter';
 import { DemoAdapter } from './core/demo-adapter';
 import { User } from "./core/user";
@@ -30,6 +30,8 @@ export class NgChat implements OnInit {
     private windows: Window[] = [];
 
     private currentChat: NgChat = this;
+
+    @ViewChildren('chatMessages') chatMessageClusters;
 
     ngOnInit() { 
         this.bootstrapChat();
@@ -74,6 +76,8 @@ export class NgChat implements OnInit {
 
         if (chatWindow){
             chatWindow.messages.push(message);
+
+            this.scrollChatWindowToBottom(chatWindow);
         }
     }
 
@@ -93,6 +97,8 @@ export class NgChat implements OnInit {
             this.adapter.sendMessage(message);
 
             window.newMessage = ""; // Resets the new message input
+
+            this.scrollChatWindowToBottom(window);
         }
     }
 
@@ -110,7 +116,8 @@ export class NgChat implements OnInit {
         this.isCollapsed = !this.isCollapsed;
     }
 
-    protected thumbnailVisible(window: Window, message: Message, index: number): boolean
+    // Asserts if a user avatar is visible in a chat cluster
+    protected isAvatarVisible(window: Window, message: Message, index: number): boolean
     {
         if (message.fromId != this.userId){
             if (index == 0){
@@ -125,5 +132,15 @@ export class NgChat implements OnInit {
         }
 
         return false;
+    }
+
+    // Scrolls a chat window message flow to the bottom
+    private scrollChatWindowToBottom(window: Window): void
+    {
+        let windowIndex = this.windows.indexOf(window);
+
+        setTimeout(() => {
+            this.chatMessageClusters.toArray()[windowIndex].nativeElement.scrollTop = this.chatMessageClusters.toArray()[windowIndex].nativeElement.scrollHeight;
+        }); 
     }
 }

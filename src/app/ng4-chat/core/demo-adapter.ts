@@ -19,6 +19,12 @@ export class DemoAdapter implements ChatAdapter
         displayName: "Rafael Carvalho",
         avatar: "https://avatars1.githubusercontent.com/u/12396249?v=4&amp;s=40",
         status: UserStatus.Online
+    },
+    {
+        id: 2,
+        displayName: "Scott Hanselman",
+        avatar: "https://avatars1.githubusercontent.com/u/2892?v=4&s=40",
+        status: UserStatus.Online
     }];
 
     listFriends(): User[] {
