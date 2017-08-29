@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 
-import { NgChatModule } from 'ng4-chat/ng4-chat';
+import { NgChatModule } from 'ng-chat';
 
 @NgModule({
   declarations: [
