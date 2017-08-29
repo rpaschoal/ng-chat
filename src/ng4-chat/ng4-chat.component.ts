@@ -34,7 +34,7 @@ export class NgChat implements OnInit {
 
     private currentChat: NgChat = this;
 
-    @ViewChildren('chatMessages') chatMessageClusters;
+    @ViewChildren('chatMessages') chatMessageClusters: any;
 
     ngOnInit() { 
         this.bootstrapChat();

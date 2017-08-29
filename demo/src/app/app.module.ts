@@ -4,16 +4,16 @@ import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 
-import { NgChat } from './ng4-chat/ng4-chat.component';
+import { NgChatModule } from 'ng4-chat/ng4-chat';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    NgChat
+    AppComponent
   ],
   imports: [
     BrowserModule,
-    FormsModule
+    FormsModule,
+    NgChatModule
   ],
   providers: [],
   bootstrap: [AppComponent]
