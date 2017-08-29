@@ -1,12 +1,13 @@
 <div id="ng4-chat">
     <div id="ng4-chat-people" [ngClass]="{'ng4-chat-people-collapsed':isCollapsed}">
-        <a href="javascript:void(0);" class="ng4-chat-title" (click)="onChatTitleClicked($event)">
+        <a href="javascript:void(0);" class="ng4-chat-title shadowed" (click)="onChatTitleClicked($event)">
             <span>
                 {{title}}
             </span>
         </a>
+        <input id="ng4-chat-search_friend" type="search" placeholder="Search" [(ngModel)]="searchInput"/>
         <ul id="ng4-chat-users" *ngIf="!isCollapsed">
-            <li *ngFor="let user of users" (click)="onUserClicked(user)">
+            <li *ngFor="let user of filteredUsers" (click)="onUserClicked(user)">
                 <img alt="" class="avatar" height="30" width="30"  src="{{user.avatar}}"/>
                 <strong>{{user.displayName}}</strong>
                 <span class="ng4-chat-user-status"></span>

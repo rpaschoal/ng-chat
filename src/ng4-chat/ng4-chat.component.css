@@ -41,28 +41,41 @@
     text-decoration: none;
     color: inherit;
     font-weight: 400;
-    /* box-shadow: 0 4px 8px rgba(0,0,0,.25); */
     /* background-color:#FFF; */
+}
+.ng4-chat-title.shadowed
+{
+    box-shadow: 0 4px 8px rgba(0,0,0,.25);
 }
     .ng4-chat-title > strong{
         font-weight: 600;
     }
+#ng4-chat-search_friend
+{
+    display: block;
+    padding: 7px 10px;
+    margin: 0 auto;
+    width: calc(100% - 20px);
+    margin-top: 10px;
+}
 #ng4-chat-users
 {
+    padding: 0 10px;
     list-style: none;
-    padding:10px;
-    margin:0;
+    margin: 0;
+    overflow: auto;
+    position: absolute;
+    top: 84px;
+    bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
 }
     #ng4-chat-users li
     {
         clear: both;
-        margin-top: 10px;
+        margin-bottom: 10px;
         overflow: hidden;
         cursor: pointer;
-    }
-    #ng4-chat-users li:nth-child(1)
-    {
-        margin: 0;
     }
         #ng4-chat-users li > img
         {

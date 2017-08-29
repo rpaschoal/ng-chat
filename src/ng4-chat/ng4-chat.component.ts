@@ -28,7 +28,19 @@ export class NgChat implements OnInit {
 
     public isCollapsed: boolean = false;
 
+    private searchInput: string = "";
+
     private users: User[];
+
+    get filteredUsers(): User[]
+    {
+        if (this.searchInput.length > 0){
+            // Searches in the friend list by the inputted search string
+            return this.users.filter(x => x.displayName.toUpperCase().includes(this.searchInput.toUpperCase()));
+        }
+
+        return this.users;
+    }
 
     private windows: Window[] = [];
 
