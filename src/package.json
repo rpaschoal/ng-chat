@@ -1,5 +1,5 @@
 {
-  "name": "ng4-chat",
+  "name": "ng-chat",
   "version": "0.1.0-beta1",
   "dependencies": {
     "@angular/common": "^4.0.0",
