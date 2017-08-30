@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChildren } from '@angular/core';
+import { Component, Input, OnInit, ViewChildren, HostListener } from '@angular/core';
 import { ChatAdapter } from './core/chat-adapter';
 import { DemoAdapter } from './core/demo-adapter';
 import { User } from "./core/user";
@@ -42,14 +42,39 @@ export class NgChat implements OnInit {
         return this.users;
     }
 
-    private windows: Window[] = [];
+    // Defines the size of each opened window to calculate how many windows can be opened on the viewport at the same time.
+    private windowSizeFactor: number = 320;
 
-    private currentChat: NgChat = this;
+    // Total width size of the friends list section
+    private friendsListWidth: number = 262;
+
+    // Available area to render the plugin
+    private viewPortTotalArea: number = window.innerWidth;
+
+    private windows: Window[] = [];
 
     @ViewChildren('chatMessages') chatMessageClusters: any;
 
     ngOnInit() { 
         this.bootstrapChat();
+    }
+
+    @HostListener('window:resize', ['$event'])
+    onResize(event: any){
+       this.viewPortTotalArea = event.target.innerWidth;
+
+       this.NormalizeWindows();
+    }
+
+    // Checks if there are more opened windows than the view port can display
+    private NormalizeWindows(): void
+    {
+        let maxSupportedOpenedWindows = Math.floor(this.viewPortTotalArea / this.windowSizeFactor);
+        let difference = this.windows.length - maxSupportedOpenedWindows;
+
+        if (difference >= 0){
+            this.windows.splice(this.windows.length - 1 - difference);
+        }
     }
 
     // Initializes the chat plugin and the messaging adapter
@@ -65,25 +90,6 @@ export class NgChat implements OnInit {
         }
     }
 
-    // Monitors a click on the friends list and opens a new chat window
-    private onUserClicked(clickedUser: User): void
-    {
-        if (this.windows.findIndex(x => x.chattingTo.id == clickedUser.id) < 0)
-        {
-            let history = this.adapter.getMessageHistory(); // TODO Should this be a promise?
-
-            if (history == null)
-                history = [];
-
-            let newChatWindow: Window = {
-                chattingTo: clickedUser,
-                messages:  history
-            };
-
-            this.windows.push(newChatWindow);
-        }
-    }
-
     // Handles received messages by the adapter
     private onMessageReceived(message: Message)
     {
@@ -93,6 +99,31 @@ export class NgChat implements OnInit {
             chatWindow.messages.push(message);
 
             this.scrollChatWindowToBottom(chatWindow);
+        }
+    }
+
+    // Opens a new chat whindow. Takes care of available viewport
+    private openChatWindow(user: User): void
+    {
+        // Is this window opened?
+        if (this.windows.findIndex(x => x.chattingTo.id == user.id) < 0)
+        {
+            let history = this.adapter.getMessageHistory(); // TODO Should this be a promise?
+
+            if (history == null)
+                history = [];
+
+            let newChatWindow: Window = {
+                chattingTo: user,
+                messages:  history
+            };
+
+            this.windows.unshift(newChatWindow);
+
+            // Is there enough space left in the view port ?
+            if (this.windows.length * this.windowSizeFactor >= this.viewPortTotalArea - this.friendsListWidth){                
+                this.windows.pop();
+            }
         }
     }
 

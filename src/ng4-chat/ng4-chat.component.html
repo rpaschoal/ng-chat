@@ -7,7 +7,7 @@
         </a>
         <input id="ng4-chat-search_friend" type="search" placeholder="Search" [(ngModel)]="searchInput"/>
         <ul id="ng4-chat-users" *ngIf="!isCollapsed">
-            <li *ngFor="let user of filteredUsers" (click)="onUserClicked(user)">
+            <li *ngFor="let user of filteredUsers" (click)="openChatWindow(user)">
                 <img alt="" class="avatar" height="30" width="30"  src="{{user.avatar}}"/>
                 <strong>{{user.displayName}}</strong>
                 <span class="ng4-chat-user-status"></span>
