@@ -18,10 +18,10 @@ export class NgChat implements OnInit {
     public title: string = "Friends";
 
     @Input()
-    public adapter: ChatAdapter = new DemoAdapter(); // TODO: Remove this, testing purposes only
+    public adapter: ChatAdapter;
 
     @Input()
-    public userId: any = 123; // The user id that is using the chat instance
+    public userId: any;
 
     @Input()
     public messagePlaceholder: string = "Type a message";
@@ -53,6 +53,8 @@ export class NgChat implements OnInit {
 
     private windows: Window[] = [];
 
+    private isBootsrapped: boolean = false;
+
     @ViewChildren('chatMessages') chatMessageClusters: any;
 
     ngOnInit() { 
@@ -80,13 +82,26 @@ export class NgChat implements OnInit {
     // Initializes the chat plugin and the messaging adapter
     private bootstrapChat(): void
     {
-        if (this.adapter != null)
+        if (this.adapter != null && this.userId != null)
         {
             // Binding event listeners
             this.adapter.onMessageReceived((msg) => this.onMessageReceived(msg));
 
             // Loading current users list
             this.users = this.adapter.listFriends();
+
+            this.isBootsrapped = true;
+        }
+
+        if (!this.isBootsrapped){
+            console.error("ng-chat component couldn't be bootstrapped.");
+            
+            if (this.userId == null){
+                console.error("ng-chat can't be initialized without an user id. Please make sure you've provided an userId as a parameter of the ng-chat component.");
+            }
+            if (this.adapter == null){
+                console.error("ng-chat can't be bootstrapped without a ChatAdapter. Please make sure you've provided a ChatAdapter implementation as a parameter of the ng-chat component.");
+            }
         }
     }
 
