@@ -177,6 +177,12 @@ export class NgChat implements OnInit {
         this.isCollapsed = !this.isCollapsed;
     }
 
+    // Toggles a chat window visibility between maximized/minimized
+    protected onChatWindowClicked(window: Window): void
+    {
+        window.isCollapsed = !window.isCollapsed;
+    }
+
     // Asserts if a user avatar is visible in a chat cluster
     protected isAvatarVisible(window: Window, message: Message, index: number): boolean
     {

@@ -98,76 +98,73 @@
             background-color: #92A400;
             margin-top:10px;
         }
-#ng4-chat-windows
+.ng4-chat-window
 {
-    position: fixed;
-    margin:0;
-    list-style: none;
+    right:260px;
     height:360px;
     z-index:999;
     bottom:0;
-    right:260px; /* TODO: This will be calculated by the viewport and the number of windows opened */
+    position: fixed;
+    width:300px;
+    border:1px solid #A3A3A3;
+    border-bottom:0;
+    box-shadow: 0 4px 8px rgba(0,0,0,.25);
 }
-    #ng4-chat-windows .ng4-chat-window
+.ng4-chat-window-collapsed
+{
+    height: 30px !important;
+}
+    .ng4-chat-window > input
     {
-        float: right;
-        height:100%;
-        width:300px;
-        border:1px solid #A3A3A3;
-        margin-right:20px;
-        box-shadow: 0 4px 8px rgba(0,0,0,.25);
+        font-size:0.8em;
+        box-sizing: border-box;
+        padding:0 5px;
+        display:block;
+        height: calc(10%);
+        width:100%;
+        border: none;
+        border-top: 1px solid #A3A3A3;
     }
-        #ng4-chat-windows .ng4-chat-window > input
+    .ng4-chat-window .ng4-chat-messages
+    {
+        padding: 10px;
+        height: calc(90% - 50px);
+        position: relative;
+        overflow: auto;
+        background-color: #FFF;
+    }
+        .ng4-chat-window .ng4-chat-messages .ng4-chat-message
         {
-            font-size:0.8em;
-            box-sizing: border-box;
-            padding:0 5px;
-            display:block;
-            height: calc(10%);
-            width:100%;
-            border: none;
-            border-top: 1px solid #A3A3A3;
+            clear: both;
         }
-        #ng4-chat-windows .ng4-chat-window .ng4-chat-messages
+        .ng4-chat-window .ng4-chat-messages .ng4-chat-message > img
         {
+            position: absolute;
+            left: 10px;
+            border-radius: 25px;
+        }
+        .ng4-chat-window .ng4-chat-messages .ng4-chat-message > span
+        {
+            float: right;
+            width: 65%;
+            padding: 0;
+            margin-top: 0;
+            background-color:#E3E3E3;
+            border-radius: 5px;
             padding: 10px;
-            height: calc(90% - 50px);
-            position: relative;
-            overflow: auto;
-            background-color: #FFF;
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+            word-wrap: break-word;
         }
-            #ng4-chat-windows .ng4-chat-window .ng4-chat-messages .ng4-chat-message
-            {
-                clear: both;
-            }
-            #ng4-chat-windows .ng4-chat-window .ng4-chat-messages .ng4-chat-message > img
-            {
-                position: absolute;
-                left: 10px;
-                border-radius: 25px;
-            }
-            #ng4-chat-windows .ng4-chat-window .ng4-chat-messages .ng4-chat-message > span
-            {
-                float: right;
-                width: 65%;
-                padding: 0;
-                margin-top: 0;
-                background-color:#E3E3E3;
-                border-radius: 5px;
-                padding: 10px;
-                margin-top: 0;
-                margin-bottom: 5px;
-                font-size: 0.9em;
-                word-wrap: break-word;
-            }
-            #ng4-chat-windows .ng4-chat-window .ng4-chat-messages .ng4-chat-message.ng4-chat-message-received > span
-            {
-                float: left;
-                margin-left: 40px;
-                padding-top: 7px;
-                padding-bottom: 7px;
-                background-color:#FFF;
-                border: 3px solid #E3E3E3;
-                margin-top: 0;
-                margin-bottom: 5px;
-            }
+        .ng4-chat-window .ng4-chat-messages .ng4-chat-message.ng4-chat-message-received > span
+        {
+            float: left;
+            margin-left: 40px;
+            padding-top: 7px;
+            padding-bottom: 7px;
+            background-color:#FFF;
+            border: 3px solid #E3E3E3;
+            margin-top: 0;
+            margin-bottom: 5px;
+        }

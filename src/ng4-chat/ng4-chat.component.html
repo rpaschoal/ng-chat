@@ -14,9 +14,17 @@
             </li>
         </ul>
     </div>
-    <ul id="ng4-chat-windows">
-        <li *ngFor="let window of windows" class="ng4-chat-window">
-            <div class="ng4-chat-title">
+    <div *ngFor="let window of windows; let i = index" [ngClass]="{'ng4-chat-window': true, 'ng4-chat-window-collapsed': window.isCollapsed}" [ngStyle]="{'right': friendsListWidth + 20 + windowSizeFactor * i + 'px'}">
+        <ng-container *ngIf="window.isCollapsed">
+            <div class="ng4-chat-title" (click)="onChatWindowClicked(window)">
+                <strong>
+                    {{window.chattingTo.displayName}}
+                </strong>
+                <a href="javascript:void(0);" class="ng4-chat-close" (click)="onCloseChatWindow(window)">X</a>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="!window.isCollapsed">
+            <div class="ng4-chat-title" (click)="onChatWindowClicked(window)">
                 <strong>
                     {{window.chattingTo.displayName}}
                 </strong>
@@ -30,7 +38,7 @@
                     </span>
                 </div>
             </div>
-            <input [(ngModel)]="window.newMessage" type="text" (keypress)="onChatInputTyped($event, window)" [placeholder]="messagePlaceholder"/>
-        </li>
-    </ul>
+            <input [(ngModel)]="window.newMessage" type="text" (keypress)="onChatInputTyped($event, window)" [placeholder]="messagePlaceholder"/>            
+        </ng-container>
+    </div>
 </div>
