@@ -85,7 +85,7 @@ export class NgChat implements OnInit {
         if (this.adapter != null && this.userId != null)
         {
             // Binding event listeners
-            this.adapter.onMessageReceived((msg) => this.onMessageReceived(msg));
+            this.adapter.onMessageReceived((user, msg) => this.onMessageReceived(user, msg));
 
             // Loading current users list
             this.users = this.adapter.listFriends();
@@ -106,22 +106,27 @@ export class NgChat implements OnInit {
     }
 
     // Handles received messages by the adapter
-    private onMessageReceived(message: Message)
+    private onMessageReceived(user: User, message: Message)
     {
-        let chatWindow = this.windows.find(x => x.chattingTo.id == message.fromId);
+        if (user && message)
+        {
+            let chatWindow = this.openChatWindow(user);
 
-        if (chatWindow){
-            chatWindow.messages.push(message);
+            if (chatWindow){
+                chatWindow.messages.push(message);
 
-            this.scrollChatWindowToBottom(chatWindow);
+                this.scrollChatWindowToBottom(chatWindow);
+            }
         }
     }
 
     // Opens a new chat whindow. Takes care of available viewport
-    private openChatWindow(user: User): void
+    private openChatWindow(user: User): Window
     {
         // Is this window opened?
-        if (this.windows.findIndex(x => x.chattingTo.id == user.id) < 0)
+        let openedWindow = this.windows.find(x => x.chattingTo.id == user.id);
+
+        if (!openedWindow)
         {
             let history = this.adapter.getMessageHistory(); // TODO Should this be a promise?
 
@@ -139,6 +144,13 @@ export class NgChat implements OnInit {
             if (this.windows.length * this.windowSizeFactor >= this.viewPortTotalArea - this.friendsListWidth){                
                 this.windows.pop();
             }
+
+            return newChatWindow;
+        }
+        else
+        {
+            // Returns the existing chat window     
+            return openedWindow;       
         }
     }
 

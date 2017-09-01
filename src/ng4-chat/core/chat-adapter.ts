@@ -11,5 +11,5 @@ export interface ChatAdapter
 
     onFriendsListChanged(handler:(users: User[]) => void): void;
     
-    onMessageReceived(handler:(message: Message) => void): void;
+    onMessageReceived(handler:(user: User, message: Message) => void): void;
 }

@@ -6,13 +6,12 @@ import { UserStatus } from './user-status.enum';
 export class DemoAdapter implements ChatAdapter
 {
     constructor()
-    {
-        
+    {   
     }
 
     // Event handlers
     friendsListChangedHandlers: Array<(users: User[]) => void> = [];
-    messageReceivedHandlers: Array<(message: Message) => void> = [];
+    messageReceivedHandlers: Array<(user:User, message: Message) => void> = [];
 
     private mockedUsers: User[] = [{
         id: 1,
@@ -32,7 +31,7 @@ export class DemoAdapter implements ChatAdapter
     }
 
     getMessageHistory(): Message[] {
-        return null; // No history necessary for the demo
+        return null; // History not necessary for the demo adapter
     }
     
     sendMessage(message: Message): void {
@@ -42,9 +41,11 @@ export class DemoAdapter implements ChatAdapter
 
                 replyMessage.fromId = message.toId;
                 replyMessage.toId = message.fromId;
-                replyMessage.message = "You have typed => " + message.message;
+                replyMessage.message = "You have typed '" + message.message + "'";
                 
-                handler(replyMessage);
+                let user = this.mockedUsers.find(x => x.id == replyMessage.fromId);
+
+                handler(user, replyMessage);
             });
         }, 1000);
     }
@@ -53,7 +54,7 @@ export class DemoAdapter implements ChatAdapter
         this.friendsListChangedHandlers.push(handler);
     }
 
-    onMessageReceived(handler: (message: Message) => void): void {
+    onMessageReceived(handler: (user: User, message: Message) => void): void {
         this.messageReceivedHandlers.push(handler);
     }
 }
