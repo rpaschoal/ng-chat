@@ -4,6 +4,7 @@ import { DemoAdapter } from './core/demo-adapter';
 import { User } from "./core/user";
 import { Message } from "./core/message";
 import { Window } from "./core/window";
+import { UserStatus } from "./core/user-status.enum";
 
 @Component({
     selector: 'ng4-chat',
@@ -13,6 +14,9 @@ import { Window } from "./core/window";
 
 export class NgChat implements OnInit {
     constructor() { }
+
+    // Exposes the enum for the template
+    UserStatus = UserStatus;
 
     @Input()
     public title: string = "Friends";

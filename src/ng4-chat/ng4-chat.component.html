@@ -10,7 +10,7 @@
             <li *ngFor="let user of filteredUsers" (click)="openChatWindow(user)">
                 <img alt="" class="avatar" height="30" width="30"  src="{{user.avatar}}"/>
                 <strong>{{user.displayName}}</strong>
-                <span class="ng4-chat-user-status"></span>
+                <span [ngClass]="{'ng4-chat-user-status': true, 'online': user.status == UserStatus.Online, 'busy': user.status == UserStatus.Busy, 'away': user.status == UserStatus.Away, 'offline': user.status == UserStatus.Offline}"></span>
             </li>
         </ul>
     </div>

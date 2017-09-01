@@ -95,8 +95,23 @@
             border-radius: 25px;
             width: 8px;
             height: 8px;
-            background-color: #92A400;
             margin-top:10px;
+        }
+        #ng4-chat-users li > .ng4-chat-user-status.online
+        {
+            background-color: #92A400;
+        }
+        #ng4-chat-users li > .ng4-chat-user-status.busy
+        {
+            background-color: #F91C1E;
+        }
+        #ng4-chat-users li > .ng4-chat-user-status.away
+        {
+            background-color: #FE8622;
+        }
+        #ng4-chat-users li > .ng4-chat-user-status.offline
+        {
+            background-color: #BABABA;
         }
 .ng4-chat-window
 {

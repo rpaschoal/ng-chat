@@ -23,7 +23,7 @@ export class DemoAdapter implements ChatAdapter
         id: 2,
         displayName: "Scott Hanselman",
         avatar: "https://avatars1.githubusercontent.com/u/2892?v=4&s=40",
-        status: UserStatus.Online
+        status: UserStatus.Offline
     }];
 
     listFriends(): User[] {
