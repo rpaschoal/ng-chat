@@ -8,8 +8,55 @@ import { UserStatus } from "./core/user-status.enum";
 
 @Component({
     selector: 'ng4-chat',
-    templateUrl: 'ng4-chat.component.html',
-    styleUrls: ['ng4-chat.component.css']
+    // TODO: Investigate how to load these relative URLs via Webpack after plugin is published
+    //templateUrl:'ng4-chat.component.html',
+    //styleUrls:['ng4-chat.component.css']
+    template: `
+        <div id="ng4-chat">
+            <div id="ng4-chat-people" [ngClass]="{'ng4-chat-people-collapsed':isCollapsed}">
+                <a href="javascript:void(0);" class="ng4-chat-title shadowed" (click)="onChatTitleClicked($event)">
+                    <span>
+                        {{title}}
+                    </span>
+                </a>
+                <input id="ng4-chat-search_friend" type="search" placeholder="Search" [(ngModel)]="searchInput"/>
+                <ul id="ng4-chat-users" *ngIf="!isCollapsed">
+                    <li *ngFor="let user of filteredUsers" (click)="openChatWindow(user)">
+                        <img alt="" class="avatar" height="30" width="30"  src="{{user.avatar}}"/>
+                        <strong>{{user.displayName}}</strong>
+                        <span [ngClass]="{'ng4-chat-user-status': true, 'online': user.status == UserStatus.Online, 'busy': user.status == UserStatus.Busy, 'away': user.status == UserStatus.Away, 'offline': user.status == UserStatus.Offline}"></span>
+                    </li>
+                </ul>
+            </div>
+            <div *ngFor="let window of windows; let i = index" [ngClass]="{'ng4-chat-window': true, 'ng4-chat-window-collapsed': window.isCollapsed}" [ngStyle]="{'right': friendsListWidth + 20 + windowSizeFactor * i + 'px'}">
+                <ng-container *ngIf="window.isCollapsed">
+                    <div class="ng4-chat-title" (click)="onChatWindowClicked(window)">
+                        <strong>
+                            {{window.chattingTo.displayName}}
+                        </strong>
+                        <a href="javascript:void(0);" class="ng4-chat-close" (click)="onCloseChatWindow(window)">X</a>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="!window.isCollapsed">
+                    <div class="ng4-chat-title" (click)="onChatWindowClicked(window)">
+                        <strong>
+                            {{window.chattingTo.displayName}}
+                        </strong>
+                        <a href="javascript:void(0);" class="ng4-chat-close" (click)="onCloseChatWindow(window)">X</a>
+                    </div>
+                    <div #chatMessages class="ng4-chat-messages">
+                        <div *ngFor="let message of window.messages; let i = index" [ngClass]="{'ng4-chat-message': true, 'ng4-chat-message-received': message.fromId != userId}">
+                            <img *ngIf="isAvatarVisible(window, message, i)" alt="@rpaschoal" class="avatar" height="30" width="30" [src]="window.chattingTo.avatar" />
+                            <span>
+                                {{message.message}}
+                            </span>
+                        </div>
+                    </div>
+                    <input [(ngModel)]="window.newMessage" type="text" (keypress)="onChatInputTyped($event, window)" [placeholder]="messagePlaceholder"/>            
+                </ng-container>
+            </div>
+        </div>
+    `
 })
 
 export class NgChat implements OnInit {
@@ -53,7 +100,7 @@ export class NgChat implements OnInit {
     private friendsListWidth: number = 262;
 
     // Available area to render the plugin
-    private viewPortTotalArea: number = window.innerWidth;
+    private viewPortTotalArea: number;
 
     private windows: Window[] = [];
 
@@ -88,6 +135,8 @@ export class NgChat implements OnInit {
     {
         if (this.adapter != null && this.userId != null)
         {
+            this.viewPortTotalArea = window.innerWidth;
+
             // Binding event listeners
             this.adapter.onMessageReceived((user, msg) => this.onMessageReceived(user, msg));
 
