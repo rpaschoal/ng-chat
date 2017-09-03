@@ -1,6 +1,8 @@
 # ng-chat
 
-A simple facebook/linkedin lookalike chat plugin for Angular applications
+A simple facebook/linkedin lookalike chat plugin for Angular applications.
+
+https://www.npmjs.com/package/ng-chat
 
 ## Demo
 
