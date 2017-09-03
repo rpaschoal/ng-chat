@@ -1,6 +1,6 @@
 # ng-chat
 
-**Note: This plugin is under development.**
+__Note: This module is under development.__
 
 A simple facebook/linkedin lookalike chat plugin for Angular applications.
 
@@ -86,4 +86,4 @@ export class AppComponent {
 * Run "npm link ng-chat"
 * To unlink just run "npm unlink ng-chat"
 
-(Make sure there is no 'node_modules' folder in 'src' while developing.
+__Make sure there is no 'node_modules' folder in 'src' while developing.__
