@@ -8,7 +8,9 @@ TODO: Add a link to the offline bot demo.
 
 ## Installing the plugin
 
+```
 npm install ng-chat
+```
 
 ## NPM Deployment notes
 
