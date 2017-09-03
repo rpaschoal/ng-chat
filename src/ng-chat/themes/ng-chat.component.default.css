@@ -6,6 +6,8 @@
     bottom:0;
     color: #5C5C5C;
     font-family: Arial, Helvetica, sans-serif;
+    box-sizing: initial;
+    font-size: 11pt;
 }
 #ng-chat-people
 {
@@ -28,7 +30,7 @@
     text-decoration:none;
     float:right;
 }
-.ng-chat-title
+.ng-chat-title, .ng-chat-title:hover
 {
     position: relative;
     z-index:2;
@@ -57,6 +59,8 @@
     margin: 0 auto;
     width: calc(100% - 20px);
     margin-top: 10px;
+    font-size: 0.9em;
+    -webkit-appearance: searchfield;
 }
 #ng-chat-users
 {
@@ -81,7 +85,7 @@
         {
             border-radius: 25px;
             float: left;
-            padding-right: 5px;
+            margin-right: 5px;
         }
         #ng-chat-users li > strong
         {
@@ -143,7 +147,8 @@
     .ng-chat-window .ng-chat-messages
     {
         padding: 10px;
-        height: calc(90% - 50px);
+        height: calc(90% - 30px);
+        box-sizing: border-box;
         position: relative;
         overflow: auto;
         background-color: #FFF;
