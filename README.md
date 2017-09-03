@@ -39,10 +39,30 @@ export class AppModule { }
 #### Add the component directive in your AppComponent template:
 
 ```
-<ng-chat [adapter]="adapter" [userId]="999"></ng-chat>
+<ng-chat [adapter]="adapter" [userId]="userId"></ng-chat>
 ```
 
-* [adapter]: This will point to your adapter implementation.
+#### And in your app.component.ts:
+
+```
+import { Component } from '@angular/core';
+import  { ChatAdapter } from 'ng-chat';
+import { MyAdapter } from 'my-adapter';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title = 'app';
+  userId = 999;
+
+  public adapter: ChatAdapter = new MyAdapter();
+}
+```
+
+* [adapter]: This will point to your adapter implementation ('MyAdapter' in the example above).
 * [userId]: The unique id of the user that will be using the chat instance.
 
 ## Development Notes
