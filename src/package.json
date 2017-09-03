@@ -7,12 +7,15 @@
     "@angular/forms": "^4.0.0"
   },
   "devDependencies": {
+    "gulp": "3.9.1",
+    "gulp-inline-ng2-template": "^4.0.0",
     "typescript": "^2.4.2"
   },
   "scripts": {
-    "prepublish": "tsc"
+    "prepublish": "tsc",
+    "build": "gulp inline-templates && copy tsconfig.json dist && cd dist && tsc && del tsconfig.json"
   },
-  "description": "Angular chat plugin",
+  "description": "A simple facebook/linkedin lookalike chat plugin for Angular applications.",
   "author": "Rafael Carvalho",
   "license": "MIT"
 }
