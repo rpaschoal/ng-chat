@@ -4,7 +4,7 @@ A simple facebook/linkedin lookalike chat plugin for Angular applications.
 
 https://www.npmjs.com/package/ng-chat
 
-## Demo
+### Demo
 
 TODO: Add a link to the offline bot demo.
 
