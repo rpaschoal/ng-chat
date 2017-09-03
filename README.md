@@ -16,6 +16,26 @@ npm install ng-chat
 ```
 
 ### Setup
+#### Import the NgChatModule on your AppModule (EG: app.module.ts):
+
+```
+...
+import { NgChatModule } from 'ng-chat';
+
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    NgChatModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+```
 
 ## Development Notes
 ### NPM Deployment
