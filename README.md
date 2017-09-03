@@ -8,11 +8,14 @@ https://www.npmjs.com/package/ng-chat
 
 TODO: Add a link to the offline bot demo.
 
-## Installing the plugin
+## Getting started
+### Installation
 
 ```
 npm install ng-chat
 ```
+
+### Setup
 
 ## Development Notes
 ### NPM Deployment
