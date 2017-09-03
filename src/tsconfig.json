@@ -22,7 +22,7 @@
       "node_modules"
     ],
     "files": [
-      "./ng4-chat.ts",
+      "./ng-chat.ts",
       "./index.ts"
     ]
   }

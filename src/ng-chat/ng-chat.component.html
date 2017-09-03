@@ -1,0 +1,44 @@
+<div id="ng-chat">
+    <div id="ng-chat-people" [ngClass]="{'ng-chat-people-collapsed':isCollapsed}">
+        <a href="javascript:void(0);" class="ng-chat-title shadowed" (click)="onChatTitleClicked($event)">
+            <span>
+                {{title}}
+            </span>
+        </a>
+        <input id="ng-chat-search_friend" type="search" placeholder="Search" [(ngModel)]="searchInput"/>
+        <ul id="ng-chat-users" *ngIf="!isCollapsed">
+            <li *ngFor="let user of filteredUsers" (click)="openChatWindow(user)">
+                <img alt="" class="avatar" height="30" width="30"  src="{{user.avatar}}"/>
+                <strong>{{user.displayName}}</strong>
+                <span [ngClass]="{'ng-chat-user-status': true, 'online': user.status == UserStatus.Online, 'busy': user.status == UserStatus.Busy, 'away': user.status == UserStatus.Away, 'offline': user.status == UserStatus.Offline}"></span>
+            </li>
+        </ul>
+    </div>
+    <div *ngFor="let window of windows; let i = index" [ngClass]="{'ng-chat-window': true, 'ng-chat-window-collapsed': window.isCollapsed}" [ngStyle]="{'right': friendsListWidth + 20 + windowSizeFactor * i + 'px'}">
+        <ng-container *ngIf="window.isCollapsed">
+            <div class="ng-chat-title" (click)="onChatWindowClicked(window)">
+                <strong>
+                    {{window.chattingTo.displayName}}
+                </strong>
+                <a href="javascript:void(0);" class="ng-chat-close" (click)="onCloseChatWindow(window)">X</a>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="!window.isCollapsed">
+            <div class="ng-chat-title" (click)="onChatWindowClicked(window)">
+                <strong>
+                    {{window.chattingTo.displayName}}
+                </strong>
+                <a href="javascript:void(0);" class="ng-chat-close" (click)="onCloseChatWindow(window)">X</a>
+            </div>
+            <div #chatMessages class="ng-chat-messages">
+                <div *ngFor="let message of window.messages; let i = index" [ngClass]="{'ng-chat-message': true, 'ng-chat-message-received': message.fromId != userId}">
+                    <img *ngIf="isAvatarVisible(window, message, i)" alt="@rpaschoal" class="avatar" height="30" width="30" [src]="window.chattingTo.avatar" />
+                    <span>
+                        {{message.message}}
+                    </span>
+                </div>
+            </div>
+            <input [(ngModel)]="window.newMessage" type="text" (keypress)="onChatInputTyped($event, window)" [placeholder]="messagePlaceholder"/>            
+        </ng-container>
+    </div>
+</div>

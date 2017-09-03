@@ -7,9 +7,9 @@ import { Window } from "./core/window";
 import { UserStatus } from "./core/user-status.enum";
 
 @Component({
-    selector: 'ng4-chat',
-    templateUrl: 'ng4-chat.component.html',
-    styleUrls: ['/themes/ng4-chat.component.default.css']
+    selector: 'ng-chat',
+    templateUrl: 'ng-chat.component.html',
+    styleUrls: ['/themes/ng-chat.component.default.css']
 })
 
 export class NgChat implements OnInit {

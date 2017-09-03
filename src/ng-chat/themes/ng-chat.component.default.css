@@ -1,4 +1,4 @@
-#ng4-chat
+#ng-chat
 {
     position:fixed;
     z-index:999;
@@ -7,7 +7,7 @@
     color: #5C5C5C;
     font-family: Arial, Helvetica, sans-serif;
 }
-#ng4-chat-people
+#ng-chat-people
 {
     position: relative;
     width: 240px;
@@ -18,17 +18,17 @@
     box-shadow: 0 4px 8px rgba(0,0,0,.25);
     border-bottom:0;
 }
-    #ng4-chat-people.ng4-chat-people-collapsed
+    #ng-chat-people.ng-chat-people-collapsed
     {
         height:30px;
     }
-.ng4-chat-close
+.ng-chat-close
 {
     color: #5C5C5C;
     text-decoration:none;
     float:right;
 }
-.ng4-chat-title
+.ng-chat-title
 {
     position: relative;
     z-index:2;
@@ -43,14 +43,14 @@
     font-weight: 400;
     /* background-color:#FFF; */
 }
-.ng4-chat-title.shadowed
+.ng-chat-title.shadowed
 {
     box-shadow: 0 4px 8px rgba(0,0,0,.25);
 }
-    .ng4-chat-title > strong{
+    .ng-chat-title > strong{
         font-weight: 600;
     }
-#ng4-chat-search_friend
+#ng-chat-search_friend
 {
     display: block;
     padding: 7px 10px;
@@ -58,7 +58,7 @@
     width: calc(100% - 20px);
     margin-top: 10px;
 }
-#ng4-chat-users
+#ng-chat-users
 {
     padding: 0 10px;
     list-style: none;
@@ -70,26 +70,26 @@
     width: 100%;
     box-sizing: border-box;
 }
-    #ng4-chat-users li
+    #ng-chat-users li
     {
         clear: both;
         margin-bottom: 10px;
         overflow: hidden;
         cursor: pointer;
     }
-        #ng4-chat-users li > img
+        #ng-chat-users li > img
         {
             border-radius: 25px;
             float: left;
             padding-right: 5px;
         }
-        #ng4-chat-users li > strong
+        #ng-chat-users li > strong
         {
             float: left;
             line-height: 30px;
             font-size: 0.8em;
         }
-        #ng4-chat-users li > .ng4-chat-user-status
+        #ng-chat-users li > .ng-chat-user-status
         {
             float: right;
             border-radius: 25px;
@@ -97,23 +97,23 @@
             height: 8px;
             margin-top:10px;
         }
-        #ng4-chat-users li > .ng4-chat-user-status.online
+        #ng-chat-users li > .ng-chat-user-status.online
         {
             background-color: #92A400;
         }
-        #ng4-chat-users li > .ng4-chat-user-status.busy
+        #ng-chat-users li > .ng-chat-user-status.busy
         {
             background-color: #F91C1E;
         }
-        #ng4-chat-users li > .ng4-chat-user-status.away
+        #ng-chat-users li > .ng-chat-user-status.away
         {
             background-color: #FE8622;
         }
-        #ng4-chat-users li > .ng4-chat-user-status.offline
+        #ng-chat-users li > .ng-chat-user-status.offline
         {
             background-color: #BABABA;
         }
-.ng4-chat-window
+.ng-chat-window
 {
     right:260px;
     height:360px;
@@ -125,11 +125,11 @@
     border-bottom:0;
     box-shadow: 0 4px 8px rgba(0,0,0,.25);
 }
-.ng4-chat-window-collapsed
+.ng-chat-window-collapsed
 {
     height: 30px !important;
 }
-    .ng4-chat-window > input
+    .ng-chat-window > input
     {
         font-size:0.8em;
         box-sizing: border-box;
@@ -140,7 +140,7 @@
         border: none;
         border-top: 1px solid #A3A3A3;
     }
-    .ng4-chat-window .ng4-chat-messages
+    .ng-chat-window .ng-chat-messages
     {
         padding: 10px;
         height: calc(90% - 50px);
@@ -148,17 +148,17 @@
         overflow: auto;
         background-color: #FFF;
     }
-        .ng4-chat-window .ng4-chat-messages .ng4-chat-message
+        .ng-chat-window .ng-chat-messages .ng-chat-message
         {
             clear: both;
         }
-        .ng4-chat-window .ng4-chat-messages .ng4-chat-message > img
+        .ng-chat-window .ng-chat-messages .ng-chat-message > img
         {
             position: absolute;
             left: 10px;
             border-radius: 25px;
         }
-        .ng4-chat-window .ng4-chat-messages .ng4-chat-message > span
+        .ng-chat-window .ng-chat-messages .ng-chat-message > span
         {
             float: right;
             width: 65%;
@@ -172,7 +172,7 @@
             font-size: 0.9em;
             word-wrap: break-word;
         }
-        .ng4-chat-window .ng4-chat-messages .ng4-chat-message.ng4-chat-message-received > span
+        .ng-chat-window .ng-chat-messages .ng-chat-message.ng-chat-message-received > span
         {
             float: left;
             margin-left: 40px;
