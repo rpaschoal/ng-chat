@@ -1,6 +1,6 @@
 # ng-chat
 
-Note: This plugin is under development.
+**Note: This plugin is under development.**
 
 A simple facebook/linkedin lookalike chat plugin for Angular applications.
 
