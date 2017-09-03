@@ -36,6 +36,14 @@ import { NgChatModule } from 'ng-chat';
 })
 export class AppModule { }
 ```
+#### Add the component directive in your AppComponent template:
+
+```
+<ng-chat [adapter]="adapter" [userId]="999"></ng-chat>
+```
+
+* [adapter]: This will point to your adapter implementation.
+* [userId]: The unique id of the user that will be using the chat instance.
 
 ## Development Notes
 ### NPM Deployment
