@@ -14,7 +14,8 @@ TODO: Add a link to the offline bot demo.
 npm install ng-chat
 ```
 
-## NPM Deployment notes
+## Development Notes
+### NPM Deployment
 
 * Open a terminal
 * Navigate to the SRC folder
@@ -23,7 +24,7 @@ npm install ng-chat
 * Open the dist folder that was generated
 * Run "npm publish"
 
-## Development environment setup notes
+### Development environment setup
 
 * Open a terminal
 * Navigate to the SRC folder
