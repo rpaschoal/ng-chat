@@ -2,6 +2,7 @@ import { ChatAdapter } from './chat-adapter';
 import { User } from './user';
 import { Message } from './message';
 import { UserStatus } from './user-status.enum';
+import { Observable } from "rxjs/Rx";
 
 export class DemoAdapter implements ChatAdapter
 {
@@ -30,8 +31,18 @@ export class DemoAdapter implements ChatAdapter
         return this.mockedUsers;
     }
 
-    getMessageHistory(): Message[] {
-        return null; // History not necessary for the demo adapter
+    getMessageHistory(userId: any): Observable<Message[]> {
+        let mockedHistory: Array<Message>;
+
+        mockedHistory = [
+            {
+                fromId: 1,
+                toId: 999,
+                message: "Hi there, just type any message bellow to test this module."
+            }
+        ];
+
+        return Observable.of(mockedHistory);
     }
     
     sendMessage(message: Message): void {

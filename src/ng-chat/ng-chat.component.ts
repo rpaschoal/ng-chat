@@ -5,6 +5,7 @@ import { User } from "./core/user";
 import { Message } from "./core/message";
 import { Window } from "./core/window";
 import { UserStatus } from "./core/user-status.enum";
+import 'rxjs/add/operator/map';
 
 @Component({
     selector: 'ng-chat',
@@ -134,15 +135,17 @@ export class NgChat implements OnInit {
 
         if (!openedWindow)
         {
-            let history = this.adapter.getMessageHistory(); // TODO Should this be a promise?
-
-            if (history == null)
-                history = [];
-
             let newChatWindow: Window = {
                 chattingTo: user,
-                messages:  history
+                messages:  []
             };
+
+            // Loads the chat history via an RxJs Observable
+            this.adapter.getMessageHistory(newChatWindow.chattingTo.id)
+            .map((result: Message[]) =>{
+                //newChatWindow.messages.push.apply(newChatWindow.messages, result);
+                newChatWindow.messages = result.concat(newChatWindow.messages);
+            }).subscribe();
 
             this.windows.unshift(newChatWindow);
 

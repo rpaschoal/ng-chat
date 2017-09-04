@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs/Observable';
 import { Message } from "./message";
 import { User } from "./user";
 
@@ -5,7 +6,7 @@ export interface ChatAdapter
 {
     listFriends(): User[];
     
-    getMessageHistory(): Message[];
+    getMessageHistory(userId: any): Observable<Message[]>;
 
     sendMessage(message: Message): void;
 

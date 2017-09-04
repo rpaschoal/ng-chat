@@ -2,9 +2,10 @@
   "name": "ng-chat",
   "version": "0.1.0-beta-10",
   "dependencies": {
-    "@angular/common": "^4.0.0",
-    "@angular/core": "^4.0.0",
-    "@angular/forms": "^4.0.0"
+    "@angular/common": "*",
+    "@angular/core": "*",
+    "@angular/forms": "*",
+    "rxjs": "*" 
   },
   "devDependencies": {
     "gulp": "3.9.1",
@@ -12,7 +13,6 @@
     "typescript": "^2.4.2"
   },
   "scripts": {
-    "prepublish": "tsc",
     "build": "gulp inline-templates && copy tsconfig.json dist && cd dist && tsc && del tsconfig.json"
   },
   "description": "A simple facebook/linkedin lookalike chat plugin for Angular applications.",
