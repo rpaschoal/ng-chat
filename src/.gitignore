@@ -45,3 +45,6 @@ Thumbs.db
 # Compiled JS files
 *.js
 *.d.ts
+
+#Except for the gulpfile
+!gulpfile.js
