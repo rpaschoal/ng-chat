@@ -1,4 +1,5 @@
 import { ChatAdapter, User, Message, UserStatus } from 'ng-chat';
+import { Observable } from 'rxjs/Observable';
 
 export class SignalRAdapter implements ChatAdapter {
     constructor() {
@@ -25,8 +26,8 @@ export class SignalRAdapter implements ChatAdapter {
         return this.mockedUsers;
     }
 
-    getMessageHistory(): Message[] {
-        return null; // History not necessary for the demo adapter
+    getMessageHistory(): Observable<Message[]> {
+        return Observable.from([]); // History not necessary for the demo adapter
     }
 
     sendMessage(message: Message): void {

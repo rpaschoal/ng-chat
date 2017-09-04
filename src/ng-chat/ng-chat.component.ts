@@ -166,7 +166,7 @@ export class NgChat implements OnInit {
     // Monitors pressed keys on a chat window and dispatch a message when the enter key is typed
     protected onChatInputTyped(event: any, window: Window): void
     {
-        if (event.keyCode == 13)
+        if (event.keyCode == 13 && window.newMessage && window.newMessage.trim() != "")
         {
             let message = new Message();
              
