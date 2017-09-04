@@ -1,6 +1,6 @@
 {
   "name": "ng-chat",
-  "version": "0.1.0-beta-10",
+  "version": "0.1.0-beta2",
   "dependencies": {
     "@angular/common": "*",
     "@angular/core": "*",
