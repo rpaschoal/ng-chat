@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <base href="/" />
+  <title>ASP.NET Core Angular Demo</title>
+
+  <!-- inject:css -->
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="css/custom.css">
+  <link rel="stylesheet" href="css/toaster.css">
+  <!-- endinject -->
+</head>
+
+<body>
+  <my-app>Loading...</my-app>
+
+  <!-- inject:js -->
+  <!-- 1. Load libraries -->
+  <script src="js/shim.min.js"></script>
+  <script src="js/zone.js"></script>
+  <script src="js/Reflect.js"></script>
+  <script src="js/system.src.js"></script>
+
+  <script src="https://code.jquery.com/jquery-2.x-git.min.js"></script>  
+
+  <script src="http://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.0.min.js"></script>
+  <script src="signalr/js"></script>
+
+  <script src="js/bootstrap.js"></script>
+
+  <!-- 2. Configure SystemJS -->
+  <script src="system.config.js"></script>
+  <script>
+    System.import('app').catch(function (err) { console.error(err); });
+  </script>
+  <!-- endinject -->
+
+
+</body>
+
+</html>

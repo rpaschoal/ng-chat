@@ -1,0 +1,16 @@
+node_modules/
+obj
+wwwroot/js
+typings
+bin
+node_modules
+.vs/
+npm-debug.log
+npm-debug.log*
+ASPNETCoreAngular2Demo.xproj.user
+wwwroot/app/
+wwwroot/css
+.vscode
+.temp
+angularApp/**/*.js
+angularApp/**/*.js.map

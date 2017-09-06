@@ -1,0 +1,16 @@
+<startertemplatenavigation></startertemplatenavigation>
+
+<div class="container">
+    <div class="starter-template">
+        <loading-bar color="#FFFFFF" [height]="2" [animationTime]="0.3" [runInterval]="100"></loading-bar>
+        <toaster-container></toaster-container>
+        <router-outlet></router-outlet>
+
+        <hr>
+
+      <ng-chat [adapter]="adapter" [userId]="userId"></ng-chat>
+
+        <startertemplatefooter></startertemplatefooter>
+    </div>
+</div>
+<!-- /.container -->
