@@ -92,10 +92,14 @@ export class NgChat implements OnInit {
             this.viewPortTotalArea = window.innerWidth;
 
             // Binding event listeners
-            this.adapter.onMessageReceived((user, msg) => this.onMessageReceived(user, msg));
+            this.adapter.messageReceivedHandler = (user, msg) => this.onMessageReceived(user, msg);
+            this.adapter.friendsListChangedHandler = (users) => this.onFriendsListChanged(users);
 
             // Loading current users list
-            this.users = this.adapter.listFriends();
+            this.adapter.listFriends()
+            .map((users: User[]) => {
+                this.users = users;
+            }).subscribe();
 
             this.isBootsrapped = true;
         }
@@ -109,6 +113,14 @@ export class NgChat implements OnInit {
             if (this.adapter == null){
                 console.error("ng-chat can't be bootstrapped without a ChatAdapter. Please make sure you've provided a ChatAdapter implementation as a parameter of the ng-chat component.");
             }
+        }
+    }
+
+    // Updates the friends list via the event handler
+    private onFriendsListChanged(users: User[]): void
+    {
+        if (users){
+            this.users = users;
         }
     }
 

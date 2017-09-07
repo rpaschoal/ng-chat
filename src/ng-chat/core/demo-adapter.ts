@@ -4,16 +4,8 @@ import { Message } from './message';
 import { UserStatus } from './user-status.enum';
 import { Observable } from "rxjs/Rx";
 
-export class DemoAdapter implements ChatAdapter
+export class DemoAdapter extends ChatAdapter
 {
-    constructor()
-    {   
-    }
-
-    // Event handlers
-    friendsListChangedHandlers: Array<(users: User[]) => void> = [];
-    messageReceivedHandlers: Array<(user:User, message: Message) => void> = [];
-
     private mockedUsers: User[] = [{
         id: 1,
         displayName: "Rafael Carvalho",
@@ -27,8 +19,8 @@ export class DemoAdapter implements ChatAdapter
         status: UserStatus.Offline
     }];
 
-    listFriends(): User[] {
-        return this.mockedUsers;
+    listFriends(): Observable<User[]> {
+        return Observable.of(this.mockedUsers);
     }
 
     getMessageHistory(userId: any): Observable<Message[]> {
@@ -47,25 +39,15 @@ export class DemoAdapter implements ChatAdapter
     
     sendMessage(message: Message): void {
         setTimeout(() => {
-            this.messageReceivedHandlers.forEach(handler => {
-                let replyMessage = new Message();
+            let replyMessage = new Message();
+            
+            replyMessage.fromId = message.toId;
+            replyMessage.toId = message.fromId;
+            replyMessage.message = "You have typed '" + message.message + "'";
+            
+            let user = this.mockedUsers.find(x => x.id == replyMessage.fromId);
 
-                replyMessage.fromId = message.toId;
-                replyMessage.toId = message.fromId;
-                replyMessage.message = "You have typed '" + message.message + "'";
-                
-                let user = this.mockedUsers.find(x => x.id == replyMessage.fromId);
-
-                handler(user, replyMessage);
-            });
+            this.onMessageReceived(user, replyMessage);
         }, 1000);
-    }
-    
-    onFriendsListChanged(handler: (users: User[]) => void): void {
-        this.friendsListChangedHandlers.push(handler);
-    }
-
-    onMessageReceived(handler: (user: User, message: Message) => void): void {
-        this.messageReceivedHandlers.push(handler);
     }
 }
