@@ -25,6 +25,6 @@ export abstract class ChatAdapter
     }
 
     // Event handlers
-    friendsListChangedHandler: (users: User[]) => void;
-    messageReceivedHandler: (user: User, message: Message) => void;
+    friendsListChangedHandler: (users: User[]) => void  = (users: User[]) => {};
+    messageReceivedHandler: (user: User, message: Message) => void = (user: User, message: Message) => {};
 }

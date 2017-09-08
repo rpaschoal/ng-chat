@@ -1,6 +1,5 @@
 import { Component, Input, OnInit, ViewChildren, HostListener } from '@angular/core';
 import { ChatAdapter } from './core/chat-adapter';
-import { DemoAdapter } from './core/demo-adapter';
 import { User } from "./core/user";
 import { Message } from "./core/message";
 import { Window } from "./core/window";
