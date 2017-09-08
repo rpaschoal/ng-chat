@@ -1,7 +1,4 @@
-import { ChatAdapter } from './chat-adapter';
-import { User } from './user';
-import { Message } from './message';
-import { UserStatus } from './user-status.enum';
+import { ChatAdapter, User, Message, UserStatus } from 'ng-chat';
 import { Observable } from "rxjs/Rx";
 
 export class DemoAdapter extends ChatAdapter

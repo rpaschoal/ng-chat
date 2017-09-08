@@ -1,5 +1,4 @@
 export * from  './ng-chat/core/chat-adapter';
-export * from './ng-chat/core/demo-adapter';
 export * from  './ng-chat/core/message';
 export * from  './ng-chat/core/user-status.enum';
 export * from  './ng-chat/core/user';

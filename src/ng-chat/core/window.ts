@@ -7,4 +7,5 @@ export class Window
     public messages: Message[] = [];
     public newMessage?: string = "";
     public isCollapsed?: boolean = false;
+    public isLoadingHistory?: boolean = false;
 }

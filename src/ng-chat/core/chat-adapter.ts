@@ -19,7 +19,6 @@ export abstract class ChatAdapter
         this.friendsListChangedHandler(users);
     }
 
-    
     public onMessageReceived(user: User, message: Message): void
     {
         this.messageReceivedHandler(user, message);

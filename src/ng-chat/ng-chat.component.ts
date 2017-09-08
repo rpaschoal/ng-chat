@@ -31,6 +31,7 @@ export class NgChat implements OnInit {
     @Input()
     public messagePlaceholder: string = "Type a message";
 
+    @Input()
     public isCollapsed: boolean = false;
 
     private searchInput: string = "";
@@ -149,14 +150,16 @@ export class NgChat implements OnInit {
         {
             let newChatWindow: Window = {
                 chattingTo: user,
-                messages:  []
+                messages:  [],
+                isLoadingHistory: true
             };
 
             // Loads the chat history via an RxJs Observable
             this.adapter.getMessageHistory(newChatWindow.chattingTo.id)
-            .map((result: Message[]) =>{
+            .map((result: Message[]) => {
                 //newChatWindow.messages.push.apply(newChatWindow.messages, result);
                 newChatWindow.messages = result.concat(newChatWindow.messages);
+                newChatWindow.isLoadingHistory = false;
             }).subscribe();
 
             this.windows.unshift(newChatWindow);

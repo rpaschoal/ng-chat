@@ -31,6 +31,8 @@
                 <a href="javascript:void(0);" class="ng-chat-close" (click)="onCloseChatWindow(window)">X</a>
             </div>
             <div #chatMessages class="ng-chat-messages">
+                <img *ngIf="window.isLoadingHistory" src="https://raw.githubusercontent.com/rpaschoal/ng-chat/master/src/ng-chat/loading.gif" alt="Loading history..." class="ng-chat-loading" />
+
                 <div *ngFor="let message of window.messages; let i = index" [ngClass]="{'ng-chat-message': true, 'ng-chat-message-received': message.fromId != userId}">
                     <img *ngIf="isAvatarVisible(window, message, i)" alt="@rpaschoal" class="avatar" height="30" width="30" [src]="window.chattingTo.avatar" />
                     <span>

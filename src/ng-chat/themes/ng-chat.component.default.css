@@ -8,6 +8,16 @@
     font-family: Arial, Helvetica, sans-serif;
     box-sizing: initial;
     font-size: 11pt;
+    text-align: left;
+}
+.ng-chat-loading
+{
+    height: 32px;
+    margin: 0 auto;
+    display: block;
+    font-style: italic;
+    font-size: 0.8em;
+    text-align: center;
 }
 #ng-chat-people
 {

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import  { ChatAdapter, DemoAdapter } from 'ng-chat';
+import { ChatAdapter } from 'ng-chat';
+import { DemoAdapter } from './demo-adapter'
 
 @Component({
   selector: 'app-root',
