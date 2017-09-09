@@ -69,7 +69,20 @@ __Additional Settings__
 * [pollFriendsList]{boolean}: If set to true the module will do a long poll on the "adapter.listFriends" method to keep the friends list updated. Default is false.
 * [pollingInterval]{number}: Configures the long poll interval in milliseconds. Default is 5000.
 
-## Development Notes
+# Troubleshooting
+
+Please follow this guidelines when reporting bugs and feature requests:
+
+1. Use [GitHub Issues](https://github.com/rpaschoal/ng-chat/issues) board to report bugs and feature requests.
+2. Please **always** write the steps to reproduce the error. This will make it easier to reproduce, identify and fix bugs.
+
+Thanks for understanding!
+
+### License
+
+The MIT License (see the [LICENSE](https://github.com/rpaschoal/ng-chat/blob/master/LICENSE) file for the full text)
+
+## Module Development Notes
 ### NPM Deployment
 
 * Open a terminal
@@ -88,4 +101,4 @@ __Additional Settings__
 * Run "npm link ng-chat"
 * To unlink just run "npm unlink ng-chat"
 
-__Make sure there is no 'node_modules' folder in 'src' while developing.__
+__Make sure there is no 'node_modules' folder in 'src' while developing and testing with the 'demo/offline_bot' project.__
