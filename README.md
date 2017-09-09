@@ -116,6 +116,9 @@ Thanks for understanding!
 The MIT License (see the [LICENSE](https://github.com/rpaschoal/ng-chat/blob/master/LICENSE) file for the full text)
 
 ## Module Development Notes
+
+Follow these instructions if you want to develop for this module.
+
 ### NPM Deployment
 
 * Open a terminal
