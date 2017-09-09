@@ -33,6 +33,12 @@ export class NgChat implements OnInit {
     @Input()
     public isCollapsed: boolean = false;
 
+    @Input()    
+    public pollFriendsList: boolean = false;
+
+    @Input()
+    public pollingInterval: number = 5000;
+
     private searchInput: string = "";
 
     private users: User[];
@@ -96,11 +102,17 @@ export class NgChat implements OnInit {
             this.adapter.friendsListChangedHandler = (users) => this.onFriendsListChanged(users);
 
             // Loading current users list
-            this.adapter.listFriends()
-            .map((users: User[]) => {
-                this.users = users;
-            }).subscribe();
-
+            if (this.pollFriendsList){
+                // Setting a long poll interval to update the friends list
+                this.fetchFriendsList();
+                setInterval(() => this.fetchFriendsList(), this.pollingInterval);
+            }
+            else
+            {
+                // Since polling was disabled, a friends list update mechanism will have to be implemented in the ChatAdapter.
+                this.fetchFriendsList();
+            }
+            
             this.isBootsrapped = true;
         }
 
@@ -114,6 +126,15 @@ export class NgChat implements OnInit {
                 console.error("ng-chat can't be bootstrapped without a ChatAdapter. Please make sure you've provided a ChatAdapter implementation as a parameter of the ng-chat component.");
             }
         }
+    }
+
+    // Sends a request to load the friends list
+    private fetchFriendsList(): void
+    {
+        this.adapter.listFriends()
+        .map((users: User[]) => {
+            this.users = users;
+        }).subscribe();
     }
 
     // Updates the friends list via the event handler

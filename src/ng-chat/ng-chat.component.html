@@ -11,7 +11,7 @@
                 <img *ngIf="!user.avatar" alt="" class="avatar" height="30" width="30"  src="https://raw.githubusercontent.com/rpaschoal/ng-chat/master/src/ng-chat/user.png"/>
                 <img *ngIf="user.avatar" alt="" class="avatar" height="30" width="30"  src="{{user.avatar}}"/>
                 <strong title="{{user.displayName}}">{{user.displayName}}</strong>
-                <span [ngClass]="{'ng-chat-user-status': true, 'online': user.status == UserStatus.Online, 'busy': user.status == UserStatus.Busy, 'away': user.status == UserStatus.Away, 'offline': user.status == UserStatus.Offline}"></span>
+                <span [ngClass]="{'ng-chat-user-status': true, 'online': user.status == UserStatus.Online, 'busy': user.status == UserStatus.Busy, 'away': user.status == UserStatus.Away, 'offline': user.status == UserStatus.Offline}" title="{{UserStatus[user.status]}}"></span>
             </li>
         </ul>
     </div>
