@@ -114,27 +114,3 @@ Thanks for understanding!
 ### License
 
 The MIT License (see the [LICENSE](https://github.com/rpaschoal/ng-chat/blob/master/LICENSE) file for the full text)
-
-## Module Development Notes
-
-Follow these instructions if you want to develop for this module.
-
-### NPM Deployment
-
-* Open a terminal
-* Navigate to the SRC folder
-* Run "npm install"
-* Run "npm run build"
-* Open the dist folder that was generated
-* Run "npm publish"
-
-### Development environment setup
-
-* Open a terminal
-* Navigate to the SRC folder
-* Run "npm link"
-* Go back to the demo folder
-* Run "npm link ng-chat"
-* To unlink just run "npm unlink ng-chat"
-
-__Make sure there is no 'node_modules' folder in 'src' while developing and testing with the 'demo/offline_bot' project.__
