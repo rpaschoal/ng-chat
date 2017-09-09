@@ -1,14 +1,8 @@
 # ng-chat
 
-__Note: This module is under development.__
-
-A simple facebook/linkedin lookalike chat plugin for Angular applications.
+A simple facebook/linkedin lookalike chat module for Angular applications.
 
 https://www.npmjs.com/package/ng-chat
-
-### Demo
-
-TODO: Add a link to the offline bot demo.
 
 ## Getting started
 ### Installation
@@ -48,7 +42,7 @@ export class AppModule { }
 
 ```
 import { Component } from '@angular/core';
-import  { ChatAdapter } from 'ng-chat';
+import { ChatAdapter } from 'ng-chat';
 import { MyAdapter } from 'my-adapter';
 
 @Component({
@@ -64,8 +58,16 @@ export class AppComponent {
 }
 ```
 
-* [adapter]: This will point to your adapter implementation ('MyAdapter' in the example above).
-* [userId]: The unique id of the user that will be using the chat instance.
+__Required Settings__
+* [adapter]{string}: This will point to your adapter implementation ('MyAdapter' in the example above).
+* [userId]{any}: The unique id of the user that will be using the chat instance.
+
+__Additional Settings__
+* [title]{string}: The title to be displayed on the friends list. Default is "Friends".
+* [messagePlaceholder]{string}: The placeholder that is displayed in the text input on each chat window. Default is "Type a message".
+* [isCollapsed]{boolean}: If set to true the friends list will be rendered as collapsed by default. Default is false.
+* [pollFriendsList]{boolean}: If set to true the module will do a long poll on the "adapter.listFriends" method to keep the friends list updated. Default is false.
+* [pollingInterval]{number}: Configures the long poll interval in milliseconds. Default is 5000.
 
 ## Development Notes
 ### NPM Deployment
