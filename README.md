@@ -71,7 +71,7 @@ __Additional Settings__
 
 # Troubleshooting
 
-Please follow this guidelines when reporting bugs and feature requests:
+Please follow this guideline when reporting bugs and feature requests:
 
 1. Use [GitHub Issues](https://github.com/rpaschoal/ng-chat/issues) board to report bugs and feature requests.
 2. Please **always** write the steps to reproduce the error. This will make it easier to reproduce, identify and fix bugs.
