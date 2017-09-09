@@ -10,10 +10,10 @@ export class SignalRAdapter extends ChatAdapter {
     constructor(private _dataService: DataService) {
         super();
 
-        //initialize connection
+        // initializing the connection
         this.connection = $.connection;
 
-        //to create proxy give your hub class name as parameter. IMPORTANT: notice that I followed camel casing in giving class name
+        // Creates a proxy to the ChatHub
         this.proxy = $.connection.hub.createHubProxy('chatHub');
 
         this.bindSignalREvents();
@@ -27,10 +27,10 @@ export class SignalRAdapter extends ChatAdapter {
     // The id generated to the user that has just connected
     public userId: any; 
 
-    //signalR connection reference
+    // signalR connection reference
     private connection: SignalR;
 
-    //signalR proxy reference
+    // signalR proxy reference
     private proxy: SignalR.Hub.Proxy;
 
     listFriends(): Observable<User[]> {
@@ -38,7 +38,7 @@ export class SignalRAdapter extends ChatAdapter {
     }
 
     getMessageHistory(userId: any): Observable<Message[]> {
-        return Observable.of([]); // History not necessary for the demo adapter
+        return Observable.of([]); // TODO: History not necessary for the demo adapter (Could call an API endpoint here)
     }
 
     sendMessage(message: Message): void {
