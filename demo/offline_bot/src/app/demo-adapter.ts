@@ -14,6 +14,12 @@ export class DemoAdapter extends ChatAdapter
         displayName: "Scott Hanselman",
         avatar: "https://avatars1.githubusercontent.com/u/2892?v=4&s=40",
         status: UserStatus.Offline
+    },
+    {
+        id: 3,
+        displayName: "John Snow",
+        avatar: "",
+        status: UserStatus.Busy
     }];
 
     listFriends(): Observable<User[]> {

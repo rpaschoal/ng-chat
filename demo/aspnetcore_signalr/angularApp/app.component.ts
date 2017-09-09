@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ChatAdapter, DemoAdapter } from 'ng-chat';
+import { ChatAdapter } from 'ng-chat';
 
 import { SignalRAdapter } from './core/app.ngchat.signalr.adapter';
 
@@ -10,8 +10,10 @@ import { SignalRAdapter } from './core/app.ngchat.signalr.adapter';
 })
 
 export class AppComponent {
-    userId = 999;
+    constructor(private _signalRAdapter: SignalRAdapter)
+    {
 
-    public adapter: ChatAdapter = new SignalRAdapter();
+    }
 
+    public adapter: ChatAdapter = this._signalRAdapter;
 }

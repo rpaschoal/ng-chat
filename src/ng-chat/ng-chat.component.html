@@ -8,8 +8,9 @@
         <input id="ng-chat-search_friend" type="search" placeholder="Search" [(ngModel)]="searchInput"/>
         <ul id="ng-chat-users" *ngIf="!isCollapsed">
             <li *ngFor="let user of filteredUsers" (click)="openChatWindow(user)">
-                <img alt="" class="avatar" height="30" width="30"  src="{{user.avatar}}"/>
-                <strong>{{user.displayName}}</strong>
+                <img *ngIf="!user.avatar" alt="" class="avatar" height="30" width="30"  src="https://raw.githubusercontent.com/rpaschoal/ng-chat/master/src/ng-chat/user.png"/>
+                <img *ngIf="user.avatar" alt="" class="avatar" height="30" width="30"  src="{{user.avatar}}"/>
+                <strong title="{{user.displayName}}">{{user.displayName}}</strong>
                 <span [ngClass]="{'ng-chat-user-status': true, 'online': user.status == UserStatus.Online, 'busy': user.status == UserStatus.Busy, 'away': user.status == UserStatus.Away, 'offline': user.status == UserStatus.Offline}"></span>
             </li>
         </ul>
@@ -17,7 +18,7 @@
     <div *ngFor="let window of windows; let i = index" [ngClass]="{'ng-chat-window': true, 'ng-chat-window-collapsed': window.isCollapsed}" [ngStyle]="{'right': friendsListWidth + 20 + windowSizeFactor * i + 'px'}">
         <ng-container *ngIf="window.isCollapsed">
             <div class="ng-chat-title" (click)="onChatWindowClicked(window)">
-                <strong>
+                <strong title="{{window.chattingTo.displayName}}">
                     {{window.chattingTo.displayName}}
                 </strong>
                 <a href="javascript:void(0);" class="ng-chat-close" (click)="onCloseChatWindow(window)">X</a>
@@ -25,7 +26,7 @@
         </ng-container>
         <ng-container *ngIf="!window.isCollapsed">
             <div class="ng-chat-title" (click)="onChatWindowClicked(window)">
-                <strong>
+                <strong title="{{window.chattingTo.displayName}}">
                     {{window.chattingTo.displayName}}
                 </strong>
                 <a href="javascript:void(0);" class="ng-chat-close" (click)="onCloseChatWindow(window)">X</a>
@@ -34,7 +35,8 @@
                 <img *ngIf="window.isLoadingHistory" src="https://raw.githubusercontent.com/rpaschoal/ng-chat/master/src/ng-chat/loading.gif" alt="Loading history..." class="ng-chat-loading" />
 
                 <div *ngFor="let message of window.messages; let i = index" [ngClass]="{'ng-chat-message': true, 'ng-chat-message-received': message.fromId != userId}">
-                    <img *ngIf="isAvatarVisible(window, message, i)" alt="@rpaschoal" class="avatar" height="30" width="30" [src]="window.chattingTo.avatar" />
+                    <img *ngIf="!window.chattingTo.avatar && isAvatarVisible(window, message, i)" alt="" class="avatar" height="30" width="30" src="https://raw.githubusercontent.com/rpaschoal/ng-chat/master/src/ng-chat/user.png" />
+                    <img *ngIf="window.chattingTo.avatar && isAvatarVisible(window, message, i)" alt="" class="avatar" height="30" width="30" [src]="window.chattingTo.avatar" />
                     <span>
                         {{message.message}}
                     </span>

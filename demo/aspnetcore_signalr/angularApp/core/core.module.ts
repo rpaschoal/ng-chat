@@ -1,5 +1,6 @@
 import { DataService } from './services/values-data.service';
 import { NgModule } from '@angular/core';
+import { SignalRAdapter } from './app.ngchat.signalr.adapter';
 
 @NgModule({
 
@@ -13,7 +14,8 @@ import { NgModule } from '@angular/core';
 
 
     providers: [
-        DataService
+        DataService,
+        SignalRAdapter
     ]
 })
 

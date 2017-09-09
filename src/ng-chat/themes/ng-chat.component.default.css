@@ -53,6 +53,7 @@
     text-decoration: none;
     color: inherit;
     font-weight: 400;
+    cursor: pointer;
     /* background-color:#FFF; */
 }
 .ng-chat-title.shadowed
@@ -61,6 +62,13 @@
 }
     .ng-chat-title > strong{
         font-weight: 600;
+        display: block;
+        overflow: hidden;
+        height: 30px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 85%;
+        float:left;
     }
 #ng-chat-search_friend
 {
@@ -102,6 +110,11 @@
             float: left;
             line-height: 30px;
             font-size: 0.8em;
+            max-width: 75%;
+            max-height: 30px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
         #ng-chat-users li > .ng-chat-user-status
         {

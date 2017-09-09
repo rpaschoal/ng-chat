@@ -1,18 +1,21 @@
-﻿import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { Configuration } from '../../app.constants';
+import { User } from 'ng-chat';
 
 @Injectable()
 export class DataService {
 
     private actionUrl: string;
     private headers: Headers;
+    private chatUrl: string;
 
     constructor(private _http: Http, private _configuration: Configuration) {
 
         this.actionUrl = _configuration.ServerWithApiUrl + 'values/';
+        this.chatUrl = _configuration.ServerWithApiUrl + 'chat/';
 
         this.headers = new Headers();
         this.headers.append('Content-Type', 'application/json');
@@ -41,5 +44,9 @@ export class DataService {
 
     public Delete = (id: number): Observable<Response> => {
         return this._http.delete(this.actionUrl + id);
+    }
+
+    public ListFriends = (): Observable<User[]> => {
+        return this._http.post(this.chatUrl + "ListFriends", { headers: this.headers }).map(res => res.json());
     }
 }
