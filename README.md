@@ -1,6 +1,6 @@
 # ng-chat
 
-A simple facebook/linkedin lookalike chat module for Angular applications ([demo](http://ng-chat.azurewebsites.net)).
+A simple facebook/linkedin lookalike chat module for Angular applications ([demo](https://ng-chat.azurewebsites.net)).
 
 https://www.npmjs.com/package/ng-chat
 
