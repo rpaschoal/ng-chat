@@ -21,7 +21,8 @@
     "transpile": "ngc",
     "package": "rollup -c",
     "minify": "uglifyjs dist/bundles/ng-chat.umd.js --screw-ie8 --compress --mangle --comments --output dist/bundles/ng-chat.umd.min.js",
-    "build": "npm run templates && npm run transpile && npm run package && npm run minify"
+    "clean": "del /S *.ngsummary.json del /S *.ngfactory.ts",
+    "build": "npm run templates && npm run transpile && npm run package && npm run minify && npm run clean"
   },
   "description": "A simple facebook/linkedin lookalike chat module for Angular applications.",
   "author": "Rafael Carvalho",
