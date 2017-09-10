@@ -91,8 +91,8 @@ public abstract sendMessage(message: Message): void;
 These methods will be performed via the client integration. Apart from the client integration and actions, you must also instruct the adapter in how to receive push notifications from the server using the following methods:
 
 ```
-public onFriendsListChanged(users: User[]): void
 public onMessageReceived(user: User, message: Message): void
+public onFriendsListChanged(users: User[]): void
 ```
 
 __Please note there is no need to override the 2 methods above. You must call them within your adapter implementation just to notify the module that a message was received or that the friends list was updated. The second one could be ignored if you decide to use the "pollFriendsList" feature.__
