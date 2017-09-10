@@ -5,15 +5,23 @@
     "@angular/common": "*",
     "@angular/core": "*",
     "@angular/forms": "*",
-    "rxjs": "*" 
+    "rxjs": "*"
   },
   "devDependencies": {
+    "@angular/compiler": "^4.4.0-RC.0",
+    "@angular/compiler-cli": "^4.4.0-RC.0",
     "gulp": "3.9.1",
     "gulp-inline-ng2-template": "^4.0.0",
-    "typescript": "^2.4.2"
+    "rollup": "^0.49.3",
+    "typescript": "^2.5.2",
+    "uglify-js": "^3.0.28"
   },
   "scripts": {
-    "build": "gulp inline-templates && copy tsconfig.json dist && cd dist && tsc && del tsconfig.json"
+    "templates": "gulp inline-templates",
+    "transpile": "ngc",
+    "package": "rollup -c",
+    "minify": "uglifyjs dist/bundles/ng-chat.umd.js --screw-ie8 --compress --mangle --comments --output dist/bundles/ng-chat.umd.min.js",
+    "build": "npm run templates && npm run transpile && npm run package && npm run minify"
   },
   "description": "A simple facebook/linkedin lookalike chat module for Angular applications.",
   "author": "Rafael Carvalho",
@@ -22,4 +30,4 @@
   "bugs": {
     "url": "https://github.com/rpaschoal/ng-chat/issues"
   }
-} 
+}

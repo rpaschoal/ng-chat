@@ -1,28 +1,32 @@
 {
-    "compilerOptions": {
-      "target": "es5",
-      "module": "commonjs",
-      "moduleResolution": "node",
-      "emitDecoratorMetadata": true,
-      "experimentalDecorators": true,
-      "sourceMap": false,
-      "noEmitHelpers": false,
-      "noImplicitAny": true,
-      "declaration": true,
-      "skipLibCheck": true,
-      "stripInternal": true,
-      "noUnusedLocals": false,
-      "noUnusedParameters": false,
-      "lib": ["dom", "es6"],
-      "typeRoots": [
-        "../node_modules/@types"
-      ]
+  "compilerOptions": {
+    "baseUrl": ".",
+    "declaration": true,
+    "stripInternal": true,
+    "experimentalDecorators": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "module": "es2015",
+    "moduleResolution": "node",
+    "paths": {
+      "@angular/core": ["node_modules/@angular/core"],
+      "rxjs/*": ["node_modules/rxjs/*"]
     },
-    "exclude": [
-      "node_modules"
-    ],
-    "files": [
-      "./ng-chat.ts",
-      "./index.ts"
+    "rootDir": ".",
+    "outDir": "dist",
+    "sourceMap": true,
+    "inlineSources": true,
+    "target": "es5",
+    "skipLibCheck": true,
+    "lib": [
+      "es2015", 
+      "dom"
     ]
+  },
+  "files": [
+    "index.ts"
+  ],
+  "angularCompilerOptions": {
+    "strictMetadataEmit": true
   }
+}

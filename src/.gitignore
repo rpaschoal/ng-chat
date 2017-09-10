@@ -45,6 +45,8 @@ Thumbs.db
 # Compiled JS files
 *.js
 *.d.ts
+*.ngsummary.json
+*.ngfactory.ts
 
 #Except for the gulpfile
 !gulpfile.js
