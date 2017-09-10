@@ -39,7 +39,7 @@ export class NgChat implements OnInit {
     @Input()
     public pollingInterval: number = 5000;
 
-    private searchInput: string = "";
+    public searchInput: string = "";
 
     private users: User[];
 
@@ -62,7 +62,7 @@ export class NgChat implements OnInit {
     // Available area to render the plugin
     private viewPortTotalArea: number;
 
-    private windows: Window[] = [];
+    windows: Window[] = [];
 
     private isBootsrapped: boolean = false;
 
@@ -220,7 +220,7 @@ export class NgChat implements OnInit {
     }
 
     // Closes a chat window via the close 'X' button
-    protected onCloseChatWindow(window: Window): void 
+    onCloseChatWindow(window: Window): void 
     {
         let index = this.windows.indexOf(window);
 
@@ -228,19 +228,19 @@ export class NgChat implements OnInit {
     }
 
     // Toggle friends list visibility
-    protected onChatTitleClicked(event: any): void
+    onChatTitleClicked(event: any): void
     {
         this.isCollapsed = !this.isCollapsed;
     }
 
     // Toggles a chat window visibility between maximized/minimized
-    protected onChatWindowClicked(window: Window): void
+    onChatWindowClicked(window: Window): void
     {
         window.isCollapsed = !window.isCollapsed;
     }
 
     // Asserts if a user avatar is visible in a chat cluster
-    protected isAvatarVisible(window: Window, message: Message, index: number): boolean
+    isAvatarVisible(window: Window, message: Message, index: number): boolean
     {
         if (message.fromId != this.userId){
             if (index == 0){
