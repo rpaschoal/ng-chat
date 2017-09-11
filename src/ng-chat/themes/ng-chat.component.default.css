@@ -110,7 +110,7 @@
             float: left;
             line-height: 30px;
             font-size: 0.8em;
-            max-width: 75%;
+            max-width: 57%;
             max-height: 30px;
             overflow: hidden;
             white-space: nowrap;
@@ -140,6 +140,16 @@
         {
             background-color: #BABABA;
         }
+.ng-chat-unread-messages-count
+{
+    background-color: #E3E3E3;
+    margin-left: 5px;
+    padding: 0 5px;
+    border-radius: 25px;
+    font-size: 0.9em;
+    color: #5C5C5C;
+    line-height: 30px;
+}
 .ng-chat-window
 {
     right:260px;

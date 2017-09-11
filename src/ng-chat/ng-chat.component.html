@@ -21,6 +21,7 @@
                 <strong title="{{window.chattingTo.displayName}}">
                     {{window.chattingTo.displayName}}
                 </strong>
+                <span *ngIf="unreadMessagesTotal(window).length > 0" class="ng-chat-unread-messages-count">{{unreadMessagesTotal(window)}}</span>
                 <a href="javascript:void(0);" class="ng-chat-close" (click)="onCloseChatWindow(window)">X</a>
             </div>
         </ng-container>
@@ -29,6 +30,7 @@
                 <strong title="{{window.chattingTo.displayName}}">
                     {{window.chattingTo.displayName}}
                 </strong>
+                <span *ngIf="unreadMessagesTotal(window).length > 0" class="ng-chat-unread-messages-count">{{unreadMessagesTotal(window)}}</span>
                 <a href="javascript:void(0);" class="ng-chat-close" (click)="onCloseChatWindow(window)">X</a>
             </div>
             <div #chatMessages class="ng-chat-messages">
@@ -42,7 +44,7 @@
                     </span>
                 </div>
             </div>
-            <input [(ngModel)]="window.newMessage" type="text" (keypress)="onChatInputTyped($event, window)" [placeholder]="messagePlaceholder"/>            
+            <input [(ngModel)]="window.newMessage" type="text" (keypress)="onChatInputTyped($event, window)" [placeholder]="messagePlaceholder" (blur)="toggleWindowFocus(window)" (focus)="toggleWindowFocus(window)"/>            
         </ng-container>
     </div>
 </div>
