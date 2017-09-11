@@ -171,7 +171,8 @@ export class NgChat implements OnInit {
             let newChatWindow: Window = {
                 chattingTo: user,
                 messages:  [],
-                isLoadingHistory: true
+                isLoadingHistory: true,
+                hasFocus: false // This will be triggered when the 'newMessage' input gets the current focus
             };
 
             // Loads the chat history via an RxJs Observable
@@ -180,6 +181,8 @@ export class NgChat implements OnInit {
                 //newChatWindow.messages.push.apply(newChatWindow.messages, result);
                 newChatWindow.messages = result.concat(newChatWindow.messages);
                 newChatWindow.isLoadingHistory = false;
+
+                setTimeout(() => { this.scrollChatWindowToBottom(newChatWindow)});
             }).subscribe();
 
             this.windows.unshift(newChatWindow);
@@ -198,8 +201,54 @@ export class NgChat implements OnInit {
         }
     }
 
+    // Scrolls a chat window message flow to the bottom
+    private scrollChatWindowToBottom(window: Window): void
+    {
+        if (!window.isCollapsed){
+            let windowIndex = this.windows.indexOf(window);
+
+            setTimeout(() => {
+                this.chatMessageClusters.toArray()[windowIndex].nativeElement.scrollTop = this.chatMessageClusters.toArray()[windowIndex].nativeElement.scrollHeight;
+            }); 
+        }
+    }
+
+    // Marks all messages provided as read with the current time.
+    private markMessagesAsRead(user: User, messages: Message[]): void
+    {
+        let currentDate = new Date();
+
+        messages.forEach((msg)=>{
+            msg.seenOn = currentDate;
+        });
+    }
+
+    // Returns the total unread messages from a chat window. TODO: Could use some Angular pipes in the future 
+    unreadMessagesTotal(window: Window): string
+    {
+        if (window){
+            if (window.hasFocus){
+                this.markMessagesAsRead(window.chattingTo, window.messages);
+            }
+            else{
+                let totalUnreadMessages = window.messages.filter(x => x.fromId != this.userId && !x.seenOn).length;
+                
+                if (totalUnreadMessages > 0){
+
+                    if (totalUnreadMessages > 99) 
+                        return  "99+";
+                    else
+                        return String(totalUnreadMessages); 
+                }
+            }
+        }
+            
+        // Empty fallback.
+        return "";
+    }
+
     // Monitors pressed keys on a chat window and dispatch a message when the enter key is typed
-    protected onChatInputTyped(event: any, window: Window): void
+    onChatInputTyped(event: any, window: Window): void
     {
         if (event.keyCode == 13 && window.newMessage && window.newMessage.trim() != "")
         {
@@ -237,6 +286,7 @@ export class NgChat implements OnInit {
     onChatWindowClicked(window: Window): void
     {
         window.isCollapsed = !window.isCollapsed;
+        this.scrollChatWindowToBottom(window);
     }
 
     // Asserts if a user avatar is visible in a chat cluster
@@ -257,13 +307,9 @@ export class NgChat implements OnInit {
         return false;
     }
 
-    // Scrolls a chat window message flow to the bottom
-    private scrollChatWindowToBottom(window: Window): void
+    // Toggles a window focus on the focus/blur of a 'newMessage' input
+    toggleWindowFocus(window: Window): void
     {
-        let windowIndex = this.windows.indexOf(window);
-
-        setTimeout(() => {
-            this.chatMessageClusters.toArray()[windowIndex].nativeElement.scrollTop = this.chatMessageClusters.toArray()[windowIndex].nativeElement.scrollHeight;
-        }); 
+        window.hasFocus = !window.hasFocus;
     }
 }
