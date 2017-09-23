@@ -10,14 +10,11 @@
     font-size: 11pt;
     text-align: left;
 }
-.ng-chat-loading
+.ng-chat-loading-wrapper
 {
-    height: 32px;
-    margin: 0 auto;
-    display: block;
-    font-style: italic;
-    font-size: 0.8em;
+    height: 30px;
     text-align: center;
+    font-size:0.9em;
 }
 #ng-chat-people
 {
