@@ -9,7 +9,10 @@ import 'rxjs/add/operator/map';
 @Component({
     selector: 'ng-chat',
     templateUrl: 'ng-chat.component.html',
-    styleUrls: ['/themes/ng-chat.component.default.css']
+    styleUrls: [
+        '/assets/ng-chat.component.default.css',
+        '/assets/loading-spinner.css'
+    ]
 })
 
 export class NgChat implements OnInit {
