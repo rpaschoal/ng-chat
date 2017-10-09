@@ -13,7 +13,7 @@ export class DemoAdapter extends ChatAdapter
     {
         id: 2,
         displayName: "Cersei Lannister",
-        avatar: "https://pbs.twimg.com/profile_images/378800000190054715/421f9de2ef79dbc7c7a55d8ef058fafc.png",
+        avatar: null,
         status: UserStatus.Online
     },
     {
