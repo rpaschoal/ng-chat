@@ -95,13 +95,26 @@
         margin-bottom: 10px;
         overflow: hidden;
         cursor: pointer;
+        max-height: 30px;
     }
-        #ng-chat-users li > img
+        #ng-chat-users li > img, #ng-chat-users li > .icon-wrapper
         {
-            border-radius: 25px;
             float: left;
             margin-right: 5px;
+            border-radius: 25px;
         }
+        #ng-chat-users li > .icon-wrapper
+        {
+            background-color: #BABABA;
+            overflow: hidden;
+            width: 30px;
+            height: 30px;
+        }
+            #ng-chat-users li > .icon-wrapper > i
+            {
+                color: #FFF;
+                transform: scale(0.7);
+            }
         #ng-chat-users li > strong
         {
             float: left;
@@ -187,12 +200,24 @@
         {
             clear: both;
         }
-        .ng-chat-window .ng-chat-messages .ng-chat-message > img
+        .ng-chat-window .ng-chat-messages .ng-chat-message > img, .ng-chat-window .ng-chat-messages .ng-chat-message > .icon-wrapper
         {
             position: absolute;
             left: 10px;
             border-radius: 25px;
         }
+            .ng-chat-window .ng-chat-messages .ng-chat-message > .icon-wrapper
+            {
+                background-color: #BABABA;
+                overflow: hidden;
+                width: 30px;
+                height: 30px;
+            }
+                .ng-chat-window .ng-chat-messages .ng-chat-message > .icon-wrapper > i
+                {
+                    color: #FFF;
+                    transform: scale(0.7);
+                }
         .ng-chat-window .ng-chat-messages .ng-chat-message > span
         {
             float: right;

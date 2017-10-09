@@ -8,7 +8,9 @@
         <input id="ng-chat-search_friend" type="search" placeholder="Search" [(ngModel)]="searchInput"/>
         <ul id="ng-chat-users" *ngIf="!isCollapsed">
             <li *ngFor="let user of filteredUsers" (click)="openChatWindow(user)">
-                <img *ngIf="!user.avatar" alt="" class="avatar" height="30" width="30"  src="https://raw.githubusercontent.com/rpaschoal/ng-chat/master/src/ng-chat/assets/user.png"/>
+                <div *ngIf="!user.avatar"  class="icon-wrapper">
+                    <i class="user-icon"></i>
+                </div>
                 <img *ngIf="user.avatar" alt="" class="avatar" height="30" width="30"  src="{{user.avatar}}"/>
                 <strong title="{{user.displayName}}">{{user.displayName}}</strong>
                 <span [ngClass]="{'ng-chat-user-status': true, 'online': user.status == UserStatus.Online, 'busy': user.status == UserStatus.Busy, 'away': user.status == UserStatus.Away, 'offline': user.status == UserStatus.Offline}" title="{{UserStatus[user.status]}}"></span>
@@ -39,7 +41,9 @@
                 </div>
 
                 <div *ngFor="let message of window.messages; let i = index" [ngClass]="{'ng-chat-message': true, 'ng-chat-message-received': message.fromId != userId}">
-                    <img *ngIf="!window.chattingTo.avatar && isAvatarVisible(window, message, i)" alt="" class="avatar" height="30" width="30" src="https://raw.githubusercontent.com/rpaschoal/ng-chat/master/src/ng-chat/assets/user.png" />
+                    <div *ngIf="!window.chattingTo.avatar && isAvatarVisible(window, message, i)" class="icon-wrapper">
+                        <i class="user-icon"></i>
+                    </div>
                     <img *ngIf="window.chattingTo.avatar && isAvatarVisible(window, message, i)" alt="" class="avatar" height="30" width="30" [src]="window.chattingTo.avatar" />
                     <span>
                         {{message.message}}

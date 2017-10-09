@@ -1,0 +1,36 @@
+.user-icon
+{
+    box-sizing: border-box;
+    background-color: #FFF;
+    border: 2px solid;
+    width: 32px;
+    height: 20px;
+    border-radius: 64px 64px 0 0/64px;
+    margin-top: 14px;
+    margin-left: -1px;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    font-style: normal;
+    color: #ddd;
+    text-align: left;
+    text-indent: -9999px;
+}
+    .user-icon:before{
+        border: 2px solid;
+        background-color: #FFF;
+        width: 12px;
+        height: 12px;
+        top: -19px;
+        border-radius: 50%;
+        position: absolute;
+        left: 50%;
+        -webkit-transform: translateX(-50%);
+        -ms-transform: translateX(-50%);
+        transform: translateX(-50%);
+    }
+    .user-icon:before, .user-icon:after
+    {
+        content: '';
+        pointer-events: none;
+    }
