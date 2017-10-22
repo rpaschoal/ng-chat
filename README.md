@@ -2,7 +2,10 @@
 
 [![npm](https://img.shields.io/npm/v/ng-chat.svg)](https://www.npmjs.com/package/ng-chat)
 
-A simple facebook/linkedin lookalike chat module for Angular applications ([demo](https://ng-chat.azurewebsites.net)).
+A simple facebook/linkedin lookalike chat module for Angular applications.
+
+* [Online demo](https://ng-chat.azurewebsites.net)
+* [Node.js sample application](https://github.com/rpaschoal/ng-chat-nodejs)
 
 ## Getting started
 ### Installation
