@@ -156,16 +156,16 @@ export class NgChat implements OnInit {
         {
             let chatWindow = this.openChatWindow(user);
 
-            if (chatWindow){
-                chatWindow.messages.push(message);
+            if (!chatWindow[1]){
+                chatWindow[0].messages.push(message);
 
-                this.scrollChatWindowToBottom(chatWindow);
+                this.scrollChatWindowToBottom(chatWindow[0]);
             }
         }
     }
 
     // Opens a new chat whindow. Takes care of available viewport
-    private openChatWindow(user: User): Window
+    private openChatWindow(user: User): [Window, boolean]
     {
         // Is this window opened?
         let openedWindow = this.windows.find(x => x.chattingTo.id == user.id);
@@ -196,12 +196,12 @@ export class NgChat implements OnInit {
                 this.windows.pop();
             }
 
-            return newChatWindow;
+            return [newChatWindow,true];
         }
         else
         {
             // Returns the existing chat window     
-            return openedWindow;       
+            return [openedWindow,false];       
         }
     }
 
