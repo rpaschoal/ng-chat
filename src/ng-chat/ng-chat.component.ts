@@ -165,6 +165,7 @@ export class NgChat implements OnInit {
     }
 
     // Opens a new chat whindow. Takes care of available viewport
+    // Returns => [Window: Window object reference, boolean: Indicates if this window is a new chat window]
     private openChatWindow(user: User): [Window, boolean]
     {
         // Is this window opened?
@@ -196,12 +197,12 @@ export class NgChat implements OnInit {
                 this.windows.pop();
             }
 
-            return [newChatWindow,true];
+            return [newChatWindow, true];
         }
         else
         {
             // Returns the existing chat window     
-            return [openedWindow,false];       
+            return [openedWindow, false];       
         }
     }
 
