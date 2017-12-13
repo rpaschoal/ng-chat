@@ -43,6 +43,9 @@ export class NgChat implements OnInit {
     @Input()
     public pollingInterval: number = 5000;
 
+    @Input()    
+    public historyEnabled: boolean = true;
+
     public searchInput: string = "";
 
     private users: User[];
@@ -156,7 +159,7 @@ export class NgChat implements OnInit {
         {
             let chatWindow = this.openChatWindow(user);
 
-            if (!chatWindow[1]){
+            if (!chatWindow[1] || !this.historyEnabled){
                 chatWindow[0].messages.push(message);
 
                 this.scrollChatWindowToBottom(chatWindow[0]);
@@ -176,19 +179,22 @@ export class NgChat implements OnInit {
             let newChatWindow: Window = {
                 chattingTo: user,
                 messages:  [],
-                isLoadingHistory: true,
+                isLoadingHistory: this.historyEnabled,
                 hasFocus: false // This will be triggered when the 'newMessage' input gets the current focus
             };
 
             // Loads the chat history via an RxJs Observable
-            this.adapter.getMessageHistory(newChatWindow.chattingTo.id)
-            .map((result: Message[]) => {
-                //newChatWindow.messages.push.apply(newChatWindow.messages, result);
-                newChatWindow.messages = result.concat(newChatWindow.messages);
-                newChatWindow.isLoadingHistory = false;
+            if (this.historyEnabled)
+            {
+                this.adapter.getMessageHistory(newChatWindow.chattingTo.id)
+                .map((result: Message[]) => {
+                    //newChatWindow.messages.push.apply(newChatWindow.messages, result);
+                    newChatWindow.messages = result.concat(newChatWindow.messages);
+                    newChatWindow.isLoadingHistory = false;
 
-                setTimeout(() => { this.scrollChatWindowToBottom(newChatWindow)});
-            }).subscribe();
+                    setTimeout(() => { this.scrollChatWindowToBottom(newChatWindow)});
+                }).subscribe();
+            }
 
             this.windows.unshift(newChatWindow);
 
