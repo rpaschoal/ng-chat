@@ -36,6 +36,10 @@ describe('NgChat', () => {
         expect(this.subject.pollingInterval).toBe(5000);
     });
 
+    it('Must have history enabled by default', function() {
+        expect(this.subject.historyEnabled).not.toBeFalsy();
+    });
+
     it('Exercise users filter', function() {
         this.subject.users = [{
             id: 1,
@@ -105,5 +109,70 @@ describe('NgChat', () => {
         ]);
 
         expect(this.subject.users.length).toBe(2);
+    });
+
+    it('Must return existing open chat window when requesting a chat window instance', function() {
+        let user: User = {
+            id: 999,
+            displayName: 'Test user',
+            status: 1,
+            avatar: ''
+        };
+        
+        this.subject.windows = [
+            {
+                chattingTo: user
+            }
+        ];
+        
+        let result = this.subject.openChatWindow(user);
+
+        expect(result).not.toBeUndefined();
+        expect(result.length).toBe(2);
+        expect(result[0]).not.toBeUndefined();
+        expect(result[1]).toBeFalsy();
+        expect(result[0].chattingTo.id).toEqual(user.id);
+        expect(result[0].chattingTo.displayName).toEqual(user.displayName);
+    });
+
+    it('Must open a new window on a openChatWindow request when it is not opened yet', function(){
+        this.subject.historyEnabled = false;
+        
+        let user: User = {
+            id: 999,
+            displayName: 'Test user',
+            status: 1,
+            avatar: ''
+        };
+
+        let result = this.subject.openChatWindow(user);
+
+        expect(result).not.toBeUndefined();
+        expect(result.length).toBe(2);
+        expect(result[0]).not.toBeUndefined();
+        expect(result[1]).not.toBeFalsy();
+        expect(result[0].chattingTo.id).toEqual(user.id);
+        expect(result[0].chattingTo.displayName).toEqual(user.displayName);
+    });
+
+    it('Must load history from ChatAdapter when opening a window that is not yet opened', function(){
+        let user: User = {
+            id: 999,
+            displayName: 'Test user',
+            status: 1,
+            avatar: ''
+        };
+
+        spyOn(MockableAdapter.prototype, 'getMessageHistory').and.returnValue(Observable.of([]));
+
+        let result = this.subject.openChatWindow(user);
+
+        expect(result).not.toBeUndefined();
+        expect(result.length).toBe(2);
+        expect(result[0]).not.toBeUndefined();
+        expect(result[1]).not.toBeFalsy();
+        expect(result[0].chattingTo.id).toEqual(user.id);
+        expect(result[0].chattingTo.displayName).toEqual(user.displayName);
+        expect(MockableAdapter.prototype.getMessageHistory).toHaveBeenCalledTimes(1);
     });
 });
