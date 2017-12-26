@@ -175,4 +175,25 @@ describe('NgChat', () => {
         expect(result[0].chattingTo.displayName).toEqual(user.displayName);
         expect(MockableAdapter.prototype.getMessageHistory).toHaveBeenCalledTimes(1);
     });
+
+    it('Mark messages as seen exercise', function(){
+        let messages: Message[] = [{
+            fromId: 1,
+            message: 'Test',
+            toId: 2
+        },
+        {
+            fromId: 1,
+            message: 'Test 2',
+            toId: 2
+        }]
+
+        this.subject.markMessagesAsRead(messages);
+
+        expect(messages.length).toBe(2);
+        expect(messages[0].seenOn).not.toBeUndefined();
+        expect(messages[0].seenOn.getTime()).toBeGreaterThan(new Date().getTime() - 60000);
+        expect(messages[1].seenOn).not.toBeUndefined();
+        expect(messages[1].seenOn.getTime()).toBeGreaterThan(new Date().getTime() - 60000);
+    });
 });
