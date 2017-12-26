@@ -225,7 +225,7 @@ export class NgChat implements OnInit {
     }
 
     // Marks all messages provided as read with the current time.
-    private markMessagesAsRead(user: User, messages: Message[]): void
+    private markMessagesAsRead(messages: Message[]): void
     {
         let currentDate = new Date();
 
@@ -239,7 +239,7 @@ export class NgChat implements OnInit {
     {
         if (window){
             if (window.hasFocus){
-                this.markMessagesAsRead(window.chattingTo, window.messages);
+                this.markMessagesAsRead(window.messages);
             }
             else{
                 let totalUnreadMessages = window.messages.filter(x => x.fromId != this.userId && !x.seenOn).length;
