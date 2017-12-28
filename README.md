@@ -72,6 +72,7 @@ __Additional Settings__
 * [pollFriendsList]{boolean}: If set to true the module will do a long poll on the "adapter.listFriends" method to keep the friends list updated. Default is false.
 * [pollingInterval]{number}: Configures the long poll interval in milliseconds. Default is 5000.
 * [historyEnabled]{boolean}: Defines whether the component should call the "getMessageHistory" from the chat-adapter. Default is true.
+* [emojisEnabled]{boolean}: Enables emoji parsing on the messages. Default is true.
 
 #### Implement your ChatAdapter:
 
