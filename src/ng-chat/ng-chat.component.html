@@ -46,11 +46,11 @@
                     </div>
                     <img *ngIf="window.chattingTo.avatar && isAvatarVisible(window, message, i)" alt="" class="avatar" height="30" width="30" [src]="window.chattingTo.avatar" />
                     <span>
-                        {{message.message}}
+                        {{emojisEnabled ? (message.message | emojify) : message.message}}
                     </span>
                 </div>
             </div>
-            <input [(ngModel)]="window.newMessage" type="text" (keypress)="onChatInputTyped($event, window)" [placeholder]="messagePlaceholder" (blur)="toggleWindowFocus(window)" (focus)="toggleWindowFocus(window)"/>            
+            <input [ngModel]="emojisEnabled ? (window.newMessage | emojify) : window.newMessage" (ngModelChange)="window.newMessage=$event" type="text" (keypress)="onChatInputTyped($event, window)" [placeholder]="messagePlaceholder" (blur)="toggleWindowFocus(window)" (focus)="toggleWindowFocus(window)"/>            
         </ng-container>
     </div>
 </div>
