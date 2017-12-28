@@ -8,10 +8,10 @@
     "rxjs": "*"
   },
   "devDependencies": {
-    "@angular/compiler": "^4.4.0-RC.0",
-    "@angular/compiler-cli": "^4.4.0-RC.0",
+    "@angular/compiler": "^4.4.6",
+    "@angular/compiler-cli": "^4.4.6",
     "gulp": "3.9.1",
-    "gulp-inline-ng2-template": "^4.0.0",
+    "gulp-inline-ng2-template": "^4.1.0",
     "rollup": "^0.49.3",
     "typescript": "^2.5.2",
     "uglify-js": "^3.0.28"
