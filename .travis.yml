@@ -6,11 +6,13 @@ before_install:
   - export CHROME_BIN=chromium-browser
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
-
+before_script: 
+  - cd src
 script:
-  - npm run pretest
-  - npm run test-coverage
-
+  #- npm run pretest
+  #- npm run test-coverage
+  - npm run build
+  
 after_success:
   - ./node_modules/.bin/codecov
 
