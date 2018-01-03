@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/ng-chat.svg)](https://www.npmjs.com/package/ng-chat)
 [![npm downloads](https://img.shields.io/npm/dm/ng-chat.svg)](https://npmjs.org/ng-chat)
-[![Build Status](https://travis-ci.org/rpaschoal/ng-chat.svg?branch=master)](https://travis-ci.org/rpaschoal/ng-chat)
+[![Build Status](https://travis-ci.org/rpaschoal/ng-chat.svg?branch=development)](https://travis-ci.org/rpaschoal/ng-chat)
 [![codecov](https://codecov.io/gh/rpaschoal/ng-chat/branch/master/graph/badge.svg)](https://codecov.io/gh/rpaschoal/ng-chat)
 
 A simple facebook/linkedin lookalike chat module for Angular applications.
