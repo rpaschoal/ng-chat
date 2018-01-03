@@ -5,6 +5,12 @@ email, or any other method with the owner of this repository before making a cha
 
 Always branch from "development" and send pull requests to it.
 
+## Coding Guidelines
+
+* Respect the SOLID principles
+* Keep it simple and DRY
+* Implement unit tests
+
 ## Local test environment setup 
 
 * Open a terminal 
