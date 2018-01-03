@@ -1,13 +1,17 @@
 {
   "name": "ng-chat",
   "version": "1.0.0",
-  "dependencies": {
+  "peerDependencies": {
     "@angular/common": "*",
     "@angular/core": "*",
     "@angular/forms": "*",
     "rxjs": "*"
   },
   "devDependencies": {
+	"@angular/common": "^4.4.6",
+    "@angular/core": "^4.4.6",
+    "@angular/forms": "^4.4.6",
+    "rxjs": "^5.5.6",
     "@angular/compiler": "^4.4.6",
     "@angular/compiler-cli": "^4.4.6",
     "gulp": "3.9.1",
@@ -22,7 +26,9 @@
     "package": "rollup -c",
     "minify": "uglifyjs dist/bundles/ng-chat.umd.js --screw-ie8 --compress --mangle --comments --output dist/bundles/ng-chat.umd.min.js",
     "clean": "del /S *.ngsummary.json del /S *.ngfactory.ts",
-    "build": "npm run templates && npm run transpile && npm run package && npm run minify && npm run clean"
+    "build": "npm run templates && npm run transpile && npm run package && npm run minify && npm run clean",
+	"linux-clean": "rm -f *.ngsummary.json *.ngfactory.ts",
+	"linux-build": "npm run templates && npm run transpile && npm run package && npm run minify && npm run linux-clean"
   },
   "description": "A simple facebook/linkedin lookalike chat module for Angular applications.",
   "author": "Rafael Carvalho",
