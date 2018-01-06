@@ -4,10 +4,11 @@ import { FormsModule } from '@angular/forms';
 
 import { NgChat } from './ng-chat.component';
 import { EmojifyPipe } from './pipes/emojify.pipe';
+import { LinkfyPipe } from './pipes/linkfy.pipe';
 
 @NgModule({
   imports: [CommonModule, FormsModule],
-  declarations: [NgChat, EmojifyPipe],
+  declarations: [NgChat, EmojifyPipe, LinkfyPipe],
   exports: [NgChat]
 })
 export class NgChatModule {
