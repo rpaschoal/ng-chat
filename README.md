@@ -76,6 +76,7 @@ __Additional Settings__
 * [pollingInterval]{number}: Configures the long poll interval in milliseconds. Default is 5000.
 * [historyEnabled]{boolean}: Defines whether the component should call the "getMessageHistory" from the chat-adapter. Default is true.
 * [emojisEnabled]{boolean}: Enables emoji parsing on the messages. Default is true.
+* [linkfyEnabled]{boolean}: Transforms links within the messages to valid HTML links. Default is true.
 
 #### Implement your ChatAdapter:
 

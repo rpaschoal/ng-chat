@@ -23,14 +23,14 @@ let emojiDictionary = [
 */
 @Pipe({name: 'emojify'})
 export class EmojifyPipe implements PipeTransform {
-    transform(message: string): string {
-        if (message && message.length > 1) {  
-        emojiDictionary.forEach(emoji => {
-            emoji.patterns.forEach(pattern => {
-                message = message.replace(pattern, emoji.unicode);
-            })
-        });
-    }
+    transform(message: string, pipeEnabled: boolean): string {
+        if (pipeEnabled && message && message.length > 1) {  
+            emojiDictionary.forEach(emoji => {
+                emoji.patterns.forEach(pattern => {
+                    message = message.replace(pattern, emoji.unicode);
+                })
+            });
+        }
 
     return message;
   }

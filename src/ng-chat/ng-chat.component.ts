@@ -49,6 +49,9 @@ export class NgChat implements OnInit {
     @Input()    
     public emojisEnabled: boolean = true;
 
+    @Input()    
+    public linkfyEnabled: boolean = true;
+
     public searchInput: string = "";
 
     private users: User[];
