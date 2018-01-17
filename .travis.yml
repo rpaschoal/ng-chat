@@ -35,6 +35,7 @@ script:
 after_success:
   - ./node_modules/.bin/codecov
 
+sudo: required
 addons:
   chrome: stable
   apt:
