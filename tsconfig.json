@@ -17,7 +17,8 @@
   },
   "include": [
     "demo/offline_bot/src/**/*",
-    "demo/offline_bot/node_modules/ng-chat/**/*"
+    "demo/offline_bot/node_modules/ng-chat/**/*",
+    "src/spec/**/*"
   ],
   "files": [
     "test.ts"
