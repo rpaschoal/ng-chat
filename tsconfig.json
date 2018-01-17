@@ -1,7 +1,6 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
@@ -16,12 +15,12 @@
       "dom"
     ]
   },
-  "exclude": [
-    "**/*.spec.ts"
-  ],
   "include": [
-    "src/**/*",
-    "node_modules/ng-chat/**/*",
+    "demo/offline_bot/src/**/*",
+    "demo/offline_bot/node_modules/ng-chat/**/*",
+    "src/spec/**/*"
+  ],
+  "files": [
     "test.ts"
   ]
 }
