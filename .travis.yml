@@ -27,7 +27,7 @@ script:
   - npm install
   - cd ../..
   
-  # FIX: node_modules/@angular/core/src/render3/ng_dev_mode.d.ts(9,11): error TS2451: Cannot redeclare block-scoped variable 'ngDevMode'.
+  # FIX (Tests): node_modules/@angular/core/src/render3/ng_dev_mode.d.ts(9,11): error TS2451: Cannot redeclare block-scoped variable 'ngDevMode'.
   - rm -f node_modules/@angular/core/src/render3/ng_dev_mode.d.ts
   
   - ng test --code-coverage --watch=false
