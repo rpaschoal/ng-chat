@@ -18,4 +18,4 @@ import { NgChatModule } from 'ng-chat';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule { } 
