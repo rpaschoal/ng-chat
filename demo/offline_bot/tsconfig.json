@@ -23,5 +23,5 @@
   "include": [
     "src/**/*",
     "node_modules/ng-chat/**/*"
-  ],
+  ]
 }
