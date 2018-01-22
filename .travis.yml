@@ -15,7 +15,7 @@ before_script:
   - npm install
 script:
   # Initial SRC component build
-  - npm run linux-build
+  - npm run build
   
   # Node modules clean up
   - rm -r node_modules

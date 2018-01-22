@@ -15,13 +15,5 @@
       "es2017",
       "dom"
     ]
-  },
-  "exclude": [
-    "**/*.spec.ts"
-  ],
-  "include": [
-    "src/**/*",
-    "node_modules/ng-chat/**/*",
-    "test.ts"
-  ]
+  }
 }
