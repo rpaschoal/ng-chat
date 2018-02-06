@@ -52,7 +52,15 @@ export class NgChat implements OnInit {
     @Input()    
     public linkfyEnabled: boolean = true;
 
-    public searchInput: string = "";
+    @Input()
+    public audioEnabled: boolean = true;
+
+    @Input() // TODO: This might need a better content strategy
+    public audioSource: string = 'https://raw.githubusercontent.com/rpaschoal/ng-chat/1.0.4/src/ng-chat/assets/notification.wav';
+
+    private audioFile: HTMLAudioElement;
+
+    public searchInput: string = '';
 
     private users: User[];
 
@@ -126,6 +134,8 @@ export class NgChat implements OnInit {
                 this.fetchFriendsList();
             }
             
+            this.bufferAudioFile();
+            
             this.isBootsrapped = true;
         }
 
@@ -170,6 +180,8 @@ export class NgChat implements OnInit {
 
                 this.scrollChatWindowToBottom(chatWindow[0]);
             }
+
+            this.emitMessageSound(chatWindow[0]);
         }
     }
 
@@ -238,6 +250,24 @@ export class NgChat implements OnInit {
         messages.forEach((msg)=>{
             msg.seenOn = currentDate;
         });
+    }
+
+    // Buffers audio file (For component's bootstrapping)
+    private bufferAudioFile(): void {
+        if (this.audioSource && this.audioSource.length > 0)
+        {
+            this.audioFile = new Audio();
+            this.audioFile.src = this.audioSource;
+            this.audioFile.load();
+        }
+    }
+
+    // Emits a message notification audio if enabled after every message received
+    private emitMessageSound(window: Window): void
+    {
+        if (this.audioEnabled && !window.hasFocus && this.audioFile) {
+            this.audioFile.play();
+        }
     }
 
     // Returns the total unread messages from a chat window. TODO: Could use some Angular pipes in the future 
