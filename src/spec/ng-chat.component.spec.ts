@@ -216,15 +216,6 @@ describe('NgChat', () => {
         expect(messages[1].seenOn.getTime()).toBeGreaterThan(new Date().getTime() - 60000);
     });
 
-    it('Should buffer notification audio file while bootstrapping', () => {
-        spyOn(this.subject, 'fetchFriendsList'); // Masking this call as we're not testing this part on this spec
-        spyOn(this.subject, 'bufferAudioFile');
-        
-        this.subject.bootstrapChat();
-
-        expect(this.subject.bufferAudioFile).toHaveBeenCalledTimes(1);
-    });
-
     it('Should play HTMLAudioElement when emitting a message sound on an unfocused window', () => {
         let window = new Window();
 
