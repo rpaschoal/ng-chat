@@ -18,10 +18,17 @@ class MockableAdapter extends ChatAdapter {
     }       
 }
 
+class MockableHTMLAudioElement {
+    public play(): void {}
+    public load(): void {}
+}
+
 describe('NgChat', () => {
     beforeEach(() => {
         this.subject = new NgChat();
+        this.subject.userId = 123;
         this.subject.adapter = new MockableAdapter();
+        this.subject.audioFile = new MockableHTMLAudioElement();
     });
 
     it('Should have default title', () => {
@@ -42,6 +49,14 @@ describe('NgChat', () => {
 
     it('Must have emojis enabled by default', () => {
         expect(this.subject.emojisEnabled).not.toBeFalsy();
+    });
+
+    it('Audio notification must be enabled by default', () => {
+        expect(this.subject.audioEnabled).not.toBeFalsy();
+    });
+
+    it('Audio notification must have a default source', () => {
+        expect(this.subject.audioSource).not.toBeUndefined();
     });
 
     it('Exercise users filter', () => {
@@ -201,11 +216,59 @@ describe('NgChat', () => {
         expect(messages[1].seenOn.getTime()).toBeGreaterThan(new Date().getTime() - 60000);
     });
 
-    it('Audio notification must be enabled by default', () => {
-        expect(this.subject.audioEnabled).not.toBeFalsy();
+    it('Should buffer notification audio file while bootstrapping', () => {
+        spyOn(this.subject, 'fetchFriendsList'); // Masking this call as we're not testing this part on this spec
+        spyOn(this.subject, 'bufferAudioFile');
+        
+        this.subject.bootstrapChat();
+
+        expect(this.subject.bufferAudioFile).toHaveBeenCalledTimes(1);
     });
 
-    it('Audio notification must have a default source', () => {
-        expect(this.subject.audioSource).not.toBeUndefined();
+    it('Should play HTMLAudioElement when emitting a message sound on an unfocused window', () => {
+        let window = new Window();
+
+        spyOn(MockableHTMLAudioElement.prototype, 'play'); 
+
+        this.subject.emitMessageSound(window);
+
+        expect(MockableHTMLAudioElement.prototype.play).toHaveBeenCalledTimes(1);
+    });
+
+    it('Should not play HTMLAudioElement when emitting a message sound on a focused window', () => {
+        let window = new Window();
+
+        window.hasFocus = true;
+
+        spyOn(MockableHTMLAudioElement.prototype, 'play'); 
+
+        this.subject.emitMessageSound(window);
+
+        expect(MockableHTMLAudioElement.prototype.play).not.toHaveBeenCalled();
+    });
+
+    it('Should not play HTMLAudioElement when audio notification is disabled', () => {
+        let window = new Window();
+
+        this.subject.audioEnabled = false;
+
+        spyOn(MockableHTMLAudioElement.prototype, 'play'); 
+
+        this.subject.emitMessageSound(window);
+
+        expect(MockableHTMLAudioElement.prototype.play).not.toHaveBeenCalled();
+    });
+
+    it('Must invoke message notification method on new messages', () => {
+        let message = new Message();
+        let user = new User();
+
+        spyOn(this.subject, 'emitMessageSound'); 
+        spyOn(this.subject, 'openChatWindow').and.returnValue([null, true]);
+        spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
+
+        this.subject.onMessageReceived(user, message);
+
+        expect(this.subject.emitMessageSound).toHaveBeenCalledTimes(1);
     });
 });
