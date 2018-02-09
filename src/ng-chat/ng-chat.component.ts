@@ -56,7 +56,7 @@ export class NgChat implements OnInit {
     public audioEnabled: boolean = true;
 
     @Input() // TODO: This might need a better content strategy
-    public audioSource: string = 'https://raw.githubusercontent.com/rpaschoal/ng-chat/1.0.4/src/ng-chat/assets/notification.wav';
+    public audioSource: string = 'https://raw.githubusercontent.com/rpaschoal/ng-chat/master/src/ng-chat/assets/notification.wav';
 
     private audioFile: HTMLAudioElement;
 
