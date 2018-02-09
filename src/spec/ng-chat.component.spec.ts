@@ -200,4 +200,12 @@ describe('NgChat', () => {
         expect(messages[1].seenOn).not.toBeUndefined();
         expect(messages[1].seenOn.getTime()).toBeGreaterThan(new Date().getTime() - 60000);
     });
+
+    it('Audio notification must be enabled by default', () => {
+        expect(this.subject.audioEnabled).not.toBeFalsy();
+    });
+
+    it('Audio notification must have a default source', () => {
+        expect(this.subject.audioSource).not.toBeUndefined();
+    });
 });
