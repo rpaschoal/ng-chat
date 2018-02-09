@@ -77,6 +77,8 @@ __Additional Settings__
 * [historyEnabled]{boolean}: Defines whether the component should call the "getMessageHistory" from the chat-adapter. Default is true.
 * [emojisEnabled]{boolean}: Enables emoji parsing on the messages. Default is true.
 * [linkfyEnabled]{boolean}: Transforms links within the messages to valid HTML links. Default is true.
+* [audioEnabled]{boolean}: Enables audio notifications on received messages. Default is true.
+* [audioSource]{string}: WAV source of the audio notification. Default is a RAW github WAV content from ng-chat repository.
 
 #### Implement your ChatAdapter:
 
