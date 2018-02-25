@@ -67,6 +67,11 @@
         max-width: 85%;
         float:left;
     }
+    .ng-chat-title > .ng-chat-user-status
+    {
+        float: left;
+        margin-left: 5px;
+    }
 #ng-chat-search_friend
 {
     display: block;
@@ -129,27 +134,30 @@
         #ng-chat-users li > .ng-chat-user-status
         {
             float: right;
-            border-radius: 25px;
-            width: 8px;
-            height: 8px;
-            margin-top:10px;
         }
-        #ng-chat-users li > .ng-chat-user-status.online
-        {
-            background-color: #92A400;
-        }
-        #ng-chat-users li > .ng-chat-user-status.busy
-        {
-            background-color: #F91C1E;
-        }
-        #ng-chat-users li > .ng-chat-user-status.away
-        {
-            background-color: #F7D21B;
-        }
-        #ng-chat-users li > .ng-chat-user-status.offline
-        {
-            background-color: #BABABA;
-        }
+.ng-chat-user-status
+{
+    border-radius: 25px;
+    width: 8px;
+    height: 8px;
+    margin-top:10px;
+}
+.ng-chat-user-status.online
+{
+    background-color: #92A400;
+}
+.ng-chat-user-status.busy
+{
+    background-color: #F91C1E;
+}
+.ng-chat-user-status.away
+{
+    background-color: #F7D21B;
+}
+.ng-chat-user-status.offline
+{
+    background-color: #BABABA;
+}
 .ng-chat-unread-messages-count
 {
     background-color: #E3E3E3;
