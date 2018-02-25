@@ -114,7 +114,7 @@ describe('NgChat', () => {
     it('Must invoke adapter on fetchFriendsList', () => {
         spyOn(MockableAdapter.prototype, 'listFriends').and.returnValue(Observable.of([]));
 
-        this.subject.fetchFriendsList();
+        this.subject.fetchFriendsList(false);
 
         expect(MockableAdapter.prototype.listFriends).toHaveBeenCalledTimes(1);
     });
