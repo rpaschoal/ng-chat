@@ -59,6 +59,10 @@ describe('NgChat', () => {
         expect(this.subject.audioSource).not.toBeUndefined();
     });
 
+    it('Persistent windows state must be enabled by default', () => {
+        expect(this.subject.persistWindowsState).toBeTruthy();
+    });
+
     it('Exercise users filter', () => {
         this.subject.users = [{
             id: 1,
@@ -117,6 +121,24 @@ describe('NgChat', () => {
         this.subject.fetchFriendsList(false);
 
         expect(MockableAdapter.prototype.listFriends).toHaveBeenCalledTimes(1);
+    });
+
+    it('Must invoke restore windows state on fetchFriendsList when bootstrapping', () => {
+        spyOn(MockableAdapter.prototype, 'listFriends').and.returnValue(Observable.of([]));
+        spyOn(this.subject, 'restoreWindowsState');
+
+        this.subject.fetchFriendsList(true);
+
+        expect(this.subject.restoreWindowsState).toHaveBeenCalledTimes(1);
+    });
+
+    it('Must not invoke restore windows state on fetchFriendsList when not bootstrapping', () => {
+        spyOn(MockableAdapter.prototype, 'listFriends').and.returnValue(Observable.of([]));
+        spyOn(this.subject, 'restoreWindowsState');
+
+        this.subject.fetchFriendsList(false);
+
+        expect(this.subject.restoreWindowsState).not.toHaveBeenCalled();
     });
 
     it('Must update users property when onFriendsListChanged is invoked', () => {
@@ -261,5 +283,89 @@ describe('NgChat', () => {
         this.subject.onMessageReceived(user, message);
 
         expect(this.subject.emitMessageSound).toHaveBeenCalledTimes(1);
+    });
+
+    it('Should not use local storage persistency if persistWindowsState is disabled', () => {
+        let windows = [new Window()];
+
+        this.subject.persistWindowsState = false;
+
+        spyOn(localStorage, 'setItem'); 
+
+        this.subject.updateWindowsState(windows);
+
+        expect(localStorage.setItem).not.toHaveBeenCalled();
+    });
+
+    it('Update windows state exercise', () => {
+        let persistedValue = null;
+
+        spyOn(localStorage, 'setItem').and.callFake((key, value) =>{
+            persistedValue = value;
+        });
+        
+        let firstUser = new User();
+        let secondUser = new User();
+
+        firstUser.id = 88;
+        secondUser.id = 99;
+
+        let firstWindow = new Window();
+        let secondWindow = new Window();
+
+        firstWindow.chattingTo = firstUser;
+        secondWindow.chattingTo = secondUser;
+        
+        let windows = [firstWindow, secondWindow];
+
+        this.subject.updateWindowsState(windows);
+
+        expect(localStorage.setItem).toHaveBeenCalledTimes(1);
+        expect(persistedValue).toBe(JSON.stringify([88, 99]));
+    });
+
+    it('Should not restore windows state from local storage if persistWindowsState is disabled', () => {
+        this.subject.persistWindowsState = false;
+
+        spyOn(this.subject, 'openChatWindow'); 
+
+        this.subject.restoreWindowsState();
+
+        expect(this.subject.openChatWindow).not.toHaveBeenCalled();
+    });
+
+    it('Restore windows state exercise', () => {
+        let firstUser = new User();
+        let secondUser = new User();
+
+        firstUser.id = 88;
+        secondUser.id = 99;
+
+        localStorage.setItem(this.subject.localStorageKey, JSON.stringify([firstUser.id, secondUser.id]));
+
+        this.subject.users = [firstUser, secondUser];
+        let pushedUsers = [];
+
+        spyOn(this.subject, 'openChatWindow').and.callFake((user) => {
+            pushedUsers.push(user);
+        });
+
+        this.subject.restoreWindowsState();
+
+        expect(this.subject.openChatWindow).toHaveBeenCalledTimes(2);
+        expect(pushedUsers).not.toBeNull();
+        expect(pushedUsers.length).toBe(2);
+        expect(pushedUsers[0]).toBe(firstUser);
+        expect(pushedUsers[1]).toBe(secondUser);
+    });
+
+    it('Must invoke window state update when closing a chat window', () => {
+        this.subject.windows = [new Window()];
+
+        spyOn(this.subject, 'updateWindowsState');
+        
+        let result = this.subject.onCloseChatWindow(this.subject.windows[0]);
+
+        expect(this.subject.updateWindowsState).toHaveBeenCalledTimes(1);
     });
 });
