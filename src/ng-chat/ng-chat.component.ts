@@ -58,11 +58,16 @@ export class NgChat implements OnInit {
     @Input() // TODO: This might need a better content strategy
     public audioSource: string = 'https://raw.githubusercontent.com/rpaschoal/ng-chat/master/src/ng-chat/assets/notification.wav';
 
+    @Input()
+    public persistWindowsState: boolean = true;
+
     private audioFile: HTMLAudioElement;
 
     public searchInput: string = '';
 
     private users: User[];
+
+    private localStorageKey: string = "ng-chat-users"; 
 
     get filteredUsers(): User[]
     {
@@ -125,13 +130,13 @@ export class NgChat implements OnInit {
             // Loading current users list
             if (this.pollFriendsList){
                 // Setting a long poll interval to update the friends list
-                this.fetchFriendsList();
-                setInterval(() => this.fetchFriendsList(), this.pollingInterval);
+                this.fetchFriendsList(true);
+                setInterval(() => this.fetchFriendsList(false), this.pollingInterval);
             }
             else
             {
                 // Since polling was disabled, a friends list update mechanism will have to be implemented in the ChatAdapter.
-                this.fetchFriendsList();
+                this.fetchFriendsList(true);
             }
             
             this.bufferAudioFile();
@@ -152,12 +157,17 @@ export class NgChat implements OnInit {
     }
 
     // Sends a request to load the friends list
-    private fetchFriendsList(): void
+    private fetchFriendsList(isBootstrapping: boolean): void
     {
         this.adapter.listFriends()
         .map((users: User[]) => {
             this.users = users;
-        }).subscribe();
+        }).subscribe(() => {
+            if (isBootstrapping)
+            {
+                this.restoreWindowsState();
+            }
+        });
     }
 
     // Updates the friends list via the event handler
@@ -221,6 +231,8 @@ export class NgChat implements OnInit {
                 this.windows.pop();
             }
 
+            this.updateWindowsState(this.windows);
+
             return [newChatWindow, true];
         }
         else
@@ -267,6 +279,45 @@ export class NgChat implements OnInit {
     {
         if (this.audioEnabled && !window.hasFocus && this.audioFile) {
             this.audioFile.play();
+        }
+    }
+
+    // Saves current windows state into local storage if persistence is enabled
+    private updateWindowsState(windows: Window[]): void
+    {
+        if (this.persistWindowsState)
+        {
+            let usersIds = windows.map((w) => {
+                return w.chattingTo.id;
+            });
+
+            localStorage.setItem(this.localStorageKey, JSON.stringify(usersIds));
+        }
+    }
+
+    private restoreWindowsState(): void
+    {
+        try
+        {
+            if (this.persistWindowsState)
+            {
+                let stringfiedUserIds = localStorage.getItem(this.localStorageKey);
+
+                if (stringfiedUserIds && stringfiedUserIds.length > 0)
+                {
+                    let userIds = <number[]>JSON.parse(stringfiedUserIds);
+
+                    let usersToRestore = this.users.filter(u => userIds.indexOf(u.id) >= 0);
+
+                    usersToRestore.forEach((user) => {
+                        this.openChatWindow(user);
+                    });
+                }
+            }
+        }
+        catch (ex)
+        {
+            console.log(`An error occurred while restoring ng-chat windows state. Details: ${ex}`);
         }
     }
 
@@ -321,6 +372,8 @@ export class NgChat implements OnInit {
         let index = this.windows.indexOf(window);
 
         this.windows.splice(index, 1);
+
+        this.updateWindowsState(this.windows);
     }
 
     // Toggle friends list visibility

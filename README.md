@@ -79,6 +79,7 @@ __Additional Settings__
 * [linkfyEnabled]{boolean}: Transforms links within the messages to valid HTML links. Default is true.
 * [audioEnabled]{boolean}: Enables audio notifications on received messages. Default is true.
 * [audioSource]{string}: WAV source of the audio notification. Default is a RAW github WAV content from ng-chat repository.
+* [persistWindowsState]{boolean}: Saves the state of current open windows on the local storage. Default is true.
 
 #### Implement your ChatAdapter:
 
