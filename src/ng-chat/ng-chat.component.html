@@ -23,6 +23,7 @@
                 <strong title="{{window.chattingTo.displayName}}">
                     {{window.chattingTo.displayName}}
                 </strong>
+                <span [ngClass]="{'ng-chat-user-status': true, 'online': window.chattingTo.status == UserStatus.Online, 'busy': window.chattingTo.status == UserStatus.Busy, 'away': window.chattingTo.status == UserStatus.Away, 'offline': window.chattingTo.status == UserStatus.Offline}" title="{{UserStatus[window.chattingTo.status]}}"></span>
                 <span *ngIf="unreadMessagesTotal(window).length > 0" class="ng-chat-unread-messages-count">{{unreadMessagesTotal(window)}}</span>
                 <a href="javascript:void(0);" class="ng-chat-close" (click)="onCloseChatWindow(window)">X</a>
             </div>
@@ -32,6 +33,7 @@
                 <strong title="{{window.chattingTo.displayName}}">
                     {{window.chattingTo.displayName}}
                 </strong>
+                <span [ngClass]="{'ng-chat-user-status': true, 'online': window.chattingTo.status == UserStatus.Online, 'busy': window.chattingTo.status == UserStatus.Busy, 'away': window.chattingTo.status == UserStatus.Away, 'offline': window.chattingTo.status == UserStatus.Offline}" title="{{UserStatus[window.chattingTo.status]}}"></span>
                 <span *ngIf="unreadMessagesTotal(window).length > 0" class="ng-chat-unread-messages-count">{{unreadMessagesTotal(window)}}</span>
                 <a href="javascript:void(0);" class="ng-chat-close" (click)="onCloseChatWindow(window)">X</a>
             </div>
