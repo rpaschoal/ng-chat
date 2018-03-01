@@ -35,6 +35,9 @@ export class NgChat implements OnInit {
     public messagePlaceholder: string = "Type a message";
 
     @Input()
+    public searchPlaceholder: string = "Search";
+
+    @Input()
     public isCollapsed: boolean = false;
 
     @Input()    
