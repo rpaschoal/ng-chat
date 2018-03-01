@@ -71,6 +71,7 @@ __Required Settings__
 __Additional Settings__
 * [title]{string}: The title to be displayed on the friends list. Default is "Friends".
 * [messagePlaceholder]{string}: The placeholder that is displayed in the text input on each chat window. Default is "Type a message".
+* [searchPlaceholder]{string}: The placeholder that is displayed in the search input on the friends list. Default is "Search".
 * [isCollapsed]{boolean}: If set to true the friends list will be rendered as collapsed by default. Default is false.
 * [pollFriendsList]{boolean}: If set to true the module will do a long poll on the "adapter.listFriends" method to keep the friends list updated. Default is false.
 * [pollingInterval]{number}: Configures the long poll interval in milliseconds. Default is 5000.
