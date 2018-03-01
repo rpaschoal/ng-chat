@@ -5,7 +5,7 @@
                 {{title}}
             </span>
         </a>
-        <input id="ng-chat-search_friend" type="search" placeholder="Search" [(ngModel)]="searchInput"/>
+        <input id="ng-chat-search_friend" type="search" [placeholder]="searchPlaceholder" [(ngModel)]="searchInput"/>
         <ul id="ng-chat-users" *ngIf="!isCollapsed">
             <li *ngFor="let user of filteredUsers" (click)="openChatWindow(user)">
                 <div *ngIf="!user.avatar"  class="icon-wrapper">
