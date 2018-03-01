@@ -39,6 +39,10 @@ describe('NgChat', () => {
         expect(this.subject.messagePlaceholder).toBe('Type a message');
     });
 
+    it('Should have default friends search placeholder', () => {
+        expect(this.subject.searchPlaceholder).toBe('Search');
+    });
+
     it('Should have default polling interval', () => {
         expect(this.subject.pollingInterval).toBe(5000);
     });
