@@ -254,7 +254,8 @@ export class NgChat implements OnInit {
             let windowIndex = this.windows.indexOf(window);
 
             setTimeout(() => {
-                this.chatMessageClusters.toArray()[windowIndex].nativeElement.scrollTop = this.chatMessageClusters.toArray()[windowIndex].nativeElement.scrollHeight;
+                if (this.chatMessageClusters)
+                    this.chatMessageClusters.toArray()[windowIndex].nativeElement.scrollTop = this.chatMessageClusters.toArray()[windowIndex].nativeElement.scrollHeight;
             }); 
         }
     }
