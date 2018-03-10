@@ -97,6 +97,8 @@ export class NgChat implements OnInit {
 
     @ViewChildren('chatMessages') chatMessageClusters: any;
 
+    @ViewChildren('chatWindowInput') chatWindowInputs: any;
+
     ngOnInit() { 
         this.bootstrapChat();
     }
@@ -252,7 +254,8 @@ export class NgChat implements OnInit {
             let windowIndex = this.windows.indexOf(window);
 
             setTimeout(() => {
-                this.chatMessageClusters.toArray()[windowIndex].nativeElement.scrollTop = this.chatMessageClusters.toArray()[windowIndex].nativeElement.scrollHeight;
+                if (this.chatMessageClusters)
+                    this.chatMessageClusters.toArray()[windowIndex].nativeElement.scrollTop = this.chatMessageClusters.toArray()[windowIndex].nativeElement.scrollHeight;
             }); 
         }
     }
@@ -348,24 +351,47 @@ export class NgChat implements OnInit {
         return "";
     }
 
-    // Monitors pressed keys on a chat window and dispatch a message when the enter key is typed
+    /*  Monitors pressed keys on a chat window
+        - Dispatches a message when the ENTER key is pressed
+        - Tabs between windows on TAB or SHIFT + TAB
+    */
     onChatInputTyped(event: any, window: Window): void
     {
-        if (event.keyCode == 13 && window.newMessage && window.newMessage.trim() != "")
+        switch (event.keyCode)
         {
-            let message = new Message();
+            case 13:
+                if (window.newMessage && window.newMessage.trim() != "")
+                {
+                    let message = new Message();
              
-            message.fromId = this.userId;
-            message.toId = window.chattingTo.id;
-            message.message = window.newMessage;
+                    message.fromId = this.userId;
+                    message.toId = window.chattingTo.id;
+                    message.message = window.newMessage;
+        
+                    window.messages.push(message);
+        
+                    this.adapter.sendMessage(message);
+        
+                    window.newMessage = ""; // Resets the new message input
+        
+                    this.scrollChatWindowToBottom(window);
+                }
+                break;
+            case 9:
+                event.preventDefault();
+                
+                let currentWindowIndex = this.windows.indexOf(window);
+                let messageInputToFocus = this.chatWindowInputs.toArray()[currentWindowIndex + (event.shiftKey ? 1 : -1)]; // Goes back on shift + tab
 
-            window.messages.push(message);
+                if (!messageInputToFocus)
+                {
+                    // Edge windows, go to start or end
+                    messageInputToFocus = this.chatWindowInputs.toArray()[currentWindowIndex > 0 ? 0 : this.chatWindowInputs.length - 1]; 
+                }
 
-            this.adapter.sendMessage(message);
+                messageInputToFocus.nativeElement.focus();
 
-            window.newMessage = ""; // Resets the new message input
-
-            this.scrollChatWindowToBottom(window);
+                break;
         }
     }
 
