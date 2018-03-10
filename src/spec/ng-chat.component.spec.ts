@@ -372,4 +372,157 @@ describe('NgChat', () => {
 
         expect(this.subject.updateWindowsState).toHaveBeenCalledTimes(1);
     });
+
+    it('Must send a new message when the ENTER key is pressed', () => {
+        let currentWindow = new Window();
+        let chattingToUser = new User();
+        let sentMessage: Message = null;
+        let event = {
+            keyCode: 13 
+        };
+
+        chattingToUser.id = 99;
+        currentWindow.newMessage = "Test";
+        currentWindow.chattingTo = chattingToUser;
+
+        spyOn(MockableAdapter.prototype, 'sendMessage').and.callFake((message: Message) => {
+            sentMessage = message;
+        });
+        spyOn(this.subject, 'scrollChatWindowToBottom');
+
+        this.subject.onChatInputTyped(event, currentWindow);
+
+        expect(currentWindow.newMessage).toBe(""); // Should clean the message input after dispatching the message
+        expect(MockableAdapter.prototype.sendMessage).toHaveBeenCalledTimes(1);
+        expect(this.subject.scrollChatWindowToBottom).toHaveBeenCalledTimes(1);
+        expect(sentMessage).not.toBeNull();
+        expect(sentMessage.message).toBe("Test");
+    });
+
+    it('Must not send a new message when the ENTER key is pressed but the message input is empty', () => {
+        let currentWindow = new Window();
+        let chattingToUser = new User();
+        let sentMessage: Message = null;
+        let event = {
+            keyCode: 13 
+        };
+
+        chattingToUser.id = 99;
+        currentWindow.newMessage = "";
+        currentWindow.chattingTo = chattingToUser;
+
+        spyOn(MockableAdapter.prototype, 'sendMessage').and.callFake((message: Message) => {
+            sentMessage = message;
+        });
+        spyOn(this.subject, 'scrollChatWindowToBottom');
+
+        this.subject.onChatInputTyped(event, currentWindow);
+
+        expect(MockableAdapter.prototype.sendMessage).not.toHaveBeenCalled();
+        expect(this.subject.scrollChatWindowToBottom).not.toHaveBeenCalled();
+        expect(sentMessage).toBeNull(); 
+    });
+
+    it('Must move to the next chat window when the TAB key is pressed', () => {
+        this.subject.windows = [
+            new Window(),
+            new Window(),
+            new Window()
+        ];
+
+        this.subject.chatWindowInputs = {
+            toArray: () => {}
+        };
+
+        let fakeChatInputs = [
+            {
+                nativeElement:
+                {
+                    focus: () => {}
+                }
+            },
+            {
+                nativeElement:
+                {
+                    focus: () => {}
+                }
+            },
+            {
+                nativeElement:
+                {
+                    focus: () => {}
+                }
+            }
+        ];
+
+        let event = {
+            keyCode: 9,
+            preventDefault: () => {}
+        };
+
+        spyOn(fakeChatInputs[0].nativeElement, 'focus');
+        spyOn(fakeChatInputs[1].nativeElement, 'focus');
+        spyOn(fakeChatInputs[2].nativeElement, 'focus');
+        spyOn(event, 'preventDefault');
+        spyOn(this.subject.chatWindowInputs, 'toArray').and.returnValue(fakeChatInputs);
+
+        this.subject.onChatInputTyped(event, this.subject.windows[1]);
+
+        expect(event.preventDefault).toHaveBeenCalledTimes(1);
+        expect(fakeChatInputs[0].nativeElement.focus).toHaveBeenCalledTimes(1);
+        expect(fakeChatInputs[1].nativeElement.focus).not.toHaveBeenCalled();
+        expect(fakeChatInputs[2].nativeElement.focus).not.toHaveBeenCalled();
+    });
+
+    it('Must move to the previous chat window when SHIFT + TAB keys are pressed', () => {
+        this.subject.windows = [
+            new Window(),
+            new Window(),
+            new Window()
+        ];
+
+        this.subject.chatWindowInputs = {
+            toArray: () => {}
+        };
+
+        let fakeChatInputs = [
+            {
+                nativeElement:
+                {
+                    focus: () => {}
+                }
+            },
+            {
+                nativeElement:
+                {
+                    focus: () => {}
+                }
+            },
+            {
+                nativeElement:
+                {
+                    focus: () => {}
+                }
+            }
+        ];
+
+        let event = {
+            keyCode: 9,
+            shiftKey: true,
+            preventDefault: () => {}
+        };
+
+        spyOn(fakeChatInputs[0].nativeElement, 'focus');
+        spyOn(fakeChatInputs[1].nativeElement, 'focus');
+        spyOn(fakeChatInputs[2].nativeElement, 'focus');
+        spyOn(event, 'preventDefault');
+        spyOn(this.subject.chatWindowInputs, 'toArray').and.returnValue(fakeChatInputs);
+
+        this.subject.onChatInputTyped(event, this.subject.windows[1]);
+
+        expect(event.preventDefault).toHaveBeenCalledTimes(1);
+        expect(fakeChatInputs[2].nativeElement.focus).toHaveBeenCalledTimes(1);
+        expect(fakeChatInputs[1].nativeElement.focus).not.toHaveBeenCalled();
+        expect(fakeChatInputs[0].nativeElement.focus).not.toHaveBeenCalled();
+    });
 });
