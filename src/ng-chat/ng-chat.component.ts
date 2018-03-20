@@ -4,6 +4,7 @@ import { User } from "./core/user";
 import { Message } from "./core/message";
 import { Window } from "./core/window";
 import { UserStatus } from "./core/user-status.enum";
+import { Localization, StatusDescription } from './core/localization';
 import 'rxjs/add/operator/map';
 
 @Component({
@@ -63,6 +64,22 @@ export class NgChat implements OnInit {
 
     @Input()
     public persistWindowsState: boolean = true;
+
+    @Input()
+    public statusDescription: StatusDescription = {
+        online: 'Online',
+        busy: 'Busy',
+        away: 'Away',
+        offline: 'Offline'
+    };
+
+    @Input()
+    public localization: Localization = {
+        messagePlaceholder: this.messagePlaceholder,
+        searchPlaceholder: this.searchPlaceholder, 
+        title: this.title,
+        statusDescription: this.statusDescription
+    }
 
     private audioFile: HTMLAudioElement;
 

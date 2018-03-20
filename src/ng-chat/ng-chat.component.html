@@ -2,10 +2,10 @@
     <div id="ng-chat-people" [ngClass]="{'ng-chat-people-collapsed':isCollapsed}">
         <a href="javascript:void(0);" class="ng-chat-title shadowed" (click)="onChatTitleClicked($event)">
             <span>
-                {{title}}
+                {{localization.title}}
             </span>
         </a>
-        <input id="ng-chat-search_friend" type="search" [placeholder]="searchPlaceholder" [(ngModel)]="searchInput"/>
+        <input id="ng-chat-search_friend" type="search" [placeholder]="localization.searchPlaceholder" [(ngModel)]="searchInput"/>
         <ul id="ng-chat-users" *ngIf="!isCollapsed">
             <li *ngFor="let user of filteredUsers" (click)="openChatWindow(user)">
                 <div *ngIf="!user.avatar"  class="icon-wrapper">
@@ -50,7 +50,7 @@
                     <span [innerHtml]="message.message | emojify:emojisEnabled | linkfy:linkfyEnabled"></span>
                 </div>
             </div>
-            <input #chatWindowInput [ngModel]="window.newMessage | emojify:emojisEnabled" (ngModelChange)="window.newMessage=$event" type="text" (keydown)="onChatInputTyped($event, window)" [placeholder]="messagePlaceholder" (blur)="toggleWindowFocus(window)" (focus)="toggleWindowFocus(window)"/>            
+            <input #chatWindowInput [ngModel]="window.newMessage | emojify:emojisEnabled" (ngModelChange)="window.newMessage=$event" type="text" (keydown)="onChatInputTyped($event, window)" [placeholder]="localization.messagePlaceholder" (blur)="toggleWindowFocus(window)" (focus)="toggleWindowFocus(window)"/>            
         </ng-container>
     </div>
 </div>
