@@ -4,6 +4,7 @@ import { User } from "./core/user";
 import { Message } from "./core/message";
 import { Window } from "./core/window";
 import { UserStatus } from "./core/user-status.enum";
+import { Localization, StatusDescription } from './core/localization';
 import 'rxjs/add/operator/map';
 
 @Component({
@@ -23,19 +24,10 @@ export class NgChat implements OnInit {
     UserStatus = UserStatus;
 
     @Input()
-    public title: string = "Friends";
-
-    @Input()
     public adapter: ChatAdapter;
 
     @Input()
     public userId: any;
-
-    @Input()
-    public messagePlaceholder: string = "Type a message";
-
-    @Input()
-    public searchPlaceholder: string = "Search";
 
     @Input()
     public isCollapsed: boolean = false;
@@ -63,6 +55,26 @@ export class NgChat implements OnInit {
 
     @Input()
     public persistWindowsState: boolean = true;
+
+    @Input()
+    public title: string = "Friends";
+
+    @Input()
+    public messagePlaceholder: string = "Type a message";
+
+    @Input()
+    public searchPlaceholder: string = "Search";
+
+    // Don't want to add this as a setting to simplify usage. Previous placeholder and title settings available to be used, or use full Localization object.
+    private statusDescription: StatusDescription = {
+        online: 'Online',
+        busy: 'Busy',
+        away: 'Away',
+        offline: 'Offline'
+    };
+
+    @Input()
+    public localization: Localization;
 
     private audioFile: HTMLAudioElement;
 
@@ -128,6 +140,9 @@ export class NgChat implements OnInit {
         {
             this.viewPortTotalArea = window.innerWidth;
 
+            // Localize messages
+            this.localizeTexts();
+
             // Binding event listeners
             this.adapter.messageReceivedHandler = (user, msg) => this.onMessageReceived(user, msg);
             this.adapter.friendsListChangedHandler = (users) => this.onFriendsListChanged(users);
@@ -158,6 +173,19 @@ export class NgChat implements OnInit {
             if (this.adapter == null){
                 console.error("ng-chat can't be bootstrapped without a ChatAdapter. Please make sure you've provided a ChatAdapter implementation as a parameter of the ng-chat component.");
             }
+        }
+    }
+
+    private localizeTexts() : void
+    {
+        if (!this.localization)
+        {
+            this.localization = {
+                messagePlaceholder: this.messagePlaceholder,
+                searchPlaceholder: this.searchPlaceholder, 
+                title: this.title,
+                statusDescription: this.statusDescription
+            };
         }
     }
 
@@ -440,5 +468,13 @@ export class NgChat implements OnInit {
     toggleWindowFocus(window: Window): void
     {
         window.hasFocus = !window.hasFocus;
+    }
+
+    // [Localized] Returns the status descriptive title
+    getStatusTitle(status: UserStatus) : any
+    {
+        let currentStatus = status.toString().toLowerCase();
+
+        return this.localization.statusDescription[currentStatus];
     }
 }

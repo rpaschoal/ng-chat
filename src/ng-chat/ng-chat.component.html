@@ -1,11 +1,11 @@
-<div id="ng-chat">
+<div id="ng-chat" *ngIf="isBootsrapped">
     <div id="ng-chat-people" [ngClass]="{'ng-chat-people-collapsed':isCollapsed}">
         <a href="javascript:void(0);" class="ng-chat-title shadowed" (click)="onChatTitleClicked($event)">
             <span>
-                {{title}}
+                {{localization.title}}
             </span>
         </a>
-        <input id="ng-chat-search_friend" type="search" [placeholder]="searchPlaceholder" [(ngModel)]="searchInput"/>
+        <input id="ng-chat-search_friend" type="search" [placeholder]="localization.searchPlaceholder" [(ngModel)]="searchInput"/>
         <ul id="ng-chat-users" *ngIf="!isCollapsed">
             <li *ngFor="let user of filteredUsers" (click)="openChatWindow(user)">
                 <div *ngIf="!user.avatar"  class="icon-wrapper">
@@ -13,7 +13,7 @@
                 </div>
                 <img *ngIf="user.avatar" alt="" class="avatar" height="30" width="30"  src="{{user.avatar}}"/>
                 <strong title="{{user.displayName}}">{{user.displayName}}</strong>
-                <span [ngClass]="{'ng-chat-user-status': true, 'online': user.status == UserStatus.Online, 'busy': user.status == UserStatus.Busy, 'away': user.status == UserStatus.Away, 'offline': user.status == UserStatus.Offline}" title="{{UserStatus[user.status]}}"></span>
+                <span [ngClass]="{'ng-chat-user-status': true, 'online': user.status == UserStatus.Online, 'busy': user.status == UserStatus.Busy, 'away': user.status == UserStatus.Away, 'offline': user.status == UserStatus.Offline}" title="{{getStatusTitle(UserStatus[user.status])}}"></span>
             </li>
         </ul>
     </div>
@@ -23,7 +23,7 @@
                 <strong title="{{window.chattingTo.displayName}}">
                     {{window.chattingTo.displayName}}
                 </strong>
-                <span [ngClass]="{'ng-chat-user-status': true, 'online': window.chattingTo.status == UserStatus.Online, 'busy': window.chattingTo.status == UserStatus.Busy, 'away': window.chattingTo.status == UserStatus.Away, 'offline': window.chattingTo.status == UserStatus.Offline}" title="{{UserStatus[window.chattingTo.status]}}"></span>
+                <span [ngClass]="{'ng-chat-user-status': true, 'online': window.chattingTo.status == UserStatus.Online, 'busy': window.chattingTo.status == UserStatus.Busy, 'away': window.chattingTo.status == UserStatus.Away, 'offline': window.chattingTo.status == UserStatus.Offline}" title="{{getStatusTitle(UserStatus[window.chattingTo.status])}}"></span>
                 <span *ngIf="unreadMessagesTotal(window).length > 0" class="ng-chat-unread-messages-count">{{unreadMessagesTotal(window)}}</span>
                 <a href="javascript:void(0);" class="ng-chat-close" (click)="onCloseChatWindow(window)">X</a>
             </div>
@@ -33,7 +33,7 @@
                 <strong title="{{window.chattingTo.displayName}}">
                     {{window.chattingTo.displayName}}
                 </strong>
-                <span [ngClass]="{'ng-chat-user-status': true, 'online': window.chattingTo.status == UserStatus.Online, 'busy': window.chattingTo.status == UserStatus.Busy, 'away': window.chattingTo.status == UserStatus.Away, 'offline': window.chattingTo.status == UserStatus.Offline}" title="{{UserStatus[window.chattingTo.status]}}"></span>
+                <span [ngClass]="{'ng-chat-user-status': true, 'online': window.chattingTo.status == UserStatus.Online, 'busy': window.chattingTo.status == UserStatus.Busy, 'away': window.chattingTo.status == UserStatus.Away, 'offline': window.chattingTo.status == UserStatus.Offline}" title="{{getStatusTitle(UserStatus[window.chattingTo.status])}}"></span>
                 <span *ngIf="unreadMessagesTotal(window).length > 0" class="ng-chat-unread-messages-count">{{unreadMessagesTotal(window)}}</span>
                 <a href="javascript:void(0);" class="ng-chat-close" (click)="onCloseChatWindow(window)">X</a>
             </div>
@@ -50,7 +50,7 @@
                     <span [innerHtml]="message.message | emojify:emojisEnabled | linkfy:linkfyEnabled"></span>
                 </div>
             </div>
-            <input #chatWindowInput [ngModel]="window.newMessage | emojify:emojisEnabled" (ngModelChange)="window.newMessage=$event" type="text" (keydown)="onChatInputTyped($event, window)" [placeholder]="messagePlaceholder" (blur)="toggleWindowFocus(window)" (focus)="toggleWindowFocus(window)"/>            
+            <input #chatWindowInput [ngModel]="window.newMessage | emojify:emojisEnabled" (ngModelChange)="window.newMessage=$event" type="text" (keydown)="onChatInputTyped($event, window)" [placeholder]="localization.messagePlaceholder" (blur)="toggleWindowFocus(window)" (focus)="toggleWindowFocus(window)"/>            
         </ng-container>
     </div>
 </div>
