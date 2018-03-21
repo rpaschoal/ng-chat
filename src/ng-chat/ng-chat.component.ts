@@ -65,8 +65,8 @@ export class NgChat implements OnInit {
     @Input()
     public searchPlaceholder: string = "Search";
 
-    @Input()
-    public statusDescription: StatusDescription = {
+    // Don't want to add this as a setting to simplify usage. Previous placeholder and title settings available to be used, or use full Localization object.
+    private statusDescription: StatusDescription = {
         online: 'Online',
         busy: 'Busy',
         away: 'Away',
@@ -74,12 +74,7 @@ export class NgChat implements OnInit {
     };
 
     @Input()
-    public localization: Localization = {
-        messagePlaceholder: this.messagePlaceholder,
-        searchPlaceholder: this.searchPlaceholder, 
-        title: this.title,
-        statusDescription: this.statusDescription
-    }
+    public localization: Localization;
 
     private audioFile: HTMLAudioElement;
 
@@ -145,6 +140,9 @@ export class NgChat implements OnInit {
         {
             this.viewPortTotalArea = window.innerWidth;
 
+            // Localize messages
+            this.localizeTexts();
+
             // Binding event listeners
             this.adapter.messageReceivedHandler = (user, msg) => this.onMessageReceived(user, msg);
             this.adapter.friendsListChangedHandler = (users) => this.onFriendsListChanged(users);
@@ -175,6 +173,19 @@ export class NgChat implements OnInit {
             if (this.adapter == null){
                 console.error("ng-chat can't be bootstrapped without a ChatAdapter. Please make sure you've provided a ChatAdapter implementation as a parameter of the ng-chat component.");
             }
+        }
+    }
+
+    private localizeTexts() : void
+    {
+        if (!this.localization)
+        {
+            this.localization = {
+                messagePlaceholder: this.messagePlaceholder,
+                searchPlaceholder: this.searchPlaceholder, 
+                title: this.title,
+                statusDescription: this.statusDescription
+            };
         }
     }
 
@@ -464,6 +475,6 @@ export class NgChat implements OnInit {
     {
         let currentStatus = status.toString().toLowerCase();
 
-        return this.statusDescription[currentStatus];
+        return this.localization.statusDescription[currentStatus];
     }
 }
