@@ -141,7 +141,7 @@ export class NgChat implements OnInit {
             this.viewPortTotalArea = window.innerWidth;
 
             // Localize messages
-            this.localizeTexts();
+            this.localizeText();
 
             // Binding event listeners
             this.adapter.messageReceivedHandler = (user, msg) => this.onMessageReceived(user, msg);
@@ -176,7 +176,8 @@ export class NgChat implements OnInit {
         }
     }
 
-    private localizeTexts() : void
+    // Initializes text localization or default text
+    private localizeText() : void
     {
         if (!this.localization)
         {
