@@ -12,4 +12,5 @@ export interface StatusDescription
     busy: string;
     away: string;
     offline: string;
+    [key: string]: string;
 }

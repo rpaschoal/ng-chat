@@ -24,19 +24,10 @@ export class NgChat implements OnInit {
     UserStatus = UserStatus;
 
     @Input()
-    public title: string = "Friends";
-
-    @Input()
     public adapter: ChatAdapter;
 
     @Input()
     public userId: any;
-
-    @Input()
-    public messagePlaceholder: string = "Type a message";
-
-    @Input()
-    public searchPlaceholder: string = "Search";
 
     @Input()
     public isCollapsed: boolean = false;
@@ -64,6 +55,15 @@ export class NgChat implements OnInit {
 
     @Input()
     public persistWindowsState: boolean = true;
+
+    @Input()
+    public title: string = "Friends";
+
+    @Input()
+    public messagePlaceholder: string = "Type a message";
+
+    @Input()
+    public searchPlaceholder: string = "Search";
 
     @Input()
     public statusDescription: StatusDescription = {
@@ -457,5 +457,13 @@ export class NgChat implements OnInit {
     toggleWindowFocus(window: Window): void
     {
         window.hasFocus = !window.hasFocus;
+    }
+
+    // [Localized] Returns the status descriptive title
+    getStatusTitle(status: UserStatus) : any
+    {
+        let currentStatus = status.toString().toLowerCase();
+
+        return this.statusDescription[currentStatus];
     }
 }
