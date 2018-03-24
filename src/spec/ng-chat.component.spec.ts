@@ -525,4 +525,38 @@ describe('NgChat', () => {
         expect(fakeChatInputs[1].nativeElement.focus).not.toHaveBeenCalled();
         expect(fakeChatInputs[0].nativeElement.focus).not.toHaveBeenCalled();
     });
+
+    it('Must copy default text when a localization object was not supplied while initializing default text', () => {
+        expect(this.subject.localization).toBeUndefined();
+        
+        this.subject.initializeDefaultText();
+
+        expect(this.subject.localization).not.toBeUndefined();
+        expect(this.subject.localization.title).toBe(this.subject.title);
+        expect(this.subject.localization.searchPlaceholder).toBe(this.subject.searchPlaceholder);
+        expect(this.subject.localization.messagePlaceholder).toBe(this.subject.messagePlaceholder);
+        expect(this.subject.localization.statusDescription).toBe(this.subject.statusDescription);
+    });
+
+    it('Must not copy default text when a localization object was supplied while initializing default text', () => {
+        this.subject.localization = {
+            title: 'test 01',
+            searchPlaceholder: 'test 02',
+            messagePlaceholder: 'test 03',
+            statusDescription: {
+              online: 'test 04',
+              busy: 'test 05',
+              away: 'test 06',
+              offline: 'test 07'
+            }
+        };
+        
+        this.subject.initializeDefaultText();
+
+        expect(this.subject.localization).not.toBeUndefined();
+        expect(this.subject.localization.title).not.toBe(this.subject.title);
+        expect(this.subject.localization.searchPlaceholder).not.toBe(this.subject.searchPlaceholder);
+        expect(this.subject.localization.messagePlaceholder).not.toBe(this.subject.messagePlaceholder);
+        expect(this.subject.localization.statusDescription).not.toBe(this.subject.statusDescription);
+    });
 });
