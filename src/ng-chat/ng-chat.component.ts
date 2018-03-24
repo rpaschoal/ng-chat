@@ -140,7 +140,6 @@ export class NgChat implements OnInit {
         {
             this.viewPortTotalArea = window.innerWidth;
 
-            // Localize messages
             this.initializeDefaultText();
 
             // Binding event listeners
