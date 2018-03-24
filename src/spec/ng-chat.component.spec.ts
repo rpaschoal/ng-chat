@@ -526,10 +526,10 @@ describe('NgChat', () => {
         expect(fakeChatInputs[0].nativeElement.focus).not.toHaveBeenCalled();
     });
 
-    it('Must copy default text when a localization object was not supplied while localizing texts', () => {
+    it('Must copy default text when a localization object was not supplied while initializing default text', () => {
         expect(this.subject.localization).toBeUndefined();
         
-        this.subject.localizeText();
+        this.subject.initializeDefaultText();
 
         expect(this.subject.localization).not.toBeUndefined();
         expect(this.subject.localization.title).toBe(this.subject.title);
@@ -538,7 +538,7 @@ describe('NgChat', () => {
         expect(this.subject.localization.statusDescription).toBe(this.subject.statusDescription);
     });
 
-    it('Must not copy default text when a localization object was supplied while localizing texts', () => {
+    it('Must not copy default text when a localization object was supplied while initializing default text', () => {
         this.subject.localization = {
             title: 'test 01',
             searchPlaceholder: 'test 02',
@@ -551,7 +551,7 @@ describe('NgChat', () => {
             }
         };
         
-        this.subject.localizeText();
+        this.subject.initializeDefaultText();
 
         expect(this.subject.localization).not.toBeUndefined();
         expect(this.subject.localization.title).not.toBe(this.subject.title);
