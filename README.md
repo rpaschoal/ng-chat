@@ -72,8 +72,6 @@ __Required Settings__
 
 __Additional Settings__
 * [title]{string}: The title to be displayed on the friends list. Default is "Friends".
-* [messagePlaceholder]{string}: The placeholder that is displayed in the text input on each chat window. Default is "Type a message".
-* [searchPlaceholder]{string}: The placeholder that is displayed in the search input on the friends list. Default is "Search".
 * [isCollapsed]{boolean}: If set to true the friends list will be rendered as collapsed by default. Default is false.
 * [pollFriendsList]{boolean}: If set to true the module will do a long poll on the "adapter.listFriends" method to keep the friends list updated. Default is false.
 * [pollingInterval]{number}: Configures the long poll interval in milliseconds. Default is 5000.
@@ -83,6 +81,11 @@ __Additional Settings__
 * [audioEnabled]{boolean}: Enables audio notifications on received messages. Default is true.
 * [audioSource]{string}: WAV source of the audio notification. Default is a RAW github WAV content from ng-chat repository.
 * [persistWindowsState]{boolean}: Saves the state of current open windows on the local storage. Default is true.
+
+__Localization__
+* [messagePlaceholder]{string}: The placeholder that is displayed in the text input on each chat window. Default is "Type a message".
+* [searchPlaceholder]{string}: The placeholder that is displayed in the search input on the friends list. Default is "Search".
+* [localization]{Localization}: Contract defining all text that is rendered by this component. Supply your own object for full text localization/customization. Supplying this setting will override all  other localization settings.
 
 #### Implement your ChatAdapter:
 
