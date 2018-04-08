@@ -82,7 +82,10 @@ export class NgChat implements OnInit {
 
     private users: User[];
 
-    private localStorageKey: string = "ng-chat-users"; 
+    private get localStorageKey(): string 
+    {
+        return `ng-chat-users-${this.userId}`; // Appending the user id so the state is unique per user in a computer.   
+    }; 
 
     get filteredUsers(): User[]
     {

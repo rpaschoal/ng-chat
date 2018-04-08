@@ -67,6 +67,10 @@ describe('NgChat', () => {
         expect(this.subject.persistWindowsState).toBeTruthy();
     });
 
+    it('Must use current user id as part of the localStorageKey identifier', () => {
+        expect(this.subject.localStorageKey).toBe(`ng-chat-users-${this.subject.userId}`);
+    });
+
     it('Exercise users filter', () => {
         this.subject.users = [{
             id: 1,
