@@ -427,6 +427,24 @@ describe('NgChat', () => {
         expect(sentMessage).toBeNull(); 
     });
 
+    it('Must close the current window when the ESC key is pressed', () => {
+        let currentWindow = new Window();
+        let closedWindow: Window = null;
+        let event = {
+            keyCode: 27 
+        };
+
+        spyOn(this.subject, 'onCloseChatWindow').and.callFake((window: Window) => {
+            closedWindow = window;
+        });
+
+        this.subject.onChatInputTyped(event, currentWindow);
+
+        expect(this.subject.onCloseChatWindow).toHaveBeenCalledTimes(1);
+        expect(closedWindow).not.toBeNull();
+        expect(closedWindow).toBe(currentWindow);
+    });
+
     it('Must move to the next chat window when the TAB key is pressed', () => {
         this.subject.windows = [
             new Window(),

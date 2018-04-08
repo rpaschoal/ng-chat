@@ -385,6 +385,7 @@ export class NgChat implements OnInit {
     /*  Monitors pressed keys on a chat window
         - Dispatches a message when the ENTER key is pressed
         - Tabs between windows on TAB or SHIFT + TAB
+        - Closes the current focused window on ESC
     */
     onChatInputTyped(event: any, window: Window): void
     {
@@ -423,6 +424,8 @@ export class NgChat implements OnInit {
                 messageInputToFocus.nativeElement.focus();
 
                 break;
+            case 27:
+                this.onCloseChatWindow(window);
         }
     }
 
