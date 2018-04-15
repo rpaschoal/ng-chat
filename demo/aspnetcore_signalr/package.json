@@ -29,7 +29,7 @@
     "bootstrap": "^3.3.7",
     "core-js": "^2.4.1",
     "jquery": "3.2.1",
-    "ng-chat": "^1.0.8",
+    "ng-chat": "^1.0.9",
     "ng2-loading-bar": "0.0.6",
     "reflect-metadata": "^0.1.10",
     "rxjs": "5.4.2",
