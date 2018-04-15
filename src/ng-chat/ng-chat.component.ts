@@ -108,7 +108,7 @@ export class NgChat implements OnInit {
 
     windows: Window[] = [];
 
-    private isBootsrapped: boolean = false;
+    isBootstrapped: boolean = false;
 
     @ViewChildren('chatMessages') chatMessageClusters: any;
 
@@ -163,10 +163,10 @@ export class NgChat implements OnInit {
             
             this.bufferAudioFile();
             
-            this.isBootsrapped = true;
+            this.isBootstrapped = true;
         }
 
-        if (!this.isBootsrapped){
+        if (!this.isBootstrapped){
             console.error("ng-chat component couldn't be bootstrapped.");
             
             if (this.userId == null){
