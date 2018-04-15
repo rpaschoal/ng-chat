@@ -233,7 +233,7 @@ export class NgChat implements OnInit {
 
     // Opens a new chat whindow. Takes care of available viewport
     // Returns => [Window: Window object reference, boolean: Indicates if this window is a new chat window]
-    private openChatWindow(user: User): [Window, boolean]
+    private openChatWindow(user: User, focusOnNewWindow: boolean = false): [Window, boolean]
     {
         // Is this window opened?
         let openedWindow = this.windows.find(x => x.chattingTo.id == user.id);
@@ -268,6 +268,9 @@ export class NgChat implements OnInit {
             }
 
             this.updateWindowsState(this.windows);
+            
+            if (focusOnNewWindow)
+                this.focusOnWindow(newChatWindow);
 
             return [newChatWindow, true];
         }
@@ -276,6 +279,19 @@ export class NgChat implements OnInit {
             // Returns the existing chat window     
             return [openedWindow, false];       
         }
+    }
+
+    // Focus on the input element of the supplied window
+    private focusOnWindow(window: Window, callback: Function = () => {}) : void
+    {
+        let windowIndex = this.windows.indexOf(window);
+
+        setTimeout(() => {
+            let messageInputToFocus = this.chatWindowInputs.toArray()[windowIndex];
+            messageInputToFocus.nativeElement.focus(); 
+
+            callback(); 
+        }); 
     }
 
     // Scrolls a chat window message flow to the bottom
@@ -358,6 +374,21 @@ export class NgChat implements OnInit {
         }
     }
 
+    // Gets closest open window if any. Most recent opened has priority (Right)
+    private getClosestWindow(window: Window): Window | undefined
+    {   
+        let index = this.windows.indexOf(window);
+
+        if (index > 0)
+        {
+            return this.windows[index - 1];
+        }
+        else if (index == 0 && this.windows.length > 1)
+        {   
+            return this.windows[index + 1];
+        }
+    }
+
     // Returns the total unread messages from a chat window. TODO: Could use some Angular pipes in the future 
     unreadMessagesTotal(window: Window): string
     {
@@ -425,7 +456,16 @@ export class NgChat implements OnInit {
 
                 break;
             case 27:
-                this.onCloseChatWindow(window);
+                let closestWindow = this.getClosestWindow(window);
+
+                if (closestWindow)
+                {
+                    this.focusOnWindow(closestWindow, () => { this.onCloseChatWindow(window); });
+                }
+                else
+                {
+                    this.onCloseChatWindow(window);
+                }
         }
     }
 
