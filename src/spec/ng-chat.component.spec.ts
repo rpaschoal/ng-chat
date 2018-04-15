@@ -204,6 +204,42 @@ describe('NgChat', () => {
         expect(result[0].chattingTo.displayName).toEqual(user.displayName);
     });
 
+    it('Must focus on the new window on a openChatWindow request when argument is supplied', () =>{
+        this.subject.historyEnabled = false;
+        
+        let user: User = {
+            id: 999,
+            displayName: 'Test user',
+            status: 1,
+            avatar: ''
+        };
+
+        spyOn(this.subject, 'focusOnWindow'); 
+
+        let result = this.subject.openChatWindow(user, true);
+
+        expect(result).not.toBeUndefined();
+        expect(this.subject.focusOnWindow).toHaveBeenCalledTimes(1);
+    });
+
+    it('Must not focus on the new window on a openChatWindow request when argument is not supplied', () =>{
+        this.subject.historyEnabled = false;
+        
+        let user: User = {
+            id: 999,
+            displayName: 'Test user',
+            status: 1,
+            avatar: ''
+        };
+
+        spyOn(this.subject, 'focusOnWindow'); 
+
+        let result = this.subject.openChatWindow(user);
+
+        expect(result).not.toBeUndefined();
+        expect(this.subject.focusOnWindow).not.toHaveBeenCalled();
+    });
+
     it('Must load history from ChatAdapter when opening a window that is not yet opened', () =>{
         let user: User = {
             id: 999,
@@ -445,6 +481,47 @@ describe('NgChat', () => {
         expect(closedWindow).toBe(currentWindow);
     });
 
+    it('Must focus on closest window when the ESC key is pressed', () => {
+        let currentWindow = new Window();
+        let closestWindow = new Window();
+        let closedWindow: Window = null;
+        let event = {
+            keyCode: 27 
+        };
+
+        spyOn(this.subject, 'onCloseChatWindow');
+
+        spyOn(this.subject, 'getClosestWindow').and.returnValue(closestWindow);
+
+        spyOn(this.subject, 'focusOnWindow').and.callFake((window: Window, callback: Function) => {
+            callback(); // This should invoke onCloseChatWindow
+        });;
+
+        this.subject.onChatInputTyped(event, currentWindow);
+
+        expect(this.subject.onCloseChatWindow).toHaveBeenCalledTimes(1);
+        expect(this.subject.getClosestWindow).toHaveBeenCalledTimes(1);
+        expect(this.subject.focusOnWindow).toHaveBeenCalledTimes(1);
+    });
+
+    it('Must not focus on closest window when the ESC key is pressed and there is no other window opened', () => {
+        let currentWindow = new Window();
+        let closedWindow: Window = null;
+        let event = {
+            keyCode: 27 
+        };
+
+        spyOn(this.subject, 'onCloseChatWindow');
+        spyOn(this.subject, 'getClosestWindow').and.returnValue(undefined);
+        spyOn(this.subject, 'focusOnWindow');
+
+        this.subject.onChatInputTyped(event, currentWindow);
+
+        expect(this.subject.onCloseChatWindow).toHaveBeenCalledTimes(1);
+        expect(this.subject.getClosestWindow).toHaveBeenCalledTimes(1);
+        expect(this.subject.focusOnWindow).not.toHaveBeenCalled();
+    });
+
     it('Must move to the next chat window when the TAB key is pressed', () => {
         this.subject.windows = [
             new Window(),
@@ -582,3 +659,100 @@ describe('NgChat', () => {
         expect(this.subject.localization.statusDescription).not.toBe(this.subject.statusDescription);
     });
 });
+
+it('FocusOnWindow exercise', () => {
+    this.subject.windows = [
+        new Window(),
+        new Window(),
+        new Window()
+    ];
+
+    this.subject.chatWindowInputs = {
+        toArray: () => {}
+    };
+
+    let fakeChatInputs = [
+        {
+            nativeElement:
+            {
+                focus: () => {}
+            }
+        },
+        {
+            nativeElement:
+            {
+                focus: () => {}
+            }
+        },
+        {
+            nativeElement:
+            {
+                focus: () => {}
+            }
+        }
+    ];
+
+    spyOn(fakeChatInputs[1].nativeElement, 'focus');
+    spyOn(this.subject.chatWindowInputs, 'toArray').and.returnValue(fakeChatInputs);
+    
+    spyOn(window, 'setTimeout').and.callFake((fn) => {
+        fn();
+    });
+
+    this.subject.focusOnWindow(this.subject.windows[1]);
+
+    expect(fakeChatInputs[1].nativeElement.focus).toHaveBeenCalledTimes(1);
+});
+
+it('Must not focus on native element if a window is not found to focus when focusOnWindow is invoked', () => {
+    this.subject.windows = [];
+
+    this.subject.chatWindowInputs = {
+        toArray: () => {}
+    };
+
+    this.subject.focusOnWindow(new Window());
+});
+
+it('GetClosestWindow must return next relative right chat window', () => {
+    this.subject.windows = [
+        new Window(),
+        new Window(),
+        new Window()
+    ];
+
+    let result = this.subject.getClosestWindow(this.subject.windows[2]);
+
+    expect(result).toBe(this.subject.windows[1]);
+});
+
+it('GetClosestWindow must return previous chat window on 0 based index', () => {
+    this.subject.windows = [
+        new Window(),
+        new Window(),
+        new Window()
+    ];
+
+    let result = this.subject.getClosestWindow(this.subject.windows[0]);
+
+    expect(result).toBe(this.subject.windows[1]);
+});
+
+it('GetClosestWindow must return undefined when there is only one chat window opened on the chat', () => {
+    this.subject.windows = [
+        new Window()
+    ];
+
+    let result = this.subject.getClosestWindow(this.subject.windows[0]);
+
+    expect(result).toBe(undefined);
+});
+
+it('GetClosestWindow must return undefined when there is no open chat window on the chat', () => {
+    this.subject.windows = [];
+
+    let result = this.subject.getClosestWindow(new Window());
+
+    expect(result).toBe(undefined);
+});
+

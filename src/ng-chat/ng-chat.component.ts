@@ -286,12 +286,16 @@ export class NgChat implements OnInit {
     {
         let windowIndex = this.windows.indexOf(window);
 
-        setTimeout(() => {
-            let messageInputToFocus = this.chatWindowInputs.toArray()[windowIndex];
-            messageInputToFocus.nativeElement.focus(); 
+        if (windowIndex >= 0)
+        {
+            setTimeout(() => {
+                let messageInputToFocus = this.chatWindowInputs.toArray()[windowIndex];
+                
+                messageInputToFocus.nativeElement.focus(); 
 
-            callback(); 
-        }); 
+                callback(); 
+            });
+        } 
     }
 
     // Scrolls a chat window message flow to the bottom
