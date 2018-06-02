@@ -65,6 +65,11 @@ export class NgChat implements OnInit {
     @Input()
     public searchPlaceholder: string = "Search";
 
+    @Input()
+    public browserNotificationsEnabled: boolean = true;
+
+    private browserNotificationsBootstrapped: boolean = false;
+
     // Don't want to add this as a setting to simplify usage. Previous placeholder and title settings available to be used, or use full Localization object.
     private statusDescription: StatusDescription = {
         online: 'Online',
@@ -144,6 +149,7 @@ export class NgChat implements OnInit {
             this.viewPortTotalArea = window.innerWidth;
 
             this.initializeDefaultText();
+            this.initializeBrowserNotifications();
 
             // Binding event listeners
             this.adapter.messageReceivedHandler = (user, msg) => this.onMessageReceived(user, msg);
@@ -174,6 +180,18 @@ export class NgChat implements OnInit {
             }
             if (this.adapter == null){
                 console.error("ng-chat can't be bootstrapped without a ChatAdapter. Please make sure you've provided a ChatAdapter implementation as a parameter of the ng-chat component.");
+            }
+        }
+    }
+
+    // Initializes browser notifications
+    private async initializeBrowserNotifications()
+    {
+        if (this.browserNotificationsEnabled && ("Notification" in window))
+        {
+            if (await Notification.requestPermission())
+            {
+                this.browserNotificationsBootstrapped = true;
             }
         }
     }
@@ -228,6 +246,7 @@ export class NgChat implements OnInit {
             }
 
             this.emitMessageSound(chatWindow[0]);
+            this.emitBrowserNotification(chatWindow[0]);
         }
     }
 
@@ -336,6 +355,21 @@ export class NgChat implements OnInit {
     {
         if (this.audioEnabled && !window.hasFocus && this.audioFile) {
             this.audioFile.play();
+        }
+    }
+
+    // Emits a browser notification
+    private emitBrowserNotification(window: Window): void
+    {       
+        if (this.browserNotificationsBootstrapped && !window.hasFocus) {
+            let notification = new Notification(`New message from ${window.chattingTo.displayName}`, {
+                'body': window.messages[window.messages.length - 1].message,
+                //'icon': 'image_url'
+            });
+
+            setTimeout(() => {
+                notification.close();
+            }, 7000);
         }
     }
 
