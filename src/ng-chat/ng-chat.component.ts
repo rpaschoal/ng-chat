@@ -68,6 +68,9 @@ export class NgChat implements OnInit {
     @Input()
     public browserNotificationsEnabled: boolean = true;
 
+    @Input() // TODO: This might need a better content strategy
+    public browserNotificationIconSource: string = 'https://raw.githubusercontent.com/rpaschoal/ng-chat/master/src/ng-chat/assets/notification.png';
+
     private browserNotificationsBootstrapped: boolean = false;
 
     // Don't want to add this as a setting to simplify usage. Previous placeholder and title settings available to be used, or use full Localization object.
@@ -362,14 +365,16 @@ export class NgChat implements OnInit {
     private emitBrowserNotification(window: Window): void
     {       
         if (this.browserNotificationsBootstrapped && !window.hasFocus) {
+            let message = window.messages[window.messages.length - 1].message;
+
             let notification = new Notification(`New message from ${window.chattingTo.displayName}`, {
                 'body': window.messages[window.messages.length - 1].message,
-                //'icon': 'image_url'
+                'icon': this.browserNotificationIconSource
             });
 
             setTimeout(() => {
                 notification.close();
-            }, 7000);
+            }, message.length <= 50 ? 5000 : 7000); // More time to read longer messages
         }
     }
 
