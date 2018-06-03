@@ -7,7 +7,7 @@
         </a>
         <input id="ng-chat-search_friend" type="search" [placeholder]="localization.searchPlaceholder" [(ngModel)]="searchInput"/>
         <ul id="ng-chat-users" *ngIf="!isCollapsed">
-            <li *ngFor="let user of filteredUsers" (click)="openChatWindow(user, true)">
+            <li *ngFor="let user of filteredUsers" (click)="openChatWindow(user, true, true)">
                 <div *ngIf="!user.avatar"  class="icon-wrapper">
                     <i class="user-icon"></i>
                 </div>
