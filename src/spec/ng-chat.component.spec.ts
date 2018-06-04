@@ -5,6 +5,7 @@ import { ChatAdapter } from '../ng-chat/core/chat-adapter';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import { Message } from '../ng-chat/core/message';
+import { EventEmitter } from '@angular/core';
 
 class MockableAdapter extends ChatAdapter {
     public listFriends(): Observable<User[]> {
@@ -69,6 +70,30 @@ describe('NgChat', () => {
 
     it('Must use current user id as part of the localStorageKey identifier', () => {
         expect(this.subject.localStorageKey).toBe(`ng-chat-users-${this.subject.userId}`);
+    });
+
+    it('Browser notifications must be enabled by default', () => {
+        expect(this.subject.browserNotificationsEnabled).not.toBeFalsy();
+    });
+
+    it('Browser notifications must have a default source', () => {
+        expect(this.subject.browserNotificationIconSource).not.toBeUndefined();
+    });
+
+    it('Browser notifications must not be bootstrapped before initialization', () => {
+        expect(this.subject.browserNotificationsBootstrapped).toBeFalsy();
+    });
+
+    it('onUserChatClicked must have a default event emitter', () => {
+        expect(this.subject.onUserChatClicked).toBeDefined();
+    });
+
+    it('onUserChatOpened must have a default event emitter', () => {
+        expect(this.subject.onUserChatClicked).toBeDefined();
+    });
+
+    it('onUserChatClosed must have a default event emitter', () => {
+        expect(this.subject.onUserChatClicked).toBeDefined();
     });
 
     it('Exercise users filter', () => {
@@ -756,3 +781,36 @@ it('GetClosestWindow must return undefined when there is no open chat window on 
     expect(result).toBe(undefined);
 });
 
+it('Must bootstrap browser notifications when user permission is granted', async () => {
+    this.subject.browserNotificationsBootstrapped = false;
+    spyOn(Notification, 'requestPermission').and.returnValue(true);
+
+    await this.subject.initializeBrowserNotifications();
+
+    expect(this.subject.browserNotificationsBootstrapped).toBeTruthy();
+    expect(Notification.requestPermission).toHaveBeenCalledTimes(1);
+});
+
+it('Must not bootstrap browser notifications when user permission is not granted', async () => {
+    this.subject.browserNotificationsBootstrapped = false;
+    spyOn(Notification, 'requestPermission').and.returnValue(false);
+
+    await this.subject.initializeBrowserNotifications();
+
+    expect(this.subject.browserNotificationsBootstrapped).toBeFalsy();
+    expect(Notification.requestPermission).toHaveBeenCalledTimes(1);
+});
+
+it('Must invoke emitBrowserNotification on new messages', () => {
+    let message = new Message();
+    let user = new User();
+
+    spyOn(this.subject, 'emitBrowserNotification'); 
+    spyOn(this.subject, 'openChatWindow').and.returnValue([null, true]);
+    spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
+    spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
+
+    this.subject.onMessageReceived(user, message);
+
+    expect(this.subject.emitBrowserNotification).toHaveBeenCalledTimes(1);
+});
