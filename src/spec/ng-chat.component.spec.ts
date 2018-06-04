@@ -814,3 +814,164 @@ it('Must invoke emitBrowserNotification on new messages', () => {
 
     expect(this.subject.emitBrowserNotification).toHaveBeenCalledTimes(1);
 });
+
+it('Must invoke onUserChatClicked event when a user is clicked on the friend list', () => {
+    this.subject.historyEnabled = false;
+
+    let eventInvoked = false;
+    let eventArgument = null;
+
+    this.subject.onUserChatClicked.subscribe(e => {
+        eventInvoked = true;
+        eventArgument = e;
+    });
+    
+    let user: User = {
+        id: 999,
+        displayName: 'Test user',
+        status: 1,
+        avatar: ''
+    };
+    
+    this.subject.openChatWindow(user, true, true);
+
+    expect(eventInvoked).toBeTruthy();
+    expect(eventArgument).toBe(user);
+});
+
+it('Must not invoke onUserChatClicked event when a user is clicked on the friend list and the window is already open', () => {
+    this.subject.historyEnabled = false;
+    
+    let eventInvoked = false;
+    let eventArgument = null;
+
+    this.subject.onUserChatClicked.subscribe(e => {
+        eventInvoked = true;
+        eventArgument = e;
+    });
+    
+    let user: User = {
+        id: 999,
+        displayName: 'Test user',
+        status: 1,
+        avatar: ''
+    };
+
+    this.subject.windows = [
+        {
+            chattingTo: user
+        }
+    ];
+    
+    this.subject.openChatWindow(user, true, true);
+
+    expect(eventInvoked).toBeFalsy();
+    expect(eventArgument).toBe(null);
+});
+
+it('Must not invoke onUserChatClicked event when a window is open but not triggered directly via user click', () => {
+    this.subject.historyEnabled = false;
+    
+    let eventInvoked = false;
+    let eventArgument = null;
+
+    this.subject.onUserChatClicked.subscribe(e => {
+        eventInvoked = true;
+        eventArgument = e;
+    });
+    
+    let user: User = {
+        id: 999,
+        displayName: 'Test user',
+        status: 1,
+        avatar: ''
+    };
+    
+    this.subject.openChatWindow(user, true, false);
+
+    expect(eventInvoked).toBeFalsy();
+    expect(eventArgument).toBe(null);
+});
+
+it('Must invoke onUserChatOpened event when a chat window is open via user click', () => {
+    this.subject.historyEnabled = false;
+    
+    let eventInvoked = false;
+    let eventArgument = null;
+
+    this.subject.onUserChatOpened.subscribe(e => {
+        eventInvoked = true;
+        eventArgument = e;
+    });
+    
+    let user: User = {
+        id: 999,
+        displayName: 'Test user',
+        status: 1,
+        avatar: ''
+    };
+    
+    this.subject.openChatWindow(user, true, true);
+
+    expect(eventInvoked).toBeTruthy();
+    expect(eventArgument).toBe(user);
+});
+
+it('Must not invoke onUserChatOpened event when a window is already open for the user', () => {
+    this.subject.historyEnabled = false;
+    
+    let eventInvoked = false;
+    let eventArgument = null;
+
+    this.subject.onUserChatOpened.subscribe(e => {
+        eventInvoked = true;
+        eventArgument = e;
+    });
+    
+    let user: User = {
+        id: 999,
+        displayName: 'Test user',
+        status: 1,
+        avatar: ''
+    };
+
+    this.subject.windows = [
+        {
+            chattingTo: user
+        }
+    ];
+    
+    this.subject.openChatWindow(user, true, true);
+
+    expect(eventInvoked).toBeFalsy();
+    expect(eventArgument).toBe(null);
+});
+
+it('Must invoke onUserChatClosed event when a window is closed', () => {
+    
+    let window = new Window();
+
+    window.chattingTo = {
+        id: 999,
+        displayName: 'Test user',
+        status: 1,
+        avatar: ''
+    };
+
+    this.subject.windows = [window];
+
+    spyOn(this.subject, 'updateWindowsState'); // Bypassing this
+
+    let eventInvoked = false;
+    let eventArgument = null;
+
+    this.subject.onUserChatClosed.subscribe(e => {
+        eventInvoked = true;
+        eventArgument = e;
+    });
+    
+    let result = this.subject.onCloseChatWindow(this.subject.windows[0]);
+
+    expect(eventInvoked).toBeTruthy();
+    expect(eventArgument).toBe(window.chattingTo);
+});
