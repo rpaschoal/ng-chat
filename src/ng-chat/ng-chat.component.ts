@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChildren, HostListener } from '@angular/core';
+import { Component, Input, OnInit, ViewChildren, HostListener, Output, EventEmitter } from '@angular/core';
 import { ChatAdapter } from './core/chat-adapter';
 import { User } from "./core/user";
 import { Message } from "./core/message";
@@ -65,6 +65,26 @@ export class NgChat implements OnInit {
     @Input()
     public searchPlaceholder: string = "Search";
 
+    @Input()
+    public browserNotificationsEnabled: boolean = true;
+
+    @Input() // TODO: This might need a better content strategy
+    public browserNotificationIconSource: string = 'https://raw.githubusercontent.com/rpaschoal/ng-chat/master/src/ng-chat/assets/notification.png';
+
+    @Input()
+    public localization: Localization;
+
+    @Output()
+    public onUserClicked: EventEmitter<User> = new EventEmitter<User>();
+
+    @Output()
+    public onUserChatOpened: EventEmitter<User> = new EventEmitter<User>();
+
+    @Output()
+    public onUserChatClosed: EventEmitter<User> = new EventEmitter<User>();
+
+    private browserNotificationsBootstrapped: boolean = false;
+
     // Don't want to add this as a setting to simplify usage. Previous placeholder and title settings available to be used, or use full Localization object.
     private statusDescription: StatusDescription = {
         online: 'Online',
@@ -72,9 +92,6 @@ export class NgChat implements OnInit {
         away: 'Away',
         offline: 'Offline'
     };
-
-    @Input()
-    public localization: Localization;
 
     private audioFile: HTMLAudioElement;
 
@@ -144,6 +161,7 @@ export class NgChat implements OnInit {
             this.viewPortTotalArea = window.innerWidth;
 
             this.initializeDefaultText();
+            this.initializeBrowserNotifications();
 
             // Binding event listeners
             this.adapter.messageReceivedHandler = (user, msg) => this.onMessageReceived(user, msg);
@@ -174,6 +192,18 @@ export class NgChat implements OnInit {
             }
             if (this.adapter == null){
                 console.error("ng-chat can't be bootstrapped without a ChatAdapter. Please make sure you've provided a ChatAdapter implementation as a parameter of the ng-chat component.");
+            }
+        }
+    }
+
+    // Initializes browser notifications
+    private async initializeBrowserNotifications()
+    {
+        if (this.browserNotificationsEnabled && ("Notification" in window))
+        {
+            if (await Notification.requestPermission())
+            {
+                this.browserNotificationsBootstrapped = true;
             }
         }
     }
@@ -209,7 +239,8 @@ export class NgChat implements OnInit {
     // Updates the friends list via the event handler
     private onFriendsListChanged(users: User[]): void
     {
-        if (users){
+        if (users) 
+        {
             this.users = users;
         }
     }
@@ -228,18 +259,24 @@ export class NgChat implements OnInit {
             }
 
             this.emitMessageSound(chatWindow[0]);
+            this.emitBrowserNotification(chatWindow[0]);
         }
     }
 
     // Opens a new chat whindow. Takes care of available viewport
     // Returns => [Window: Window object reference, boolean: Indicates if this window is a new chat window]
-    private openChatWindow(user: User, focusOnNewWindow: boolean = false): [Window, boolean]
+    private openChatWindow(user: User, focusOnNewWindow: boolean = false, invokedByUserClick: boolean = false): [Window, boolean]
     {
         // Is this window opened?
         let openedWindow = this.windows.find(x => x.chattingTo.id == user.id);
 
         if (!openedWindow)
         {
+            if (invokedByUserClick) 
+            {
+                this.onUserClicked.emit(user);
+            }
+
             let newChatWindow: Window = {
                 chattingTo: user,
                 messages:  [],
@@ -263,14 +300,19 @@ export class NgChat implements OnInit {
             this.windows.unshift(newChatWindow);
 
             // Is there enough space left in the view port ?
-            if (this.windows.length * this.windowSizeFactor >= this.viewPortTotalArea - this.friendsListWidth){                
+            if (this.windows.length * this.windowSizeFactor >= this.viewPortTotalArea - this.friendsListWidth)
+            {                
                 this.windows.pop();
             }
 
             this.updateWindowsState(this.windows);
             
-            if (focusOnNewWindow)
+            if (focusOnNewWindow) 
+            {
                 this.focusOnWindow(newChatWindow);
+            }
+            
+            this.onUserChatOpened.emit(user);
 
             return [newChatWindow, true];
         }
@@ -336,6 +378,23 @@ export class NgChat implements OnInit {
     {
         if (this.audioEnabled && !window.hasFocus && this.audioFile) {
             this.audioFile.play();
+        }
+    }
+
+    // Emits a browser notification
+    private emitBrowserNotification(window: Window): void
+    {       
+        if (this.browserNotificationsBootstrapped && !window.hasFocus) {
+            let message = window.messages[window.messages.length - 1].message;
+
+            let notification = new Notification(`New message from ${window.chattingTo.displayName}`, {
+                'body': window.messages[window.messages.length - 1].message,
+                'icon': this.browserNotificationIconSource
+            });
+
+            setTimeout(() => {
+                notification.close();
+            }, message.length <= 50 ? 5000 : 7000); // More time to read longer messages
         }
     }
 
@@ -481,6 +540,8 @@ export class NgChat implements OnInit {
         this.windows.splice(index, 1);
 
         this.updateWindowsState(this.windows);
+
+        this.onUserChatClosed.emit(window.chattingTo);
     }
 
     // Toggle friends list visibility

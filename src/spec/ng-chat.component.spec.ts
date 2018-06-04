@@ -5,6 +5,7 @@ import { ChatAdapter } from '../ng-chat/core/chat-adapter';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import { Message } from '../ng-chat/core/message';
+import { EventEmitter } from '@angular/core';
 
 class MockableAdapter extends ChatAdapter {
     public listFriends(): Observable<User[]> {
@@ -69,6 +70,30 @@ describe('NgChat', () => {
 
     it('Must use current user id as part of the localStorageKey identifier', () => {
         expect(this.subject.localStorageKey).toBe(`ng-chat-users-${this.subject.userId}`);
+    });
+
+    it('Browser notifications must be enabled by default', () => {
+        expect(this.subject.browserNotificationsEnabled).not.toBeFalsy();
+    });
+
+    it('Browser notifications must have a default source', () => {
+        expect(this.subject.browserNotificationIconSource).not.toBeUndefined();
+    });
+
+    it('Browser notifications must not be bootstrapped before initialization', () => {
+        expect(this.subject.browserNotificationsBootstrapped).toBeFalsy();
+    });
+
+    it('onUserClicked must have a default event emitter', () => {
+        expect(this.subject.onUserClicked).toBeDefined();
+    });
+
+    it('onUserChatOpened must have a default event emitter', () => {
+        expect(this.subject.onUserChatOpened).toBeDefined();
+    });
+
+    it('onUserChatClosed must have a default event emitter', () => {
+        expect(this.subject.onUserChatClosed).toBeDefined();
     });
 
     it('Exercise users filter', () => {
@@ -756,3 +781,203 @@ it('GetClosestWindow must return undefined when there is no open chat window on 
     expect(result).toBe(undefined);
 });
 
+it('Must bootstrap browser notifications when user permission is granted', async () => {
+    this.subject.browserNotificationsBootstrapped = false;
+    spyOn(Notification, 'requestPermission').and.returnValue(true);
+
+    await this.subject.initializeBrowserNotifications();
+
+    expect(this.subject.browserNotificationsBootstrapped).toBeTruthy();
+    expect(Notification.requestPermission).toHaveBeenCalledTimes(1);
+});
+
+it('Must not bootstrap browser notifications when user permission is not granted', async () => {
+    this.subject.browserNotificationsBootstrapped = false;
+    spyOn(Notification, 'requestPermission').and.returnValue(false);
+
+    await this.subject.initializeBrowserNotifications();
+
+    expect(this.subject.browserNotificationsBootstrapped).toBeFalsy();
+    expect(Notification.requestPermission).toHaveBeenCalledTimes(1);
+});
+
+it('Must invoke emitBrowserNotification on new messages', () => {
+    let message = new Message();
+    let user = new User();
+
+    spyOn(this.subject, 'emitBrowserNotification'); 
+    spyOn(this.subject, 'openChatWindow').and.returnValue([null, true]);
+    spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
+    spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
+
+    this.subject.onMessageReceived(user, message);
+
+    expect(this.subject.emitBrowserNotification).toHaveBeenCalledTimes(1);
+});
+
+it('Must invoke onUserChatOpened event when a chat window is open via user click', () => {
+    this.subject.historyEnabled = false;
+    this.subject.windows = [];
+    
+    spyOn(this.subject, 'updateWindowsState'); 
+    spyOn(this.subject, 'focusOnWindow'); 
+
+    let eventInvoked = false;
+    let eventArgument = null;
+
+    this.subject.onUserChatOpened.subscribe(e => {
+        eventInvoked = true;
+        eventArgument = e;
+    });
+    
+    let user: User = {
+        id: 999,
+        displayName: 'Test user',
+        status: 1,
+        avatar: ''
+    };
+    
+    this.subject.openChatWindow(user, false, true);
+
+    expect(eventInvoked).toBeTruthy();
+    expect(eventArgument).toBe(user);
+});
+
+it('Must not invoke onUserChatOpened event when a window is already open for the user', () => {
+    this.subject.historyEnabled = false;
+    
+    let eventInvoked = false;
+    let eventArgument = null;
+
+    this.subject.onUserChatOpened.subscribe(e => {
+        eventInvoked = true;
+        eventArgument = e;
+    });
+    
+    let user: User = {
+        id: 999,
+        displayName: 'Test user',
+        status: 1,
+        avatar: ''
+    };
+
+    this.subject.windows = [
+        {
+            chattingTo: user
+        }
+    ];
+    
+    this.subject.openChatWindow(user, true, true);
+
+    expect(eventInvoked).toBeFalsy();
+    expect(eventArgument).toBe(null);
+});
+
+it('Must invoke onUserChatClosed event when a window is closed', () => {
+    
+    let window = new Window();
+
+    window.chattingTo = {
+        id: 999,
+        displayName: 'Test user',
+        status: 1,
+        avatar: ''
+    };
+
+    this.subject.windows = [window];
+
+    spyOn(this.subject, 'updateWindowsState'); // Bypassing this
+
+    let eventInvoked = false;
+    let eventArgument = null;
+
+    this.subject.onUserChatClosed.subscribe(e => {
+        eventInvoked = true;
+        eventArgument = e;
+    });
+    
+    let result = this.subject.onCloseChatWindow(this.subject.windows[0]);
+
+    expect(eventInvoked).toBeTruthy();
+    expect(eventArgument).toBe(window.chattingTo);
+});
+
+it('Must not invoke onUserClicked event when a user is clicked on the friend list and the window is already open', () => {
+    this.subject.historyEnabled = false;
+    
+    let eventInvoked = false;
+    let eventArgument = null;
+
+    this.subject.onUserClicked.subscribe(e => {
+        eventInvoked = true;
+        eventArgument = e;
+    });
+    
+    let user: User = {
+        id: 999,
+        displayName: 'Test user',
+        status: 1,
+        avatar: ''
+    };
+
+    this.subject.windows = [
+        {
+            chattingTo: user
+        }
+    ];
+    
+    this.subject.openChatWindow(user, true, true);
+
+    expect(eventInvoked).toBeFalsy();
+    expect(eventArgument).toBe(null);
+});
+
+it('Must not invoke onUserClicked event when a window is open but not triggered directly via user click', () => {
+    this.subject.historyEnabled = false;
+    
+    let eventInvoked = false;
+    let eventArgument = null;
+
+    this.subject.onUserClicked.subscribe(e => {
+        eventInvoked = true;
+        eventArgument = e;
+    });
+    
+    let user: User = {
+        id: 999,
+        displayName: 'Test user',
+        status: 1,
+        avatar: ''
+    };
+    
+    this.subject.openChatWindow(user, true, false);
+
+    expect(eventInvoked).toBeFalsy();
+    expect(eventArgument).toBe(null);
+});
+
+
+it('Must invoke onUserClicked event when a user is clicked on the friend list', () => {
+    this.subject.historyEnabled = false;
+    this.subject.windows = [];
+
+    let eventInvoked = false;
+    let eventArgument = null;
+
+    this.subject.onUserClicked.subscribe(e => {
+        eventInvoked = true;
+        eventArgument = e;
+    });
+    
+    let user: User = {
+        id: 999,
+        displayName: 'Test user',
+        status: 1,
+        avatar: ''
+    };
+    
+    this.subject.openChatWindow(user, true, true);
+
+    expect(eventInvoked).toBeTruthy();
+    expect(eventArgument).toBe(user);
+});
