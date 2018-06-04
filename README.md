@@ -81,11 +81,18 @@ __Additional Settings__
 * [audioEnabled]{boolean}: Enables audio notifications on received messages. Default is true.
 * [audioSource]{string}: WAV source of the audio notification. Default is a RAW github WAV content from ng-chat repository.
 * [persistWindowsState]{boolean}: Saves the state of current open windows on the local storage. Default is true.
+* [browserNotificationsEnabled]{boolean}: Enables browser notifications on received messages. Default is true.
+* [browserNotificationIconSource]{string}: Source URL of the icon displayed on the browser notification. Default is a RAW github PNG content from ng-chat repository.
 
 __Localization__
 * [messagePlaceholder]{string}: The placeholder that is displayed in the text input on each chat window. Default is "Type a message".
 * [searchPlaceholder]{string}: The placeholder that is displayed in the search input on the friends list. Default is "Search".
 * [localization]{Localization}: Contract defining all text that is rendered by this component. Supply your own object for full text localization/customization. Supplying this setting will override all  other localization settings.
+
+__Events__
+* [onUserChatClicked]{User}: Event emitted every time a user is clicked on the chat window.
+* [onUserChatOpened]{User}: TODO
+* [onUserChatClosed]{User}: TODO
 
 #### Implement your ChatAdapter:
 
