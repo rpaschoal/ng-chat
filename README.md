@@ -67,32 +67,32 @@ export class AppComponent {
 ```
 
 __Required Settings__
-* [adapter]{string}: This will point to your adapter implementation ('MyAdapter' in the example above).
-* [userId]{any}: The unique id of the user that will be using the chat instance.
+* [adapter]<string>: This will point to your adapter implementation ('MyAdapter' in the example above).
+* [userId]<any>: The unique id of the user that will be using the chat instance.
 
 __Additional Settings__
-* [title]{string}: The title to be displayed on the friends list. Default is "Friends".
-* [isCollapsed]{boolean}: If set to true the friends list will be rendered as collapsed by default. Default is false.
-* [pollFriendsList]{boolean}: If set to true the module will do a long poll on the "adapter.listFriends" method to keep the friends list updated. Default is false.
-* [pollingInterval]{number}: Configures the long poll interval in milliseconds. Default is 5000.
-* [historyEnabled]{boolean}: Defines whether the component should call the "getMessageHistory" from the chat-adapter. Default is true.
-* [emojisEnabled]{boolean}: Enables emoji parsing on the messages. Default is true.
-* [linkfyEnabled]{boolean}: Transforms links within the messages to valid HTML links. Default is true.
-* [audioEnabled]{boolean}: Enables audio notifications on received messages. Default is true.
-* [audioSource]{string}: WAV source of the audio notification. Default is a RAW github WAV content from ng-chat repository.
-* [persistWindowsState]{boolean}: Saves the state of current open windows on the local storage. Default is true.
-* [browserNotificationsEnabled]{boolean}: Enables browser notifications on received messages. Default is true.
-* [browserNotificationIconSource]{string}: Source URL of the icon displayed on the browser notification. Default is a RAW github PNG content from ng-chat repository.
+* [title]<string>: The title to be displayed on the friends list. Default is "Friends".
+* [isCollapsed]<boolean>: If set to true the friends list will be rendered as collapsed by default. Default is false.
+* [pollFriendsList]<boolean>: If set to true the module will do a long poll on the "adapter.listFriends" method to keep the friends list updated. Default is false.
+* [pollingInterval]<number>: Configures the long poll interval in milliseconds. Default is 5000.
+* [historyEnabled]<boolean>: Defines whether the component should call the "getMessageHistory" from the chat-adapter. Default is true.
+* [emojisEnabled]<boolean>: Enables emoji parsing on the messages. Default is true.
+* [linkfyEnabled]<boolean>: Transforms links within the messages to valid HTML links. Default is true.
+* [audioEnabled]<boolean>: Enables audio notifications on received messages. Default is true.
+* [audioSource]<string>: WAV source of the audio notification. Default is a RAW github WAV content from ng-chat repository.
+* [persistWindowsState]<boolean>: Saves the state of current open windows on the local storage. Default is true.
+* [browserNotificationsEnabled]<boolean>: Enables browser notifications on received messages. Default is true.
+* [browserNotificationIconSource]<string>: Source URL of the icon displayed on the browser notification. Default is a RAW github PNG content from ng-chat repository.
 
 __Localization__
-* [messagePlaceholder]{string}: The placeholder that is displayed in the text input on each chat window. Default is "Type a message".
-* [searchPlaceholder]{string}: The placeholder that is displayed in the search input on the friends list. Default is "Search".
-* [localization]{Localization}: Contract defining all text that is rendered by this component. Supply your own object for full text localization/customization. Supplying this setting will override all  other localization settings.
+* [messagePlaceholder]<string>: The placeholder that is displayed in the text input on each chat window. Default is "Type a message".
+* [searchPlaceholder]<string>: The placeholder that is displayed in the search input on the friends list. Default is "Search".
+* [localization]<Localization>: Contract defining all text that is rendered by this component. Supply your own object for full text localization/customization. Supplying this setting will override all  other localization settings.
 
 __Events__
-* [onUserChatClicked]{User}: Event emitted every time a user is clicked on the chat window.
-* [onUserChatOpened]{User}: TODO
-* [onUserChatClosed]{User}: TODO
+* (onUserChatClicked)<User>: Event emitted every time a user is clicked on the chat window and a new chat window is opened.
+* (onUserChatOpened)<User>: Event emitted every time a chat window is opened, regardless if it was due to a user click on the friends list or via new message received.
+* (onUserChatClosed)<User>: Event emitted every time a chat window is closed.
 
 #### Implement your ChatAdapter:
 
