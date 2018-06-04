@@ -90,7 +90,7 @@ __Localization__
 * [localization]<Localization>: Contract defining all text that is rendered by this component. Supply your own object for full text localization/customization. Supplying this setting will override all  other localization settings.
 
 __Events__
-* (onUserChatClicked)<User>: Event emitted every time a user is clicked on the chat window and a new chat window is opened.
+* (onUserClicked)<User>: Event emitted every time a user is clicked on the chat window and a new chat window is opened.
 * (onUserChatOpened)<User>: Event emitted every time a chat window is opened, regardless if it was due to a user click on the friends list or via new message received.
 * (onUserChatClosed)<User>: Event emitted every time a chat window is closed.
 

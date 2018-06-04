@@ -84,16 +84,16 @@ describe('NgChat', () => {
         expect(this.subject.browserNotificationsBootstrapped).toBeFalsy();
     });
 
-    it('onUserChatClicked must have a default event emitter', () => {
-        expect(this.subject.onUserChatClicked).toBeDefined();
+    it('onUserClicked must have a default event emitter', () => {
+        expect(this.subject.onUserClicked).toBeDefined();
     });
 
     it('onUserChatOpened must have a default event emitter', () => {
-        expect(this.subject.onUserChatClicked).toBeDefined();
+        expect(this.subject.onUserChatOpened).toBeDefined();
     });
 
     it('onUserChatClosed must have a default event emitter', () => {
-        expect(this.subject.onUserChatClicked).toBeDefined();
+        expect(this.subject.onUserChatClosed).toBeDefined();
     });
 
     it('Exercise users filter', () => {
@@ -902,13 +902,13 @@ it('Must invoke onUserChatClosed event when a window is closed', () => {
     expect(eventArgument).toBe(window.chattingTo);
 });
 
-it('Must not invoke onUserChatClicked event when a user is clicked on the friend list and the window is already open', () => {
+it('Must not invoke onUserClicked event when a user is clicked on the friend list and the window is already open', () => {
     this.subject.historyEnabled = false;
     
     let eventInvoked = false;
     let eventArgument = null;
 
-    this.subject.onUserChatClicked.subscribe(e => {
+    this.subject.onUserClicked.subscribe(e => {
         eventInvoked = true;
         eventArgument = e;
     });
@@ -932,13 +932,13 @@ it('Must not invoke onUserChatClicked event when a user is clicked on the friend
     expect(eventArgument).toBe(null);
 });
 
-it('Must not invoke onUserChatClicked event when a window is open but not triggered directly via user click', () => {
+it('Must not invoke onUserClicked event when a window is open but not triggered directly via user click', () => {
     this.subject.historyEnabled = false;
     
     let eventInvoked = false;
     let eventArgument = null;
 
-    this.subject.onUserChatClicked.subscribe(e => {
+    this.subject.onUserClicked.subscribe(e => {
         eventInvoked = true;
         eventArgument = e;
     });
@@ -957,14 +957,14 @@ it('Must not invoke onUserChatClicked event when a window is open but not trigge
 });
 
 
-it('Must invoke onUserChatClicked event when a user is clicked on the friend list', () => {
+it('Must invoke onUserClicked event when a user is clicked on the friend list', () => {
     this.subject.historyEnabled = false;
     this.subject.windows = [];
 
     let eventInvoked = false;
     let eventArgument = null;
 
-    this.subject.onUserChatClicked.subscribe(e => {
+    this.subject.onUserClicked.subscribe(e => {
         eventInvoked = true;
         eventArgument = e;
     });

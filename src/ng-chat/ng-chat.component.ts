@@ -75,7 +75,7 @@ export class NgChat implements OnInit {
     public localization: Localization;
 
     @Output()
-    public onUserChatClicked: EventEmitter<User> = new EventEmitter<User>();
+    public onUserClicked: EventEmitter<User> = new EventEmitter<User>();
 
     @Output()
     public onUserChatOpened: EventEmitter<User> = new EventEmitter<User>();
@@ -274,7 +274,7 @@ export class NgChat implements OnInit {
         {
             if (invokedByUserClick) 
             {
-                this.onUserChatClicked.emit(user);
+                this.onUserClicked.emit(user);
             }
 
             let newChatWindow: Window = {
