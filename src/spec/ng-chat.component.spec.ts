@@ -893,60 +893,6 @@ it('Must not invoke onUserChatClicked event when a window is open but not trigge
     expect(eventArgument).toBe(null);
 });
 
-it('Must invoke onUserChatOpened event when a chat window is open via user click', () => {
-    this.subject.historyEnabled = false;
-    
-    let eventInvoked = false;
-    let eventArgument = null;
-
-    this.subject.onUserChatOpened.subscribe(e => {
-        eventInvoked = true;
-        eventArgument = e;
-    });
-    
-    let user: User = {
-        id: 999,
-        displayName: 'Test user',
-        status: 1,
-        avatar: ''
-    };
-    
-    this.subject.openChatWindow(user, true, true);
-
-    expect(eventInvoked).toBeTruthy();
-    expect(eventArgument).toBe(user);
-});
-
-it('Must not invoke onUserChatOpened event when a window is already open for the user', () => {
-    this.subject.historyEnabled = false;
-    
-    let eventInvoked = false;
-    let eventArgument = null;
-
-    this.subject.onUserChatOpened.subscribe(e => {
-        eventInvoked = true;
-        eventArgument = e;
-    });
-    
-    let user: User = {
-        id: 999,
-        displayName: 'Test user',
-        status: 1,
-        avatar: ''
-    };
-
-    this.subject.windows = [
-        {
-            chattingTo: user
-        }
-    ];
-    
-    this.subject.openChatWindow(user, true, true);
-
-    expect(eventInvoked).toBeFalsy();
-    expect(eventArgument).toBe(null);
-});
-
 it('Must invoke onUserChatClosed event when a window is closed', () => {
     
     let window = new Window();
