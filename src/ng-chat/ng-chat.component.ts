@@ -259,7 +259,8 @@ export class NgChat implements OnInit {
             }
 
             this.emitMessageSound(chatWindow[0]);
-            this.emitBrowserNotification(chatWindow[0]);
+            // Some messages are not pushed because they are loaded by fetching the history hence why we supply the message here
+            this.emitBrowserNotification(chatWindow[0], message);
         }
     }
 
@@ -382,11 +383,9 @@ export class NgChat implements OnInit {
     }
 
     // Emits a browser notification
-    private emitBrowserNotification(window: Window): void
+    private emitBrowserNotification(window: Window, message: Message): void
     {       
-        if (this.browserNotificationsBootstrapped && !window.hasFocus) {
-            let message = window.messages[window.messages.length - 1].message;
-
+        if (this.browserNotificationsBootstrapped && !window.hasFocus && message) {
             let notification = new Notification(`New message from ${window.chattingTo.displayName}`, {
                 'body': window.messages[window.messages.length - 1].message,
                 'icon': this.browserNotificationIconSource
@@ -394,7 +393,7 @@ export class NgChat implements OnInit {
 
             setTimeout(() => {
                 notification.close();
-            }, message.length <= 50 ? 5000 : 7000); // More time to read longer messages
+            }, message.message.length <= 50 ? 5000 : 7000); // More time to read longer messages
         }
     }
 
