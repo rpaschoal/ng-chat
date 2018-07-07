@@ -815,6 +815,27 @@ it('Must invoke emitBrowserNotification on new messages', () => {
     expect(this.subject.emitBrowserNotification).toHaveBeenCalledTimes(1);
 });
 
+it('Must delegate message argument when invoking emitBrowserNotification on new messages', () => {
+    let message = new Message();
+    let argMessage = null;
+    message.message = 'Test message';
+
+    let user = new User();
+    this.subject.historyEnabled = true;
+
+    spyOn(this.subject, 'emitBrowserNotification').and.callFake((window, message) =>{
+        argMessage = message;
+    });
+
+    spyOn(this.subject, 'openChatWindow').and.returnValue([null, true]);
+    spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
+
+    this.subject.onMessageReceived(user, message);
+
+    expect(this.subject.emitBrowserNotification).toHaveBeenCalledTimes(1);
+    expect(argMessage).toBe(message);
+});
+
 it('Must invoke onUserChatOpened event when a chat window is open via user click', () => {
     this.subject.historyEnabled = false;
     this.subject.windows = [];
