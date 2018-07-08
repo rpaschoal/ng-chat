@@ -1080,3 +1080,49 @@ it('Must invoke onUserClicked event when a user is clicked on the friend list', 
     expect(eventArgument).toBe(user);
 });
 
+it('Must not focus on the new window when it is collapsed', () =>{
+    this.subject.historyEnabled = false;
+    this.subject.maximizeWindowOnNewMessage = false;
+    
+    let user: User = {
+        id: 999,
+        displayName: 'Test user',
+        status: 1,
+        avatar: ''
+    };
+
+    spyOn(this.subject, 'focusOnWindow'); 
+
+    let result = this.subject.openChatWindow(user, true);
+
+    expect(result).not.toBeUndefined();
+    expect(this.subject.focusOnWindow).not.toHaveBeenCalled();
+});
+
+it('unreadMessagesTotalByUser must invoke unreadMessagesTotal if there is a window opened for a supplied user argument', () => {
+    let user: User = {
+        id: 999,
+        displayName: 'Test user',
+        status: 1,
+        avatar: ''
+    };
+    let window = new Window();
+
+    window.chattingTo = user;
+
+    this.subject.windows.push(window);
+
+    spyOn(this.subject, 'unreadMessagesTotal'); 
+
+    this.subject.unreadMessagesTotalByUser(user);
+
+    expect(this.subject.unreadMessagesTotal).toHaveBeenCalledTimes(1);
+});
+
+it('unreadMessagesTotalByUser must not invoke unreadMessagesTotal if there is no open window for a supplied user argument', () => {
+    spyOn(this.subject, 'unreadMessagesTotal'); 
+
+    this.subject.unreadMessagesTotalByUser(new User());
+
+    expect(this.subject.unreadMessagesTotal).not.toHaveBeenCalled();
+});
