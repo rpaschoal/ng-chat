@@ -32,6 +32,9 @@ export class NgChat implements OnInit {
     @Input()
     public isCollapsed: boolean = false;
 
+    @Input()
+    public maximizeWindowOnNewMessage: boolean = true;
+
     @Input()    
     public pollFriendsList: boolean = false;
 
@@ -259,8 +262,14 @@ export class NgChat implements OnInit {
             }
 
             this.emitMessageSound(chatWindow[0]);
-            // Some messages are not pushed because they are loaded by fetching the history hence why we supply the message here
-            this.emitBrowserNotification(chatWindow[0], message);
+            
+            // Github issue #58 
+            // Do not push browser notifications with message content for privacy purposes if the 'maximizeWindowOnNewMessage' setting is off and this is a new chat window.
+            if (this.maximizeWindowOnNewMessage || (!chatWindow[1] && !chatWindow[0].isCollapsed))
+            { 
+                // Some messages are not pushed because they are loaded by fetching the history hence why we supply the message here
+                this.emitBrowserNotification(chatWindow[0], message);
+            }
         }
     }
 
@@ -278,11 +287,15 @@ export class NgChat implements OnInit {
                 this.onUserClicked.emit(user);
             }
 
+            // Refer to issue #58 on Github 
+            let collapseWindow = invokedByUserClick ? false : !this.maximizeWindowOnNewMessage;
+
             let newChatWindow: Window = {
                 chattingTo: user,
                 messages:  [],
                 isLoadingHistory: this.historyEnabled,
-                hasFocus: false // This will be triggered when the 'newMessage' input gets the current focus
+                hasFocus: false, // This will be triggered when the 'newMessage' input gets the current focus
+                isCollapsed: collapseWindow
             };
 
             // Loads the chat history via an RxJs Observable
@@ -308,7 +321,7 @@ export class NgChat implements OnInit {
 
             this.updateWindowsState(this.windows);
             
-            if (focusOnNewWindow) 
+            if (focusOnNewWindow && !collapseWindow) 
             {
                 this.focusOnWindow(newChatWindow);
             }
