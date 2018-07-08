@@ -68,6 +68,14 @@ describe('NgChat', () => {
         expect(this.subject.persistWindowsState).toBeTruthy();
     });
 
+    it('isCollapsed must be disabled by default', () => {
+        expect(this.subject.isCollapsed).toBeFalsy();
+    });
+
+    it('maximizeWindowOnNewMessage must be enabled by default', () => {
+        expect(this.subject.maximizeWindowOnNewMessage).toBeTruthy();
+    });
+
     it('Must use current user id as part of the localStorageKey identifier', () => {
         expect(this.subject.localStorageKey).toBe(`ng-chat-users-${this.subject.userId}`);
     });
@@ -836,6 +844,76 @@ it('Must delegate message argument when invoking emitBrowserNotification on new 
     expect(argMessage).toBe(message);
 });
 
+it('Must not invoke emitBrowserNotification when the maximizeWindowOnNewMessage setting is disabled', () => {
+    let message = new Message();
+    let user = new User();
+
+    this.subject.maximizeWindowOnNewMessage = false;
+
+    spyOn(this.subject, 'emitBrowserNotification'); 
+    spyOn(this.subject, 'openChatWindow').and.returnValue([null, true]);
+    spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
+    spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
+
+    this.subject.onMessageReceived(user, message);
+
+    expect(this.subject.emitBrowserNotification).not.toHaveBeenCalled();
+});
+
+it('Must invoke emitBrowserNotification when the maximizeWindowOnNewMessage setting is disabled but the window is maximized', () => {
+    let message = new Message();
+    let user = new User();
+    let window = new Window();
+
+    window.isCollapsed = false;
+    this.subject.maximizeWindowOnNewMessage = false;
+
+    spyOn(this.subject, 'emitBrowserNotification'); 
+    spyOn(this.subject, 'openChatWindow').and.returnValue([window, false]);
+    spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
+    spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
+
+    this.subject.onMessageReceived(user, message);
+
+    expect(this.subject.emitBrowserNotification).toHaveBeenCalledTimes(1);
+});
+
+it('Must not invoke emitBrowserNotification when the maximizeWindowOnNewMessage setting is disabled and the window is collapsed', () => {
+    let message = new Message();
+    let user = new User();
+    let window = new Window();
+
+    window.isCollapsed = true;
+    this.subject.maximizeWindowOnNewMessage = false;
+
+    spyOn(this.subject, 'emitBrowserNotification'); 
+    spyOn(this.subject, 'openChatWindow').and.returnValue([window, false]);
+    spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
+    spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
+
+    this.subject.onMessageReceived(user, message);
+
+    expect(this.subject.emitBrowserNotification).not.toHaveBeenCalled();
+});
+
+it('Must not invoke emitBrowserNotification when the maximizeWindowOnNewMessage setting is disabled and the window was freshly opened', () => {
+    let message = new Message();
+    let user = new User();
+    let window = new Window();
+
+    window.isCollapsed = false;
+    this.subject.maximizeWindowOnNewMessage = false;
+
+    spyOn(this.subject, 'emitBrowserNotification'); 
+    spyOn(this.subject, 'openChatWindow').and.returnValue([window, true]);
+    spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
+    spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
+
+    this.subject.onMessageReceived(user, message);
+
+    expect(this.subject.emitBrowserNotification).not.toHaveBeenCalled();
+});
+
 it('Must invoke onUserChatOpened event when a chat window is open via user click', () => {
     this.subject.historyEnabled = false;
     this.subject.windows = [];
@@ -1001,3 +1079,4 @@ it('Must invoke onUserClicked event when a user is clicked on the friend list', 
     expect(eventInvoked).toBeTruthy();
     expect(eventArgument).toBe(user);
 });
+
