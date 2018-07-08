@@ -977,7 +977,6 @@ it('Must not invoke onUserClicked event when a window is open but not triggered 
     expect(eventArgument).toBe(null);
 });
 
-
 it('Must invoke onUserClicked event when a user is clicked on the friend list', () => {
     this.subject.historyEnabled = false;
     this.subject.windows = [];

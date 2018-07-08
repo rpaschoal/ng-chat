@@ -14,6 +14,7 @@
                 <img *ngIf="user.avatar" alt="" class="avatar" height="30" width="30"  src="{{user.avatar}}"/>
                 <strong title="{{user.displayName}}">{{user.displayName}}</strong>
                 <span [ngClass]="{'ng-chat-user-status': true, 'online': user.status == UserStatus.Online, 'busy': user.status == UserStatus.Busy, 'away': user.status == UserStatus.Away, 'offline': user.status == UserStatus.Offline}" title="{{getStatusTitle(UserStatus[user.status])}}"></span>
+                <span *ngIf="unreadMessagesTotalByUser(user).length > 0" class="ng-chat-unread-messages-count">{{unreadMessagesTotalByUser(user)}}</span>
             </li>
         </ul>
     </div>

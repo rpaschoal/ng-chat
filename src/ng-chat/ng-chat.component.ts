@@ -475,6 +475,18 @@ export class NgChat implements OnInit {
         return "";
     }
 
+    unreadMessagesTotalByUser(user: User): string
+    {
+        let openedWindow = this.windows.find(x => x.chattingTo.id == user.id);
+
+        if (openedWindow){
+            return this.unreadMessagesTotal(openedWindow);
+        }
+            
+        // Empty fallback.
+        return "";
+    }
+
     /*  Monitors pressed keys on a chat window
         - Dispatches a message when the ENTER key is pressed
         - Tabs between windows on TAB or SHIFT + TAB
