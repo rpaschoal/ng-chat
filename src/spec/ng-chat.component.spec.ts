@@ -1079,22 +1079,3 @@ it('Must invoke onUserClicked event when a user is clicked on the friend list', 
     expect(eventInvoked).toBeTruthy();
     expect(eventArgument).toBe(user);
 });
-
-it('Must not focus on the new window when it is collapsed', () =>{
-    this.subject.historyEnabled = false;
-    this.subject.maximizeWindowOnNewMessage = false;
-    
-    let user: User = {
-        id: 999,
-        displayName: 'Test user',
-        status: 1,
-        avatar: ''
-    };
-
-    spyOn(this.subject, 'focusOnWindow'); 
-
-    let result = this.subject.openChatWindow(user, true);
-
-    expect(result).not.toBeUndefined();
-    expect(this.subject.focusOnWindow).not.toHaveBeenCalled();
-});
