@@ -73,7 +73,6 @@ __Required Settings__
 __Additional Settings__
 * [title]{string}: The title to be displayed on the friends list. Default is "Friends".
 * [isCollapsed]{boolean}: If set to true the friends list will be rendered as collapsed by default. Default is false.
-* [maximizeWindowOnNewMessage]{boolean}: If set to false new chat windows will render as collapsed when receiving new messages. Default is true.
 * [pollFriendsList]{boolean}: If set to true the module will do a long poll on the "adapter.listFriends" method to keep the friends list updated. Default is false.
 * [pollingInterval]{number}: Configures the long poll interval in milliseconds. Default is 5000.
 * [historyEnabled]{boolean}: Defines whether the component should call the "getMessageHistory" from the chat-adapter. Default is true.
@@ -84,6 +83,7 @@ __Additional Settings__
 * [persistWindowsState]{boolean}: Saves the state of current open windows on the local storage. Default is true.
 * [browserNotificationsEnabled]{boolean}: Enables browser notifications on received messages. Default is true.
 * [browserNotificationIconSource]{string}: Source URL of the icon displayed on the browser notification. Default is a RAW github PNG content from ng-chat repository.
+* [maximizeWindowOnNewMessage]{boolean}: If set to false new chat windows will render as collapsed when receiving new messages. Default is true.
 
 __Localization__
 * [messagePlaceholder]{string}: The placeholder that is displayed in the text input on each chat window. Default is "Type a message".
