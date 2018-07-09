@@ -32,6 +32,9 @@ export class NgChat implements OnInit {
     @Input()
     public isCollapsed: boolean = false;
 
+    @Input()
+    public maximizeWindowOnNewMessage: boolean = true;
+
     @Input()    
     public pollFriendsList: boolean = false;
 
@@ -259,7 +262,14 @@ export class NgChat implements OnInit {
             }
 
             this.emitMessageSound(chatWindow[0]);
-            this.emitBrowserNotification(chatWindow[0]);
+            
+            // Github issue #58 
+            // Do not push browser notifications with message content for privacy purposes if the 'maximizeWindowOnNewMessage' setting is off and this is a new chat window.
+            if (this.maximizeWindowOnNewMessage || (!chatWindow[1] && !chatWindow[0].isCollapsed))
+            { 
+                // Some messages are not pushed because they are loaded by fetching the history hence why we supply the message here
+                this.emitBrowserNotification(chatWindow[0], message);
+            }
         }
     }
 
@@ -277,11 +287,15 @@ export class NgChat implements OnInit {
                 this.onUserClicked.emit(user);
             }
 
+            // Refer to issue #58 on Github 
+            let collapseWindow = invokedByUserClick ? false : !this.maximizeWindowOnNewMessage;
+
             let newChatWindow: Window = {
                 chattingTo: user,
                 messages:  [],
                 isLoadingHistory: this.historyEnabled,
-                hasFocus: false // This will be triggered when the 'newMessage' input gets the current focus
+                hasFocus: false, // This will be triggered when the 'newMessage' input gets the current focus
+                isCollapsed: collapseWindow
             };
 
             // Loads the chat history via an RxJs Observable
@@ -307,7 +321,7 @@ export class NgChat implements OnInit {
 
             this.updateWindowsState(this.windows);
             
-            if (focusOnNewWindow) 
+            if (focusOnNewWindow && !collapseWindow) 
             {
                 this.focusOnWindow(newChatWindow);
             }
@@ -382,11 +396,9 @@ export class NgChat implements OnInit {
     }
 
     // Emits a browser notification
-    private emitBrowserNotification(window: Window): void
+    private emitBrowserNotification(window: Window, message: Message): void
     {       
-        if (this.browserNotificationsBootstrapped && !window.hasFocus) {
-            let message = window.messages[window.messages.length - 1].message;
-
+        if (this.browserNotificationsBootstrapped && !window.hasFocus && message) {
             let notification = new Notification(`New message from ${window.chattingTo.displayName}`, {
                 'body': window.messages[window.messages.length - 1].message,
                 'icon': this.browserNotificationIconSource
@@ -394,7 +406,7 @@ export class NgChat implements OnInit {
 
             setTimeout(() => {
                 notification.close();
-            }, message.length <= 50 ? 5000 : 7000); // More time to read longer messages
+            }, message.message.length <= 50 ? 5000 : 7000); // More time to read longer messages
         }
     }
 
@@ -470,6 +482,18 @@ export class NgChat implements OnInit {
                         return String(totalUnreadMessages); 
                 }
             }
+        }
+            
+        // Empty fallback.
+        return "";
+    }
+
+    unreadMessagesTotalByUser(user: User): string
+    {
+        let openedWindow = this.windows.find(x => x.chattingTo.id == user.id);
+
+        if (openedWindow){
+            return this.unreadMessagesTotal(openedWindow);
         }
             
         // Empty fallback.

@@ -83,6 +83,7 @@ __Additional Settings__
 * [persistWindowsState]{boolean}: Saves the state of current open windows on the local storage. Default is true.
 * [browserNotificationsEnabled]{boolean}: Enables browser notifications on received messages. Default is true.
 * [browserNotificationIconSource]{string}: Source URL of the icon displayed on the browser notification. Default is a RAW github PNG content from ng-chat repository.
+* [maximizeWindowOnNewMessage]{boolean}: If set to false new chat windows will render as collapsed when receiving new messages. Default is true.
 
 __Localization__
 * [messagePlaceholder]{string}: The placeholder that is displayed in the text input on each chat window. Default is "Type a message".
