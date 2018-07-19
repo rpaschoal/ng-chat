@@ -696,7 +696,7 @@ describe('NgChat', () => {
         expect(this.subject.localization.searchPlaceholder).not.toBe(this.subject.searchPlaceholder);
         expect(this.subject.localization.messagePlaceholder).not.toBe(this.subject.messagePlaceholder);
         expect(this.subject.localization.statusDescription).not.toBe(this.subject.statusDescription);
-        expect(this.subject.localization.browserNotificationTitle).toBe(this.subject.browserNotificationTitle);
+        expect(this.subject.localization.browserNotificationTitle).not.toBe(this.subject.browserNotificationTitle);
     });
 });
 
