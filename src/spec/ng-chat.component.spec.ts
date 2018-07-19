@@ -92,6 +92,10 @@ describe('NgChat', () => {
         expect(this.subject.browserNotificationsBootstrapped).toBeFalsy();
     });
 
+    it('Browser notifications must have a default title', () => {
+      expect(this.subject.browserNotificationTitle).toBe('New message from');
+    });
+
     it('onUserClicked must have a default event emitter', () => {
         expect(this.subject.onUserClicked).toBeDefined();
     });
@@ -668,6 +672,7 @@ describe('NgChat', () => {
         expect(this.subject.localization.searchPlaceholder).toBe(this.subject.searchPlaceholder);
         expect(this.subject.localization.messagePlaceholder).toBe(this.subject.messagePlaceholder);
         expect(this.subject.localization.statusDescription).toBe(this.subject.statusDescription);
+        expect(this.subject.localization.browserNotificationTitle).toBe(this.subject.browserNotificationTitle);
     });
 
     it('Must not copy default text when a localization object was supplied while initializing default text', () => {
@@ -680,7 +685,8 @@ describe('NgChat', () => {
               busy: 'test 05',
               away: 'test 06',
               offline: 'test 07'
-            }
+            },
+            browserNotificationTitle: 'test 08'
         };
         
         this.subject.initializeDefaultText();
@@ -690,6 +696,7 @@ describe('NgChat', () => {
         expect(this.subject.localization.searchPlaceholder).not.toBe(this.subject.searchPlaceholder);
         expect(this.subject.localization.messagePlaceholder).not.toBe(this.subject.messagePlaceholder);
         expect(this.subject.localization.statusDescription).not.toBe(this.subject.statusDescription);
+        expect(this.subject.localization.browserNotificationTitle).toBe(this.subject.browserNotificationTitle);
     });
 });
 
