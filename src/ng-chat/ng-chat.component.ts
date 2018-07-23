@@ -349,9 +349,12 @@ export class NgChat implements OnInit {
         if (windowIndex >= 0)
         {
             setTimeout(() => {
-                let messageInputToFocus = this.chatWindowInputs.toArray()[windowIndex];
+                if (this.chatWindowInputs)
+                {
+                    let messageInputToFocus = this.chatWindowInputs.toArray()[windowIndex];
                 
-                messageInputToFocus.nativeElement.focus(); 
+                    messageInputToFocus.nativeElement.focus(); 
+                }
 
                 callback(); 
             });
