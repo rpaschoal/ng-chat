@@ -16,12 +16,12 @@ class MockableAdapter extends ChatAdapter {
     }
     public sendMessage(message: Message): void {
         throw new Error("Method not implemented.");
-    }       
+    }
 }
 
 class MockableHTMLAudioElement {
-    public play(): void {}
-    public load(): void {}
+    public play(): void { }
+    public load(): void { }
 }
 
 describe('NgChat', () => {
@@ -92,6 +92,10 @@ describe('NgChat', () => {
         expect(this.subject.browserNotificationsBootstrapped).toBeFalsy();
     });
 
+    it('Browser notifications must have a default title', () => {
+        expect(this.subject.browserNotificationTitle).toBe('New message from');
+    });
+
     it('onUserClicked must have a default event emitter', () => {
         expect(this.subject.onUserClicked).toBeDefined();
     });
@@ -150,12 +154,12 @@ describe('NgChat', () => {
             new Window(),
             new Window()
         ];
-        
+
         this.subject.NormalizeWindows();
 
         expect(this.subject.windows.length).toBe(2);
     });
-    
+
     it('Must invoke adapter on fetchFriendsList', () => {
         spyOn(MockableAdapter.prototype, 'listFriends').and.returnValue(Observable.of([]));
 
@@ -184,7 +188,7 @@ describe('NgChat', () => {
 
     it('Must update users property when onFriendsListChanged is invoked', () => {
         expect(this.subject.users).toBeUndefined();
-        
+
         this.subject.onFriendsListChanged([
             new User(),
             new User()
@@ -200,13 +204,13 @@ describe('NgChat', () => {
             status: 1,
             avatar: ''
         };
-        
+
         this.subject.windows = [
             {
                 chattingTo: user
             }
         ];
-        
+
         let result = this.subject.openChatWindow(user);
 
         expect(result).not.toBeUndefined();
@@ -217,9 +221,9 @@ describe('NgChat', () => {
         expect(result[0].chattingTo.displayName).toEqual(user.displayName);
     });
 
-    it('Must open a new window on a openChatWindow request when it is not opened yet', () =>{
+    it('Must open a new window on a openChatWindow request when it is not opened yet', () => {
         this.subject.historyEnabled = false;
-        
+
         let user: User = {
             id: 999,
             displayName: 'Test user',
@@ -237,9 +241,9 @@ describe('NgChat', () => {
         expect(result[0].chattingTo.displayName).toEqual(user.displayName);
     });
 
-    it('Must focus on the new window on a openChatWindow request when argument is supplied', () =>{
+    it('Must focus on the new window on a openChatWindow request when argument is supplied', () => {
         this.subject.historyEnabled = false;
-        
+
         let user: User = {
             id: 999,
             displayName: 'Test user',
@@ -247,7 +251,7 @@ describe('NgChat', () => {
             avatar: ''
         };
 
-        spyOn(this.subject, 'focusOnWindow'); 
+        spyOn(this.subject, 'focusOnWindow');
 
         let result = this.subject.openChatWindow(user, true);
 
@@ -255,9 +259,9 @@ describe('NgChat', () => {
         expect(this.subject.focusOnWindow).toHaveBeenCalledTimes(1);
     });
 
-    it('Must not focus on the new window on a openChatWindow request when argument is not supplied', () =>{
+    it('Must not focus on the new window on a openChatWindow request when argument is not supplied', () => {
         this.subject.historyEnabled = false;
-        
+
         let user: User = {
             id: 999,
             displayName: 'Test user',
@@ -265,7 +269,7 @@ describe('NgChat', () => {
             avatar: ''
         };
 
-        spyOn(this.subject, 'focusOnWindow'); 
+        spyOn(this.subject, 'focusOnWindow');
 
         let result = this.subject.openChatWindow(user);
 
@@ -273,7 +277,7 @@ describe('NgChat', () => {
         expect(this.subject.focusOnWindow).not.toHaveBeenCalled();
     });
 
-    it('Must load history from ChatAdapter when opening a window that is not yet opened', () =>{
+    it('Must load history from ChatAdapter when opening a window that is not yet opened', () => {
         let user: User = {
             id: 999,
             displayName: 'Test user',
@@ -294,7 +298,7 @@ describe('NgChat', () => {
         expect(MockableAdapter.prototype.getMessageHistory).toHaveBeenCalledTimes(1);
     });
 
-    it('Mark messages as seen exercise', () =>{
+    it('Mark messages as seen exercise', () => {
         let messages: Message[] = [{
             fromId: 1,
             message: 'Test',
@@ -318,7 +322,7 @@ describe('NgChat', () => {
     it('Should play HTMLAudioElement when emitting a message sound on an unfocused window', () => {
         let window = new Window();
 
-        spyOn(MockableHTMLAudioElement.prototype, 'play'); 
+        spyOn(MockableHTMLAudioElement.prototype, 'play');
 
         this.subject.emitMessageSound(window);
 
@@ -330,7 +334,7 @@ describe('NgChat', () => {
 
         window.hasFocus = true;
 
-        spyOn(MockableHTMLAudioElement.prototype, 'play'); 
+        spyOn(MockableHTMLAudioElement.prototype, 'play');
 
         this.subject.emitMessageSound(window);
 
@@ -342,7 +346,7 @@ describe('NgChat', () => {
 
         this.subject.audioEnabled = false;
 
-        spyOn(MockableHTMLAudioElement.prototype, 'play'); 
+        spyOn(MockableHTMLAudioElement.prototype, 'play');
 
         this.subject.emitMessageSound(window);
 
@@ -353,7 +357,7 @@ describe('NgChat', () => {
         let message = new Message();
         let user = new User();
 
-        spyOn(this.subject, 'emitMessageSound'); 
+        spyOn(this.subject, 'emitMessageSound');
         spyOn(this.subject, 'openChatWindow').and.returnValue([null, true]);
         spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
 
@@ -367,7 +371,7 @@ describe('NgChat', () => {
 
         this.subject.persistWindowsState = false;
 
-        spyOn(localStorage, 'setItem'); 
+        spyOn(localStorage, 'setItem');
 
         this.subject.updateWindowsState(windows);
 
@@ -377,10 +381,10 @@ describe('NgChat', () => {
     it('Update windows state exercise', () => {
         let persistedValue = null;
 
-        spyOn(localStorage, 'setItem').and.callFake((key, value) =>{
+        spyOn(localStorage, 'setItem').and.callFake((key, value) => {
             persistedValue = value;
         });
-        
+
         let firstUser = new User();
         let secondUser = new User();
 
@@ -392,7 +396,7 @@ describe('NgChat', () => {
 
         firstWindow.chattingTo = firstUser;
         secondWindow.chattingTo = secondUser;
-        
+
         let windows = [firstWindow, secondWindow];
 
         this.subject.updateWindowsState(windows);
@@ -404,7 +408,7 @@ describe('NgChat', () => {
     it('Should not restore windows state from local storage if persistWindowsState is disabled', () => {
         this.subject.persistWindowsState = false;
 
-        spyOn(this.subject, 'openChatWindow'); 
+        spyOn(this.subject, 'openChatWindow');
 
         this.subject.restoreWindowsState();
 
@@ -440,7 +444,7 @@ describe('NgChat', () => {
         this.subject.windows = [new Window()];
 
         spyOn(this.subject, 'updateWindowsState');
-        
+
         let result = this.subject.onCloseChatWindow(this.subject.windows[0]);
 
         expect(this.subject.updateWindowsState).toHaveBeenCalledTimes(1);
@@ -451,7 +455,7 @@ describe('NgChat', () => {
         let chattingToUser = new User();
         let sentMessage: Message = null;
         let event = {
-            keyCode: 13 
+            keyCode: 13
         };
 
         chattingToUser.id = 99;
@@ -477,7 +481,7 @@ describe('NgChat', () => {
         let chattingToUser = new User();
         let sentMessage: Message = null;
         let event = {
-            keyCode: 13 
+            keyCode: 13
         };
 
         chattingToUser.id = 99;
@@ -493,14 +497,14 @@ describe('NgChat', () => {
 
         expect(MockableAdapter.prototype.sendMessage).not.toHaveBeenCalled();
         expect(this.subject.scrollChatWindowToBottom).not.toHaveBeenCalled();
-        expect(sentMessage).toBeNull(); 
+        expect(sentMessage).toBeNull();
     });
 
     it('Must close the current window when the ESC key is pressed', () => {
         let currentWindow = new Window();
         let closedWindow: Window = null;
         let event = {
-            keyCode: 27 
+            keyCode: 27
         };
 
         spyOn(this.subject, 'onCloseChatWindow').and.callFake((window: Window) => {
@@ -519,7 +523,7 @@ describe('NgChat', () => {
         let closestWindow = new Window();
         let closedWindow: Window = null;
         let event = {
-            keyCode: 27 
+            keyCode: 27
         };
 
         spyOn(this.subject, 'onCloseChatWindow');
@@ -541,7 +545,7 @@ describe('NgChat', () => {
         let currentWindow = new Window();
         let closedWindow: Window = null;
         let event = {
-            keyCode: 27 
+            keyCode: 27
         };
 
         spyOn(this.subject, 'onCloseChatWindow');
@@ -563,33 +567,33 @@ describe('NgChat', () => {
         ];
 
         this.subject.chatWindowInputs = {
-            toArray: () => {}
+            toArray: () => { }
         };
 
         let fakeChatInputs = [
             {
                 nativeElement:
-                {
-                    focus: () => {}
-                }
+                    {
+                        focus: () => { }
+                    }
             },
             {
                 nativeElement:
-                {
-                    focus: () => {}
-                }
+                    {
+                        focus: () => { }
+                    }
             },
             {
                 nativeElement:
-                {
-                    focus: () => {}
-                }
+                    {
+                        focus: () => { }
+                    }
             }
         ];
 
         let event = {
             keyCode: 9,
-            preventDefault: () => {}
+            preventDefault: () => { }
         };
 
         spyOn(fakeChatInputs[0].nativeElement, 'focus');
@@ -614,34 +618,34 @@ describe('NgChat', () => {
         ];
 
         this.subject.chatWindowInputs = {
-            toArray: () => {}
+            toArray: () => { }
         };
 
         let fakeChatInputs = [
             {
                 nativeElement:
-                {
-                    focus: () => {}
-                }
+                    {
+                        focus: () => { }
+                    }
             },
             {
                 nativeElement:
-                {
-                    focus: () => {}
-                }
+                    {
+                        focus: () => { }
+                    }
             },
             {
                 nativeElement:
-                {
-                    focus: () => {}
-                }
+                    {
+                        focus: () => { }
+                    }
             }
         ];
 
         let event = {
             keyCode: 9,
             shiftKey: true,
-            preventDefault: () => {}
+            preventDefault: () => { }
         };
 
         spyOn(fakeChatInputs[0].nativeElement, 'focus');
@@ -660,7 +664,7 @@ describe('NgChat', () => {
 
     it('Must copy default text when a localization object was not supplied while initializing default text', () => {
         expect(this.subject.localization).toBeUndefined();
-        
+
         this.subject.initializeDefaultText();
 
         expect(this.subject.localization).not.toBeUndefined();
@@ -668,6 +672,7 @@ describe('NgChat', () => {
         expect(this.subject.localization.searchPlaceholder).toBe(this.subject.searchPlaceholder);
         expect(this.subject.localization.messagePlaceholder).toBe(this.subject.messagePlaceholder);
         expect(this.subject.localization.statusDescription).toBe(this.subject.statusDescription);
+        expect(this.subject.localization.browserNotificationTitle).toBe(this.subject.browserNotificationTitle);
     });
 
     it('Must not copy default text when a localization object was supplied while initializing default text', () => {
@@ -676,13 +681,14 @@ describe('NgChat', () => {
             searchPlaceholder: 'test 02',
             messagePlaceholder: 'test 03',
             statusDescription: {
-              online: 'test 04',
-              busy: 'test 05',
-              away: 'test 06',
-              offline: 'test 07'
-            }
+                online: 'test 04',
+                busy: 'test 05',
+                away: 'test 06',
+                offline: 'test 07'
+            },
+            browserNotificationTitle: 'test 08'
         };
-        
+
         this.subject.initializeDefaultText();
 
         expect(this.subject.localization).not.toBeUndefined();
@@ -690,392 +696,393 @@ describe('NgChat', () => {
         expect(this.subject.localization.searchPlaceholder).not.toBe(this.subject.searchPlaceholder);
         expect(this.subject.localization.messagePlaceholder).not.toBe(this.subject.messagePlaceholder);
         expect(this.subject.localization.statusDescription).not.toBe(this.subject.statusDescription);
+        expect(this.subject.localization.browserNotificationTitle).not.toBe(this.subject.browserNotificationTitle);
     });
-});
 
-it('FocusOnWindow exercise', () => {
-    this.subject.windows = [
-        new Window(),
-        new Window(),
-        new Window()
-    ];
+    it('FocusOnWindow exercise', () => {
+        this.subject.windows = [
+            new Window(),
+            new Window(),
+            new Window()
+        ];
 
-    this.subject.chatWindowInputs = {
-        toArray: () => {}
-    };
+        this.subject.chatWindowInputs = {
+            toArray: () => { }
+        };
 
-    let fakeChatInputs = [
-        {
-            nativeElement:
+        let fakeChatInputs = [
             {
-                focus: () => {}
-            }
-        },
-        {
-            nativeElement:
+                nativeElement:
+                    {
+                        focus: () => { }
+                    }
+            },
             {
-                focus: () => {}
-            }
-        },
-        {
-            nativeElement:
+                nativeElement:
+                    {
+                        focus: () => { }
+                    }
+            },
             {
-                focus: () => {}
+                nativeElement:
+                    {
+                        focus: () => { }
+                    }
             }
-        }
-    ];
+        ];
 
-    spyOn(fakeChatInputs[1].nativeElement, 'focus');
-    spyOn(this.subject.chatWindowInputs, 'toArray').and.returnValue(fakeChatInputs);
-    
-    spyOn(window, 'setTimeout').and.callFake((fn) => {
-        fn();
+        spyOn(fakeChatInputs[1].nativeElement, 'focus');
+        spyOn(this.subject.chatWindowInputs, 'toArray').and.returnValue(fakeChatInputs);
+
+        spyOn(window, 'setTimeout').and.callFake((fn) => {
+            fn();
+        });
+
+        this.subject.focusOnWindow(this.subject.windows[1]);
+
+        expect(fakeChatInputs[1].nativeElement.focus).toHaveBeenCalledTimes(1);
     });
 
-    this.subject.focusOnWindow(this.subject.windows[1]);
+    it('Must not focus on native element if a window is not found to focus when focusOnWindow is invoked', () => {
+        this.subject.windows = [];
 
-    expect(fakeChatInputs[1].nativeElement.focus).toHaveBeenCalledTimes(1);
-});
+        this.subject.chatWindowInputs = {
+            toArray: () => { }
+        };
 
-it('Must not focus on native element if a window is not found to focus when focusOnWindow is invoked', () => {
-    this.subject.windows = [];
-
-    this.subject.chatWindowInputs = {
-        toArray: () => {}
-    };
-
-    this.subject.focusOnWindow(new Window());
-});
-
-it('GetClosestWindow must return next relative right chat window', () => {
-    this.subject.windows = [
-        new Window(),
-        new Window(),
-        new Window()
-    ];
-
-    let result = this.subject.getClosestWindow(this.subject.windows[2]);
-
-    expect(result).toBe(this.subject.windows[1]);
-});
-
-it('GetClosestWindow must return previous chat window on 0 based index', () => {
-    this.subject.windows = [
-        new Window(),
-        new Window(),
-        new Window()
-    ];
-
-    let result = this.subject.getClosestWindow(this.subject.windows[0]);
-
-    expect(result).toBe(this.subject.windows[1]);
-});
-
-it('GetClosestWindow must return undefined when there is only one chat window opened on the chat', () => {
-    this.subject.windows = [
-        new Window()
-    ];
-
-    let result = this.subject.getClosestWindow(this.subject.windows[0]);
-
-    expect(result).toBe(undefined);
-});
-
-it('GetClosestWindow must return undefined when there is no open chat window on the chat', () => {
-    this.subject.windows = [];
-
-    let result = this.subject.getClosestWindow(new Window());
-
-    expect(result).toBe(undefined);
-});
-
-it('Must bootstrap browser notifications when user permission is granted', async () => {
-    this.subject.browserNotificationsBootstrapped = false;
-    spyOn(Notification, 'requestPermission').and.returnValue(true);
-
-    await this.subject.initializeBrowserNotifications();
-
-    expect(this.subject.browserNotificationsBootstrapped).toBeTruthy();
-    expect(Notification.requestPermission).toHaveBeenCalledTimes(1);
-});
-
-it('Must not bootstrap browser notifications when user permission is not granted', async () => {
-    this.subject.browserNotificationsBootstrapped = false;
-    spyOn(Notification, 'requestPermission').and.returnValue(false);
-
-    await this.subject.initializeBrowserNotifications();
-
-    expect(this.subject.browserNotificationsBootstrapped).toBeFalsy();
-    expect(Notification.requestPermission).toHaveBeenCalledTimes(1);
-});
-
-it('Must invoke emitBrowserNotification on new messages', () => {
-    let message = new Message();
-    let user = new User();
-
-    spyOn(this.subject, 'emitBrowserNotification'); 
-    spyOn(this.subject, 'openChatWindow').and.returnValue([null, true]);
-    spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
-    spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
-
-    this.subject.onMessageReceived(user, message);
-
-    expect(this.subject.emitBrowserNotification).toHaveBeenCalledTimes(1);
-});
-
-it('Must delegate message argument when invoking emitBrowserNotification on new messages', () => {
-    let message = new Message();
-    let argMessage = null;
-    message.message = 'Test message';
-
-    let user = new User();
-    this.subject.historyEnabled = true;
-
-    spyOn(this.subject, 'emitBrowserNotification').and.callFake((window, message) =>{
-        argMessage = message;
+        this.subject.focusOnWindow(new Window());
     });
 
-    spyOn(this.subject, 'openChatWindow').and.returnValue([null, true]);
-    spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
+    it('GetClosestWindow must return next relative right chat window', () => {
+        this.subject.windows = [
+            new Window(),
+            new Window(),
+            new Window()
+        ];
 
-    this.subject.onMessageReceived(user, message);
+        let result = this.subject.getClosestWindow(this.subject.windows[2]);
 
-    expect(this.subject.emitBrowserNotification).toHaveBeenCalledTimes(1);
-    expect(argMessage).toBe(message);
-});
-
-it('Must not invoke emitBrowserNotification when the maximizeWindowOnNewMessage setting is disabled', () => {
-    let message = new Message();
-    let user = new User();
-
-    this.subject.maximizeWindowOnNewMessage = false;
-
-    spyOn(this.subject, 'emitBrowserNotification'); 
-    spyOn(this.subject, 'openChatWindow').and.returnValue([null, true]);
-    spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
-    spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
-
-    this.subject.onMessageReceived(user, message);
-
-    expect(this.subject.emitBrowserNotification).not.toHaveBeenCalled();
-});
-
-it('Must invoke emitBrowserNotification when the maximizeWindowOnNewMessage setting is disabled but the window is maximized', () => {
-    let message = new Message();
-    let user = new User();
-    let window = new Window();
-
-    window.isCollapsed = false;
-    this.subject.maximizeWindowOnNewMessage = false;
-
-    spyOn(this.subject, 'emitBrowserNotification'); 
-    spyOn(this.subject, 'openChatWindow').and.returnValue([window, false]);
-    spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
-    spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
-
-    this.subject.onMessageReceived(user, message);
-
-    expect(this.subject.emitBrowserNotification).toHaveBeenCalledTimes(1);
-});
-
-it('Must not invoke emitBrowserNotification when the maximizeWindowOnNewMessage setting is disabled and the window is collapsed', () => {
-    let message = new Message();
-    let user = new User();
-    let window = new Window();
-
-    window.isCollapsed = true;
-    this.subject.maximizeWindowOnNewMessage = false;
-
-    spyOn(this.subject, 'emitBrowserNotification'); 
-    spyOn(this.subject, 'openChatWindow').and.returnValue([window, false]);
-    spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
-    spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
-
-    this.subject.onMessageReceived(user, message);
-
-    expect(this.subject.emitBrowserNotification).not.toHaveBeenCalled();
-});
-
-it('Must not invoke emitBrowserNotification when the maximizeWindowOnNewMessage setting is disabled and the window was freshly opened', () => {
-    let message = new Message();
-    let user = new User();
-    let window = new Window();
-
-    window.isCollapsed = false;
-    this.subject.maximizeWindowOnNewMessage = false;
-
-    spyOn(this.subject, 'emitBrowserNotification'); 
-    spyOn(this.subject, 'openChatWindow').and.returnValue([window, true]);
-    spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
-    spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
-
-    this.subject.onMessageReceived(user, message);
-
-    expect(this.subject.emitBrowserNotification).not.toHaveBeenCalled();
-});
-
-it('Must invoke onUserChatOpened event when a chat window is open via user click', () => {
-    this.subject.historyEnabled = false;
-    this.subject.windows = [];
-    
-    spyOn(this.subject, 'updateWindowsState'); 
-    spyOn(this.subject, 'focusOnWindow'); 
-
-    let eventInvoked = false;
-    let eventArgument = null;
-
-    this.subject.onUserChatOpened.subscribe(e => {
-        eventInvoked = true;
-        eventArgument = e;
+        expect(result).toBe(this.subject.windows[1]);
     });
-    
-    let user: User = {
-        id: 999,
-        displayName: 'Test user',
-        status: 1,
-        avatar: ''
-    };
-    
-    this.subject.openChatWindow(user, false, true);
 
-    expect(eventInvoked).toBeTruthy();
-    expect(eventArgument).toBe(user);
-});
+    it('GetClosestWindow must return previous chat window on 0 based index', () => {
+        this.subject.windows = [
+            new Window(),
+            new Window(),
+            new Window()
+        ];
 
-it('Must not invoke onUserChatOpened event when a window is already open for the user', () => {
-    this.subject.historyEnabled = false;
-    
-    let eventInvoked = false;
-    let eventArgument = null;
+        let result = this.subject.getClosestWindow(this.subject.windows[0]);
 
-    this.subject.onUserChatOpened.subscribe(e => {
-        eventInvoked = true;
-        eventArgument = e;
+        expect(result).toBe(this.subject.windows[1]);
     });
-    
-    let user: User = {
-        id: 999,
-        displayName: 'Test user',
-        status: 1,
-        avatar: ''
-    };
 
-    this.subject.windows = [
-        {
-            chattingTo: user
-        }
-    ];
-    
-    this.subject.openChatWindow(user, true, true);
+    it('GetClosestWindow must return undefined when there is only one chat window opened on the chat', () => {
+        this.subject.windows = [
+            new Window()
+        ];
 
-    expect(eventInvoked).toBeFalsy();
-    expect(eventArgument).toBe(null);
-});
+        let result = this.subject.getClosestWindow(this.subject.windows[0]);
 
-it('Must invoke onUserChatClosed event when a window is closed', () => {
-    
-    let window = new Window();
-
-    window.chattingTo = {
-        id: 999,
-        displayName: 'Test user',
-        status: 1,
-        avatar: ''
-    };
-
-    this.subject.windows = [window];
-
-    spyOn(this.subject, 'updateWindowsState'); // Bypassing this
-
-    let eventInvoked = false;
-    let eventArgument = null;
-
-    this.subject.onUserChatClosed.subscribe(e => {
-        eventInvoked = true;
-        eventArgument = e;
+        expect(result).toBe(undefined);
     });
-    
-    let result = this.subject.onCloseChatWindow(this.subject.windows[0]);
 
-    expect(eventInvoked).toBeTruthy();
-    expect(eventArgument).toBe(window.chattingTo);
-});
+    it('GetClosestWindow must return undefined when there is no open chat window on the chat', () => {
+        this.subject.windows = [];
 
-it('Must not invoke onUserClicked event when a user is clicked on the friend list and the window is already open', () => {
-    this.subject.historyEnabled = false;
-    
-    let eventInvoked = false;
-    let eventArgument = null;
+        let result = this.subject.getClosestWindow(new Window());
 
-    this.subject.onUserClicked.subscribe(e => {
-        eventInvoked = true;
-        eventArgument = e;
+        expect(result).toBe(undefined);
     });
-    
-    let user: User = {
-        id: 999,
-        displayName: 'Test user',
-        status: 1,
-        avatar: ''
-    };
 
-    this.subject.windows = [
-        {
-            chattingTo: user
-        }
-    ];
-    
-    this.subject.openChatWindow(user, true, true);
+    it('Must bootstrap browser notifications when user permission is granted', async () => {
+        this.subject.browserNotificationsBootstrapped = false;
+        spyOn(Notification, 'requestPermission').and.returnValue(true);
 
-    expect(eventInvoked).toBeFalsy();
-    expect(eventArgument).toBe(null);
-});
+        await this.subject.initializeBrowserNotifications();
 
-it('Must not invoke onUserClicked event when a window is open but not triggered directly via user click', () => {
-    this.subject.historyEnabled = false;
-    
-    let eventInvoked = false;
-    let eventArgument = null;
-
-    this.subject.onUserClicked.subscribe(e => {
-        eventInvoked = true;
-        eventArgument = e;
+        expect(this.subject.browserNotificationsBootstrapped).toBeTruthy();
+        expect(Notification.requestPermission).toHaveBeenCalledTimes(1);
     });
-    
-    let user: User = {
-        id: 999,
-        displayName: 'Test user',
-        status: 1,
-        avatar: ''
-    };
-    
-    this.subject.openChatWindow(user, true, false);
 
-    expect(eventInvoked).toBeFalsy();
-    expect(eventArgument).toBe(null);
-});
+    it('Must not bootstrap browser notifications when user permission is not granted', async () => {
+        this.subject.browserNotificationsBootstrapped = false;
+        spyOn(Notification, 'requestPermission').and.returnValue(false);
 
-it('Must invoke onUserClicked event when a user is clicked on the friend list', () => {
-    this.subject.historyEnabled = false;
-    this.subject.windows = [];
+        await this.subject.initializeBrowserNotifications();
 
-    let eventInvoked = false;
-    let eventArgument = null;
-
-    this.subject.onUserClicked.subscribe(e => {
-        eventInvoked = true;
-        eventArgument = e;
+        expect(this.subject.browserNotificationsBootstrapped).toBeFalsy();
+        expect(Notification.requestPermission).toHaveBeenCalledTimes(1);
     });
-    
-    let user: User = {
-        id: 999,
-        displayName: 'Test user',
-        status: 1,
-        avatar: ''
-    };
-    
-    this.subject.openChatWindow(user, true, true);
 
-    expect(eventInvoked).toBeTruthy();
-    expect(eventArgument).toBe(user);
+    it('Must invoke emitBrowserNotification on new messages', () => {
+        let message = new Message();
+        let user = new User();
+
+        spyOn(this.subject, 'emitBrowserNotification');
+        spyOn(this.subject, 'openChatWindow').and.returnValue([null, true]);
+        spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
+        spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
+
+        this.subject.onMessageReceived(user, message);
+
+        expect(this.subject.emitBrowserNotification).toHaveBeenCalledTimes(1);
+    });
+
+    it('Must delegate message argument when invoking emitBrowserNotification on new messages', () => {
+        let message = new Message();
+        let argMessage = null;
+        message.message = 'Test message';
+
+        let user = new User();
+        this.subject.historyEnabled = true;
+
+        spyOn(this.subject, 'emitBrowserNotification').and.callFake((window, message) => {
+            argMessage = message;
+        });
+
+        spyOn(this.subject, 'openChatWindow').and.returnValue([null, true]);
+        spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
+
+        this.subject.onMessageReceived(user, message);
+
+        expect(this.subject.emitBrowserNotification).toHaveBeenCalledTimes(1);
+        expect(argMessage).toBe(message);
+    });
+
+    it('Must not invoke emitBrowserNotification when the maximizeWindowOnNewMessage setting is disabled', () => {
+        let message = new Message();
+        let user = new User();
+
+        this.subject.maximizeWindowOnNewMessage = false;
+
+        spyOn(this.subject, 'emitBrowserNotification');
+        spyOn(this.subject, 'openChatWindow').and.returnValue([null, true]);
+        spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
+        spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
+
+        this.subject.onMessageReceived(user, message);
+
+        expect(this.subject.emitBrowserNotification).not.toHaveBeenCalled();
+    });
+
+    it('Must invoke emitBrowserNotification when the maximizeWindowOnNewMessage setting is disabled but the window is maximized', () => {
+        let message = new Message();
+        let user = new User();
+        let window = new Window();
+
+        window.isCollapsed = false;
+        this.subject.maximizeWindowOnNewMessage = false;
+
+        spyOn(this.subject, 'emitBrowserNotification');
+        spyOn(this.subject, 'openChatWindow').and.returnValue([window, false]);
+        spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
+        spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
+
+        this.subject.onMessageReceived(user, message);
+
+        expect(this.subject.emitBrowserNotification).toHaveBeenCalledTimes(1);
+    });
+
+    it('Must not invoke emitBrowserNotification when the maximizeWindowOnNewMessage setting is disabled and the window is collapsed', () => {
+        let message = new Message();
+        let user = new User();
+        let window = new Window();
+
+        window.isCollapsed = true;
+        this.subject.maximizeWindowOnNewMessage = false;
+
+        spyOn(this.subject, 'emitBrowserNotification');
+        spyOn(this.subject, 'openChatWindow').and.returnValue([window, false]);
+        spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
+        spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
+
+        this.subject.onMessageReceived(user, message);
+
+        expect(this.subject.emitBrowserNotification).not.toHaveBeenCalled();
+    });
+
+    it('Must not invoke emitBrowserNotification when the maximizeWindowOnNewMessage setting is disabled and the window was freshly opened', () => {
+        let message = new Message();
+        let user = new User();
+        let window = new Window();
+
+        window.isCollapsed = false;
+        this.subject.maximizeWindowOnNewMessage = false;
+
+        spyOn(this.subject, 'emitBrowserNotification');
+        spyOn(this.subject, 'openChatWindow').and.returnValue([window, true]);
+        spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
+        spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
+
+        this.subject.onMessageReceived(user, message);
+
+        expect(this.subject.emitBrowserNotification).not.toHaveBeenCalled();
+    });
+
+    it('Must invoke onUserChatOpened event when a chat window is open via user click', () => {
+        this.subject.historyEnabled = false;
+        this.subject.windows = [];
+
+        spyOn(this.subject, 'updateWindowsState');
+        spyOn(this.subject, 'focusOnWindow');
+
+        let eventInvoked = false;
+        let eventArgument = null;
+
+        this.subject.onUserChatOpened.subscribe(e => {
+            eventInvoked = true;
+            eventArgument = e;
+        });
+
+        let user: User = {
+            id: 999,
+            displayName: 'Test user',
+            status: 1,
+            avatar: ''
+        };
+
+        this.subject.openChatWindow(user, false, true);
+
+        expect(eventInvoked).toBeTruthy();
+        expect(eventArgument).toBe(user);
+    });
+
+    it('Must not invoke onUserChatOpened event when a window is already open for the user', () => {
+        this.subject.historyEnabled = false;
+
+        let eventInvoked = false;
+        let eventArgument = null;
+
+        this.subject.onUserChatOpened.subscribe(e => {
+            eventInvoked = true;
+            eventArgument = e;
+        });
+
+        let user: User = {
+            id: 999,
+            displayName: 'Test user',
+            status: 1,
+            avatar: ''
+        };
+
+        this.subject.windows = [
+            {
+                chattingTo: user
+            }
+        ];
+
+        this.subject.openChatWindow(user, true, true);
+
+        expect(eventInvoked).toBeFalsy();
+        expect(eventArgument).toBe(null);
+    });
+
+    it('Must invoke onUserChatClosed event when a window is closed', () => {
+
+        let window = new Window();
+
+        window.chattingTo = {
+            id: 999,
+            displayName: 'Test user',
+            status: 1,
+            avatar: ''
+        };
+
+        this.subject.windows = [window];
+
+        spyOn(this.subject, 'updateWindowsState'); // Bypassing this
+
+        let eventInvoked = false;
+        let eventArgument = null;
+
+        this.subject.onUserChatClosed.subscribe(e => {
+            eventInvoked = true;
+            eventArgument = e;
+        });
+
+        let result = this.subject.onCloseChatWindow(this.subject.windows[0]);
+
+        expect(eventInvoked).toBeTruthy();
+        expect(eventArgument).toBe(window.chattingTo);
+    });
+
+    it('Must not invoke onUserClicked event when a user is clicked on the friend list and the window is already open', () => {
+        this.subject.historyEnabled = false;
+
+        let eventInvoked = false;
+        let eventArgument = null;
+
+        this.subject.onUserClicked.subscribe(e => {
+            eventInvoked = true;
+            eventArgument = e;
+        });
+
+        let user: User = {
+            id: 999,
+            displayName: 'Test user',
+            status: 1,
+            avatar: ''
+        };
+
+        this.subject.windows = [
+            {
+                chattingTo: user
+            }
+        ];
+
+        this.subject.openChatWindow(user, true, true);
+
+        expect(eventInvoked).toBeFalsy();
+        expect(eventArgument).toBe(null);
+    });
+
+    it('Must not invoke onUserClicked event when a window is open but not triggered directly via user click', () => {
+        this.subject.historyEnabled = false;
+
+        let eventInvoked = false;
+        let eventArgument = null;
+
+        this.subject.onUserClicked.subscribe(e => {
+            eventInvoked = true;
+            eventArgument = e;
+        });
+
+        let user: User = {
+            id: 999,
+            displayName: 'Test user',
+            status: 1,
+            avatar: ''
+        };
+
+        this.subject.openChatWindow(user, true, false);
+
+        expect(eventInvoked).toBeFalsy();
+        expect(eventArgument).toBe(null);
+    });
+
+    it('Must invoke onUserClicked event when a user is clicked on the friend list', () => {
+        this.subject.historyEnabled = false;
+        this.subject.windows = [];
+
+        let eventInvoked = false;
+        let eventArgument = null;
+
+        this.subject.onUserClicked.subscribe(e => {
+            eventInvoked = true;
+            eventArgument = e;
+        });
+
+        let user: User = {
+            id: 999,
+            displayName: 'Test user',
+            status: 1,
+            avatar: ''
+        };
+
+        this.subject.openChatWindow(user, true, true);
+
+        expect(eventInvoked).toBeTruthy();
+        expect(eventArgument).toBe(user);
+    });
 });

@@ -75,6 +75,9 @@ export class NgChat implements OnInit {
     public browserNotificationIconSource: string = 'https://raw.githubusercontent.com/rpaschoal/ng-chat/master/src/ng-chat/assets/notification.png';
 
     @Input()
+    public browserNotificationTitle: string = "New message from";
+
+    @Input()
     public localization: Localization;
 
     @Output()
@@ -220,7 +223,8 @@ export class NgChat implements OnInit {
                 messagePlaceholder: this.messagePlaceholder,
                 searchPlaceholder: this.searchPlaceholder, 
                 title: this.title,
-                statusDescription: this.statusDescription
+                statusDescription: this.statusDescription,
+                browserNotificationTitle: this.browserNotificationTitle
             };
         }
     }
@@ -345,9 +349,12 @@ export class NgChat implements OnInit {
         if (windowIndex >= 0)
         {
             setTimeout(() => {
-                let messageInputToFocus = this.chatWindowInputs.toArray()[windowIndex];
+                if (this.chatWindowInputs)
+                {
+                    let messageInputToFocus = this.chatWindowInputs.toArray()[windowIndex];
                 
-                messageInputToFocus.nativeElement.focus(); 
+                    messageInputToFocus.nativeElement.focus(); 
+                }
 
                 callback(); 
             });
@@ -399,7 +406,7 @@ export class NgChat implements OnInit {
     private emitBrowserNotification(window: Window, message: Message): void
     {       
         if (this.browserNotificationsBootstrapped && !window.hasFocus && message) {
-            let notification = new Notification(`New message from ${window.chattingTo.displayName}`, {
+            let notification = new Notification(`${this.localization.browserNotificationTitle} ${window.chattingTo.displayName}`, {
                 'body': window.messages[window.messages.length - 1].message,
                 'icon': this.browserNotificationIconSource
             });
