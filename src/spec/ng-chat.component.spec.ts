@@ -1085,4 +1085,54 @@ describe('NgChat', () => {
         expect(eventInvoked).toBeTruthy();
         expect(eventArgument).toBe(user);
     });
+    
+    it('Must invoke onMessageSeen event when a window gets focus', () => {
+        
+        spyOn(this.subject, 'onMessageSeen');
+        
+        let eventInvoked = false;
+        let eventArgument = null;
+        let invocationCount = 0;
+        
+        this.subject.windows = [];
+        
+        this.subject.onMessageSeen.subscribe(e => {
+            eventInvoked = true;
+            eventArgument = e;
+            invocationCount++;
+        });
+
+        let user: User = {
+            id: 999,
+            displayName: 'Test user',
+            status: 1,
+            avatar: ''
+        };
+        
+        let messages: Message[] = [
+            {
+                fromId: 999,
+                toId: 123,
+                message:'Hi',
+                seenOn: new Date()
+            },
+            {
+                fromId: 999,
+                toId: 123,
+                message:'Hi'
+            }
+        ];
+        
+        let window: Window = new Window();
+        window.chattingTo = user;
+        window.messages = messages;
+        
+        this.subject.windows.push(window);
+        
+        this.subject.toggleWindowFocus(window);
+
+        expect(eventInvoked).toBeTruthy();
+        expect(eventArgument.length).toBe(1);
+        expect(invocationCount).toBe(1);
+    });
 });

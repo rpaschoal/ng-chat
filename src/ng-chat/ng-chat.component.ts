@@ -88,6 +88,9 @@ export class NgChat implements OnInit {
 
     @Output()
     public onUserChatClosed: EventEmitter<User> = new EventEmitter<User>();
+    
+    @Output()
+    public onMessageSeen: EventEmitter<Message[]> = new EventEmitter<Message[]>();
 
     private browserNotificationsBootstrapped: boolean = false;
 
@@ -345,7 +348,6 @@ export class NgChat implements OnInit {
     private focusOnWindow(window: Window, callback: Function = () => {}) : void
     {
         let windowIndex = this.windows.indexOf(window);
-
         if (windowIndex >= 0)
         {
             setTimeout(() => {
@@ -475,19 +477,14 @@ export class NgChat implements OnInit {
     unreadMessagesTotal(window: Window): string
     {
         if (window){
-            if (window.hasFocus){
-                this.markMessagesAsRead(window.messages);
-            }
-            else{
-                let totalUnreadMessages = window.messages.filter(x => x.fromId != this.userId && !x.seenOn).length;
-                
-                if (totalUnreadMessages > 0){
+            let totalUnreadMessages = window.messages.filter(x => x.fromId != this.userId && !x.seenOn).length;
+            
+            if (totalUnreadMessages > 0){
 
-                    if (totalUnreadMessages > 99) 
-                        return  "99+";
-                    else
-                        return String(totalUnreadMessages); 
-                }
+                if (totalUnreadMessages > 99) 
+                    return  "99+";
+                else
+                    return String(totalUnreadMessages); 
             }
         }
             
@@ -610,6 +607,15 @@ export class NgChat implements OnInit {
     toggleWindowFocus(window: Window): void
     {
         window.hasFocus = !window.hasFocus;
+        if(window.hasFocus) {
+            let unreadMessages: Message[] = [];
+            window.messages.filter(message => message.seenOn == null && message.toId == this.userId).forEach(message => { 
+                unreadMessages.push(message);
+            });
+            
+            this.markMessagesAsRead(unreadMessages);
+            this.onMessageSeen.emit(unreadMessages);
+        }
     }
 
     // [Localized] Returns the status descriptive title
