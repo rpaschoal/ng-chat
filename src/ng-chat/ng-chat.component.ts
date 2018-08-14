@@ -90,7 +90,7 @@ export class NgChat implements OnInit {
     public onUserChatClosed: EventEmitter<User> = new EventEmitter<User>();
     
     @Output()
-    public onMessageSeen: EventEmitter<Message[]> = new EventEmitter<Message[]>();
+    public onMessagesSeen: EventEmitter<Message[]> = new EventEmitter<Message[]>();
 
     private browserNotificationsBootstrapped: boolean = false;
 
@@ -614,7 +614,7 @@ export class NgChat implements OnInit {
             });
             
             this.markMessagesAsRead(unreadMessages);
-            this.onMessageSeen.emit(unreadMessages);
+            this.onMessagesSeen.emit(unreadMessages);
         }
     }
 
