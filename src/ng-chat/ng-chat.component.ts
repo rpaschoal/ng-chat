@@ -5,6 +5,7 @@ import { Message } from "./core/message";
 import { Window } from "./core/window";
 import { UserStatus } from "./core/user-status.enum";
 import { Localization, StatusDescription } from './core/localization';
+import { IChatController } from './core/chat-controller'
 import 'rxjs/add/operator/map';
 
 @Component({
@@ -17,7 +18,7 @@ import 'rxjs/add/operator/map';
     ]
 })
 
-export class NgChat implements OnInit {
+export class NgChat implements OnInit, IChatController {
     constructor() { }
 
     // Exposes the enum for the template
@@ -627,5 +628,25 @@ export class NgChat implements OnInit {
         let currentStatus = status.toString().toLowerCase();
 
         return this.localization.statusDescription[currentStatus];
+    }
+
+    triggerOpenChatWindow(user: User): void {
+        this.openChatWindow(user);
+    }
+
+    triggerCloseChatWindow(userId: any): void {
+        let openedWindow = this.windows.find(x => x.chattingTo.id == userId);
+
+        if (openedWindow){
+            this.onCloseChatWindow(openedWindow);
+        }
+    }
+
+    triggerToggleChatWindowVisibility(userId: any): void {
+        let openedWindow = this.windows.find(x => x.chattingTo.id == userId);
+
+        if (openedWindow){
+            this.onChatWindowClicked(openedWindow);
+        }
     }
 }
