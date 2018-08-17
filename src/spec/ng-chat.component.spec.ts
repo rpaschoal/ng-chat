@@ -1129,4 +1129,93 @@ describe('NgChat', () => {
         expect(spy).toHaveBeenCalledTimes(1);
         expect(spy.calls.mostRecent().args.length).toBe(1);
     });
+
+    it('Must invoke openChatWindow when triggerOpenChatWindow is invoked', () => {
+        let spy = spyOn(this.subject, 'openChatWindow');
+
+        let user: User = {
+            id: 999,
+            displayName: 'Test user',
+            status: 1,
+            avatar: ''
+        };
+
+        this.subject.triggerOpenChatWindow(user);
+
+        expect(spy).toHaveBeenCalled();
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(spy.calls.mostRecent().args.length).toBe(1);
+    });
+
+    it('Must not invoke openChatWindow when triggerOpenChatWindow is invoked but user is undefined', () => {
+        let spy = spyOn(this.subject, 'openChatWindow');
+
+        this.subject.triggerOpenChatWindow(null);
+
+        expect(spy).not.toHaveBeenCalled();
+    });
+
+    it('Must invoke onCloseChatWindow when triggerCloseChatWindow is invoked', () => {
+        let spy = spyOn(this.subject, 'onCloseChatWindow');
+
+        let user: User = {
+            id: 999,
+            displayName: 'Test user',
+            status: 1,
+            avatar: ''
+        };
+
+        let window: Window = new Window();
+        window.chattingTo = user;
+        
+        this.subject.windows.push(window);
+
+        this.subject.triggerCloseChatWindow(user.id);
+
+        expect(spy).toHaveBeenCalled();
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(spy.calls.mostRecent().args.length).toBe(1);
+    });
+
+    it('Must not invoke onCloseChatWindow when triggerCloseChatWindow is invoked but user is not found', () => {
+        let spy = spyOn(this.subject, 'onCloseChatWindow');
+
+        this.subject.windows = [];
+
+        this.subject.triggerCloseChatWindow(1);
+
+        expect(spy).not.toHaveBeenCalled();
+    });
+
+    it('Must invoke onChatWindowClicked when triggerToggleChatWindowVisibility is invoked', () => {
+        let spy = spyOn(this.subject, 'onChatWindowClicked');
+
+        let user: User = {
+            id: 999,
+            displayName: 'Test user',
+            status: 1,
+            avatar: ''
+        };
+
+        let window: Window = new Window();
+        window.chattingTo = user;
+        
+        this.subject.windows.push(window);
+
+        this.subject.triggerToggleChatWindowVisibility(user.id);
+
+        expect(spy).toHaveBeenCalled();
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(spy.calls.mostRecent().args.length).toBe(1);
+    });
+
+    it('Must not invoke onChatWindowClicked when triggerToggleChatWindowVisibility is invoked but user is not found', () => {
+        let spy = spyOn(this.subject, 'onChatWindowClicked');
+
+        this.subject.windows = [];
+
+        this.subject.triggerToggleChatWindowVisibility(1);
+
+        expect(spy).not.toHaveBeenCalled();
+    });
 });

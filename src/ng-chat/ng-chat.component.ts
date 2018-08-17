@@ -631,7 +631,10 @@ export class NgChat implements OnInit, IChatController {
     }
 
     triggerOpenChatWindow(user: User): void {
-        this.openChatWindow(user);
+        if (user)
+        {
+            this.openChatWindow(user);
+        }
     }
 
     triggerCloseChatWindow(userId: any): void {
