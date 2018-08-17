@@ -64,6 +64,10 @@ describe('NgChat', () => {
         expect(this.subject.audioSource).not.toBeUndefined();
     });
 
+    it('Friends list search must be enabled by default', () => {
+        expect(this.subject.searchEnabled).not.toBeFalsy();
+    });
+
     it('Persistent windows state must be enabled by default', () => {
         expect(this.subject.persistWindowsState).toBeTruthy();
     });
