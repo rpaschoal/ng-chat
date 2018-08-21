@@ -11,4 +11,6 @@ export class Window
     public isCollapsed?: boolean = false; 
     public isLoadingHistory: boolean = false;
     public hasFocus: boolean = false;
+    public hasMoreMessages: boolean = true;
+    public historyPage: number = 0;
 }
