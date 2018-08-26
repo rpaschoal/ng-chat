@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import { Message } from '../ng-chat/core/message';
 import { EventEmitter } from '@angular/core';
+import { ScrollDirection } from '../ng-chat/core/scroll-direction.enum';
 
 class MockableAdapter extends ChatAdapter {
     public listFriends(): Observable<User[]> {
@@ -359,7 +360,7 @@ describe('NgChat', () => {
 
         spyOn(this.subject, 'emitMessageSound');
         spyOn(this.subject, 'openChatWindow').and.returnValue([null, true]);
-        spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
+        spyOn(this.subject, 'scrollChatWindow'); // Masking this call as we're not testing this part on this spec
 
         this.subject.onMessageReceived(user, message);
 
@@ -465,13 +466,15 @@ describe('NgChat', () => {
         spyOn(MockableAdapter.prototype, 'sendMessage').and.callFake((message: Message) => {
             sentMessage = message;
         });
-        spyOn(this.subject, 'scrollChatWindowToBottom');
+        let spy = spyOn(this.subject, 'scrollChatWindow');
 
         this.subject.onChatInputTyped(event, currentWindow);
 
         expect(currentWindow.newMessage).toBe(""); // Should clean the message input after dispatching the message
         expect(MockableAdapter.prototype.sendMessage).toHaveBeenCalledTimes(1);
-        expect(this.subject.scrollChatWindowToBottom).toHaveBeenCalledTimes(1);
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(spy.calls.mostRecent().args[1]).toBe(ScrollDirection.Bottom);
+        
         expect(sentMessage).not.toBeNull();
         expect(sentMessage.message).toBe("Test");
     });
@@ -491,12 +494,12 @@ describe('NgChat', () => {
         spyOn(MockableAdapter.prototype, 'sendMessage').and.callFake((message: Message) => {
             sentMessage = message;
         });
-        spyOn(this.subject, 'scrollChatWindowToBottom');
+        spyOn(this.subject, 'scrollChatWindow');
 
         this.subject.onChatInputTyped(event, currentWindow);
 
         expect(MockableAdapter.prototype.sendMessage).not.toHaveBeenCalled();
-        expect(this.subject.scrollChatWindowToBottom).not.toHaveBeenCalled();
+        expect(this.subject.scrollChatWindow).not.toHaveBeenCalled();
         expect(sentMessage).toBeNull();
     });
 
@@ -821,7 +824,7 @@ describe('NgChat', () => {
 
         spyOn(this.subject, 'emitBrowserNotification');
         spyOn(this.subject, 'openChatWindow').and.returnValue([null, true]);
-        spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
+        spyOn(this.subject, 'scrollChatWindow'); // Masking this call as we're not testing this part on this spec
         spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
 
         this.subject.onMessageReceived(user, message);
@@ -858,7 +861,7 @@ describe('NgChat', () => {
 
         spyOn(this.subject, 'emitBrowserNotification');
         spyOn(this.subject, 'openChatWindow').and.returnValue([null, true]);
-        spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
+        spyOn(this.subject, 'scrollChatWindow'); // Masking this call as we're not testing this part on this spec
         spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
 
         this.subject.onMessageReceived(user, message);
@@ -876,7 +879,7 @@ describe('NgChat', () => {
 
         spyOn(this.subject, 'emitBrowserNotification');
         spyOn(this.subject, 'openChatWindow').and.returnValue([window, false]);
-        spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
+        spyOn(this.subject, 'scrollChatWindow'); // Masking this call as we're not testing this part on this spec
         spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
 
         this.subject.onMessageReceived(user, message);
@@ -894,7 +897,7 @@ describe('NgChat', () => {
 
         spyOn(this.subject, 'emitBrowserNotification');
         spyOn(this.subject, 'openChatWindow').and.returnValue([window, false]);
-        spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
+        spyOn(this.subject, 'scrollChatWindow'); // Masking this call as we're not testing this part on this spec
         spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
 
         this.subject.onMessageReceived(user, message);
@@ -912,7 +915,7 @@ describe('NgChat', () => {
 
         spyOn(this.subject, 'emitBrowserNotification');
         spyOn(this.subject, 'openChatWindow').and.returnValue([window, true]);
-        spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
+        spyOn(this.subject, 'scrollChatWindow'); // Masking this call as we're not testing this part on this spec
         spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
 
         this.subject.onMessageReceived(user, message);
