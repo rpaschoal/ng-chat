@@ -307,7 +307,7 @@ export class NgChat implements OnInit {
                 isLoadingHistory: this.historyEnabled,
                 hasFocus: false, // This will be triggered when the 'newMessage' input gets the current focus
                 isCollapsed: collapseWindow,
-                hasMoreMessages: true,
+                hasMoreMessages: false,
                 historyPage: 0
             };
 
@@ -639,7 +639,7 @@ export class NgChat implements OnInit {
             window.messages = result.concat(window.messages);
             window.isLoadingHistory = false;
             let direction: ScrollDirection = (window.historyPage == 1) ? ScrollDirection.Bottom : ScrollDirection.Top;
-
+            window.hasMoreMessages = result.length == this.historyPageSize;    
             setTimeout(() => { this.scrollChatWindow(window, direction)});
         }).subscribe();
     }
