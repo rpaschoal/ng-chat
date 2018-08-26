@@ -1,4 +1,4 @@
 export enum ScrollDirection {
-    TOP,
-    BOTTOM
+    Top,
+    Bottom
 }
