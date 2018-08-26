@@ -269,7 +269,7 @@ export class NgChat implements OnInit {
             if (!chatWindow[1] || !this.historyEnabled){
                 chatWindow[0].messages.push(message);
 
-                this.scrollChatWindow(chatWindow[0], ScrollDirection.BOTTOM);
+                this.scrollChatWindow(chatWindow[0], ScrollDirection.Bottom);
             }
 
             this.emitMessageSound(chatWindow[0]);
@@ -370,7 +370,7 @@ export class NgChat implements OnInit {
             setTimeout(() => {
                 if (this.chatMessageClusters){
                     let element = this.chatMessageClusters.toArray()[windowIndex].nativeElement;
-                    let position = ( direction === ScrollDirection.TOP ) ? 0 : element.scrollHeight;
+                    let position = ( direction === ScrollDirection.Top ) ? 0 : element.scrollHeight;
                     element.scrollTop = position;
                 }
             }); 
@@ -529,7 +529,7 @@ export class NgChat implements OnInit {
         
                     window.newMessage = ""; // Resets the new message input
         
-                    this.scrollChatWindow(window, ScrollDirection.BOTTOM);
+                    this.scrollChatWindow(window, ScrollDirection.Bottom);
                 }
                 break;
             case 9:
@@ -583,7 +583,7 @@ export class NgChat implements OnInit {
     onChatWindowClicked(window: Window): void
     {
         window.isCollapsed = !window.isCollapsed;
-        this.scrollChatWindow(window, ScrollDirection.BOTTOM);
+        this.scrollChatWindow(window, ScrollDirection.Bottom);
     }
 
     // Asserts if a user avatar is visible in a chat cluster
@@ -638,7 +638,7 @@ export class NgChat implements OnInit {
             //newChatWindow.messages.push.apply(newChatWindow.messages, result);
             window.messages = result.concat(window.messages);
             window.isLoadingHistory = false;
-            let direction: ScrollDirection = (window.historyPage == 1) ? ScrollDirection.BOTTOM : ScrollDirection.TOP;
+            let direction: ScrollDirection = (window.historyPage == 1) ? ScrollDirection.Bottom : ScrollDirection.Top;
 
             setTimeout(() => { this.scrollChatWindow(window, direction)});
         }).subscribe();
