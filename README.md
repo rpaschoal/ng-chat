@@ -75,6 +75,7 @@ __Additional Settings__
 * [isCollapsed]{boolean}: If set to true the friends list will be rendered as collapsed by default. Default is false.
 * [pollFriendsList]{boolean}: If set to true the module will do a long poll on the "adapter.listFriends" method to keep the friends list updated. Default is false.
 * [pollingInterval]{number}: Configures the long poll interval in milliseconds. Default is 5000.
+* [searchEnabled]{boolean}: Enables the search bar on the friends list. Default is true.
 * [historyEnabled]{boolean}: Defines whether the component should call the "getMessageHistory" from the chat-adapter. Default is true.
 * [emojisEnabled]{boolean}: Enables emoji parsing on the messages. Default is true.
 * [linkfyEnabled]{boolean}: Transforms links within the messages to valid HTML links. Default is true.
@@ -94,6 +95,7 @@ __Events__
 * (onUserClicked){User}: Event emitted every time a user is clicked on the chat window and a new chat window is opened.
 * (onUserChatOpened){User}: Event emitted every time a chat window is opened, regardless if it was due to a user click on the friends list or via new message received.
 * (onUserChatClosed){User}: Event emitted every time a chat window is closed.
+* (onMessagesSeen){Message[]}: Event emitted every time a chunk of unread messages are seen by a user.
 
 #### Implement your ChatAdapter:
 
