@@ -132,7 +132,7 @@ If in doubt, I've provided 2 adapter implementations in this repo that can be fo
 
 #### Triggering ng-chat actions from elsewhere:
 
-Certain ng-chat actions can be triggered from your application by using the exported [IChatController](https://github.com/rpaschoal/ng-chat/blob/1.0.15/src/ng-chat/core/chat-controller.ts) interface.
+Certain ng-chat actions can be triggered from your application by using the exported [IChatController](https://github.com/rpaschoal/ng-chat/blob/master/src/ng-chat/core/chat-controller.ts) interface.
 
 Assuming you have a ng-chat instance declared on your template file, add an Angular unique identifier to it:
 
