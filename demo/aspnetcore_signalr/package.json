@@ -50,7 +50,7 @@
     "gulp-uglify": "^3.0.0",
     "http-server": "^0.10.0",
     "lite-server": "^2.3.0",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.5",
     "protractor": "~5.1.2",
     "rimraf": "^2.6.1",
     "run-sequence": "^2.0.0",
