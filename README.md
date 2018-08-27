@@ -130,6 +130,29 @@ If in doubt, I've provided 2 adapter implementations in this repo that can be fo
 * [Offline Bot Adapter](https://github.com/rpaschoal/ng-chat/blob/master/demo/offline_bot/src/app/demo-adapter.ts)
 * [SignalR Adapter](https://github.com/rpaschoal/ng-chat/blob/master/demo/aspnetcore_signalr/angularApp/core/app.ngchat.signalr.adapter.ts)
 
+#### Triggering ng-chat actions from elsewhere:
+
+Certain ng-chat actions can be triggered from your application by using the exported [IChatController](https://github.com/rpaschoal/ng-chat/blob/1.0.15/src/ng-chat/core/chat-controller.ts) interface.
+
+Assuming you have a ng-chat instance declared on your template file, add an Angular unique identifier to it:
+
+```
+<ng-chat #ngChatInstance ... />
+```
+
+Then on your component's code, declare a `ViewChild` property in order to bind your ng-chat instance:
+
+```
+@ViewChild('ngChatInstance')
+protected ngChatInstance: IChatController;
+```
+
+You can now trigger some ng-chat actions such as opening a chat window from elsewhere using the following code:
+
+```
+this.ngChatInstance.triggerOpenChatWindow(user);
+```
+
 # Troubleshooting
 
 Please follow this guideline when reporting bugs and feature requests:
