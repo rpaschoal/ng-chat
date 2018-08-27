@@ -5,6 +5,7 @@ import { Message } from "./core/message";
 import { Window } from "./core/window";
 import { UserStatus } from "./core/user-status.enum";
 import { Localization, StatusDescription } from './core/localization';
+import { IChatController } from './core/chat-controller'
 import 'rxjs/add/operator/map';
 
 @Component({
@@ -17,7 +18,7 @@ import 'rxjs/add/operator/map';
     ]
 })
 
-export class NgChat implements OnInit {
+export class NgChat implements OnInit, IChatController {
     constructor() { }
 
     // Exposes the enum for the template
@@ -52,6 +53,9 @@ export class NgChat implements OnInit {
 
     @Input()
     public audioEnabled: boolean = true;
+
+    @Input()
+    public searchEnabled: boolean = true;
 
     @Input() // TODO: This might need a better content strategy
     public audioSource: string = 'https://raw.githubusercontent.com/rpaschoal/ng-chat/master/src/ng-chat/assets/notification.wav';
@@ -88,6 +92,9 @@ export class NgChat implements OnInit {
 
     @Output()
     public onUserChatClosed: EventEmitter<User> = new EventEmitter<User>();
+    
+    @Output()
+    public onMessagesSeen: EventEmitter<Message[]> = new EventEmitter<Message[]>();
 
     private browserNotificationsBootstrapped: boolean = false;
 
@@ -345,7 +352,6 @@ export class NgChat implements OnInit {
     private focusOnWindow(window: Window, callback: Function = () => {}) : void
     {
         let windowIndex = this.windows.indexOf(window);
-
         if (windowIndex >= 0)
         {
             setTimeout(() => {
@@ -475,19 +481,14 @@ export class NgChat implements OnInit {
     unreadMessagesTotal(window: Window): string
     {
         if (window){
-            if (window.hasFocus){
-                this.markMessagesAsRead(window.messages);
-            }
-            else{
-                let totalUnreadMessages = window.messages.filter(x => x.fromId != this.userId && !x.seenOn).length;
-                
-                if (totalUnreadMessages > 0){
+            let totalUnreadMessages = window.messages.filter(x => x.fromId != this.userId && !x.seenOn).length;
+            
+            if (totalUnreadMessages > 0){
 
-                    if (totalUnreadMessages > 99) 
-                        return  "99+";
-                    else
-                        return String(totalUnreadMessages); 
-                }
+                if (totalUnreadMessages > 99) 
+                    return  "99+";
+                else
+                    return String(totalUnreadMessages); 
             }
         }
             
@@ -610,6 +611,15 @@ export class NgChat implements OnInit {
     toggleWindowFocus(window: Window): void
     {
         window.hasFocus = !window.hasFocus;
+        if(window.hasFocus) {
+            let unreadMessages: Message[] = [];
+            window.messages.filter(message => message.seenOn == null && message.toId == this.userId).forEach(message => { 
+                unreadMessages.push(message);
+            });
+            
+            this.markMessagesAsRead(unreadMessages);
+            this.onMessagesSeen.emit(unreadMessages);
+        }
     }
 
     // [Localized] Returns the status descriptive title
@@ -618,5 +628,28 @@ export class NgChat implements OnInit {
         let currentStatus = status.toString().toLowerCase();
 
         return this.localization.statusDescription[currentStatus];
+    }
+
+    triggerOpenChatWindow(user: User): void {
+        if (user)
+        {
+            this.openChatWindow(user);
+        }
+    }
+
+    triggerCloseChatWindow(userId: any): void {
+        let openedWindow = this.windows.find(x => x.chattingTo.id == userId);
+
+        if (openedWindow){
+            this.onCloseChatWindow(openedWindow);
+        }
+    }
+
+    triggerToggleChatWindowVisibility(userId: any): void {
+        let openedWindow = this.windows.find(x => x.chattingTo.id == userId);
+
+        if (openedWindow){
+            this.onChatWindowClicked(openedWindow);
+        }
     }
 }
