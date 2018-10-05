@@ -260,10 +260,12 @@
 {
     height: 30px;
     text-align: center;
-    font-size:0.9em;
+    font-size:0.8em;
 }
 	.ng-chat-load-history > a
 	{
-    	background-color: #E3E3E3;
-    	border-radius: 25px;
+    	background-color: #f1f1f1;
+        border-radius: 15px;
+        cursor: pointer;
+        padding: 5px 10px;
 	}    
