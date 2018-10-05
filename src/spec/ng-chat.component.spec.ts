@@ -371,6 +371,48 @@ describe('NgChat', () => {
         expect(this.subject.emitMessageSound).toHaveBeenCalledTimes(1);
     });
 
+    it('Must mark message as seen on new messages if the current window has focus', () => {
+        let message = new Message();
+        let user = new User();
+        let window = new Window();
+
+        window.hasFocus = true;
+
+        let eventSpy = spyOn(this.subject.onMessagesSeen, 'emit');
+
+        spyOn(this.subject, 'markMessagesAsRead');
+        spyOn(this.subject, 'openChatWindow').and.returnValue([window, false]);
+        spyOn(this.subject, 'scrollChatWindow'); // Masking this call as we're not testing this part on this spec
+        spyOn(this.subject, 'emitMessageSound'); // Masking this call as we're not testing this part on this spec
+
+        this.subject.onMessageReceived(user, message);
+
+        expect(this.subject.markMessagesAsRead).toHaveBeenCalledTimes(1);
+        expect(eventSpy).toHaveBeenCalled();
+        expect(eventSpy).toHaveBeenCalledTimes(1);
+        expect(eventSpy.calls.mostRecent().args.length).toBe(1);
+    });
+
+    it('Must not mark message as seen on new messages if the current window does not have focus', () => {
+        let message = new Message();
+        let user = new User();
+        let window = new Window();
+
+        window.hasFocus = false;
+
+        let eventSpy = spyOn(this.subject.onMessagesSeen, 'emit');
+
+        spyOn(this.subject, 'markMessagesAsRead');
+        spyOn(this.subject, 'openChatWindow').and.returnValue([window, false]);
+        spyOn(this.subject, 'scrollChatWindow'); // Masking this call as we're not testing this part on this spec
+        spyOn(this.subject, 'emitMessageSound'); // Masking this call as we're not testing this part on this spec
+
+        this.subject.onMessageReceived(user, message);
+
+        expect(this.subject.markMessagesAsRead).not.toHaveBeenCalled();
+        expect(eventSpy).not.toHaveBeenCalled();
+    });
+
     it('Should not use local storage persistency if persistWindowsState is disabled', () => {
         let windows = [new Window()];
 
