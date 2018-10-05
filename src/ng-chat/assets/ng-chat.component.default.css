@@ -89,11 +89,16 @@
     margin: 0;
     overflow: auto;
     position: absolute;
-    top: 84px;
+    top: 42px;
     bottom: 0;
     width: 100%;
     box-sizing: border-box;
 }
+    #ng-chat-users.offset-search
+    {
+        top: 84px;
+    }
+
     #ng-chat-users li
     {
         clear: both;

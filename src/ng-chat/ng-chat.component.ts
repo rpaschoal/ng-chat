@@ -6,6 +6,7 @@ import { Window } from "./core/window";
 import { UserStatus } from "./core/user-status.enum";
 import { ScrollDirection } from "./core/scroll-direction.enum";
 import { Localization, StatusDescription } from './core/localization';
+import { IChatController } from './core/chat-controller'
 import 'rxjs/add/operator/map';
 
 @Component({
@@ -18,7 +19,7 @@ import 'rxjs/add/operator/map';
     ]
 })
 
-export class NgChat implements OnInit {
+export class NgChat implements OnInit, IChatController {
     constructor() { }
 
     // Exposes the enum for the template
@@ -53,6 +54,9 @@ export class NgChat implements OnInit {
 
     @Input()
     public audioEnabled: boolean = true;
+
+    @Input()
+    public searchEnabled: boolean = true;
 
     @Input() // TODO: This might need a better content strategy
     public audioSource: string = 'https://raw.githubusercontent.com/rpaschoal/ng-chat/master/src/ng-chat/assets/notification.wav';
@@ -642,5 +646,27 @@ export class NgChat implements OnInit {
             window.hasMoreMessages = result.length == this.historyPageSize;    
             setTimeout(() => { this.scrollChatWindow(window, direction)});
         }).subscribe();
+
+    triggerOpenChatWindow(user: User): void {
+        if (user)
+        {
+            this.openChatWindow(user);
+        }
+    }
+
+    triggerCloseChatWindow(userId: any): void {
+        let openedWindow = this.windows.find(x => x.chattingTo.id == userId);
+
+        if (openedWindow){
+            this.onCloseChatWindow(openedWindow);
+        }
+    }
+
+    triggerToggleChatWindowVisibility(userId: any): void {
+        let openedWindow = this.windows.find(x => x.chattingTo.id == userId);
+
+        if (openedWindow){
+            this.onChatWindowClicked(openedWindow);
+        }
     }
 }
