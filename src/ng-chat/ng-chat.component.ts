@@ -86,7 +86,7 @@ export class NgChat implements OnInit, IChatController {
     public browserNotificationTitle: string = "New message from";
     
     @Input()
-    public historyPageSize: number = 0;
+    public historyPageSize: number = 10;
 
     @Input()
     public localization: Localization;
