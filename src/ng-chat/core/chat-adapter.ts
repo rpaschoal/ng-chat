@@ -1,7 +1,6 @@
 import { Observable } from 'rxjs/Observable';
 import { Message } from "./message";
 import { User } from "./user";
-import 'rxjs/add/observable/empty';
 
 export abstract class ChatAdapter
 {
@@ -28,17 +27,4 @@ export abstract class ChatAdapter
     // Event handlers
     friendsListChangedHandler: (users: User[]) => void  = (users: User[]) => {};
     messageReceivedHandler: (user: User, message: Message) => void = (user: User, message: Message) => {};
-
-    // method should be overridden and may be declared as abstract in further releases 
-    public getMessageHistoryByPage(userId: any, size: number, page: number) : Observable<Message[]> {
-        return Observable.empty<Message[]>();
-    }
-    
-    public loadMessageHistory(userId: any, size: number, page: number) : Observable<Message[]> {
-        if(size > 0 && page > 0) {
-            return this.getMessageHistoryByPage(userId, size, page);
-        } else {
-            return this.getMessageHistory(userId);
-        }
-    }
 }

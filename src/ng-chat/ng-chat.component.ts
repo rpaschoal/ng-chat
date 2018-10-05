@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, ViewChildren, HostListener, Output, EventEmitter } from '@angular/core';
+
 import { ChatAdapter } from './core/chat-adapter';
 import { User } from "./core/user";
 import { Message } from "./core/message";
@@ -6,7 +7,9 @@ import { Window } from "./core/window";
 import { UserStatus } from "./core/user-status.enum";
 import { ScrollDirection } from "./core/scroll-direction.enum";
 import { Localization, StatusDescription } from './core/localization';
-import { IChatController } from './core/chat-controller'
+import { IChatController } from './core/chat-controller';
+import { PagedHistoryChatAdapter } from './core/paged-history-chat-adapter';
+
 import 'rxjs/add/operator/map';
 
 @Component({
@@ -101,6 +104,8 @@ export class NgChat implements OnInit, IChatController {
     public onMessagesSeen: EventEmitter<Message[]> = new EventEmitter<Message[]>();
 
     private browserNotificationsBootstrapped: boolean = false;
+
+    private hasPagedHistory: boolean = false;
 
     // Don't want to add this as a setting to simplify usage. Previous placeholder and title settings available to be used, or use full Localization object.
     private statusDescription: StatusDescription = {
@@ -197,6 +202,8 @@ export class NgChat implements OnInit, IChatController {
             }
             
             this.bufferAudioFile();
+
+            this.hasPagedHistory = this.adapter instanceof PagedHistoryChatAdapter;
             
             this.isBootstrapped = true;
         }
@@ -254,6 +261,33 @@ export class NgChat implements OnInit, IChatController {
         });
     }
 
+    fetchMessageHistory(window: Window) {
+        // Not ideal but will keep this until we decide if we are shipping pagination with the default adapter
+        if (this.adapter instanceof PagedHistoryChatAdapter)
+        {
+            window.isLoadingHistory = true;
+
+            this.adapter.getMessageHistoryByPage(window.chattingTo.id, this.historyPageSize, ++window.historyPage)
+            .map((result: Message[]) => {
+                window.messages = result.concat(window.messages);
+                window.isLoadingHistory = false;
+                let direction: ScrollDirection = (window.historyPage == 1) ? ScrollDirection.Bottom : ScrollDirection.Top;
+                window.hasMoreMessages = result.length == this.historyPageSize;
+                setTimeout(() => { this.scrollChatWindow(window, direction)});
+            }).subscribe();
+        }
+        else
+        {
+            this.adapter.getMessageHistory(window.chattingTo.id)
+            .map((result: Message[]) => {
+                window.messages = result.concat(window.messages);
+                window.isLoadingHistory = false;
+
+                setTimeout(() => { this.scrollChatWindow(window, ScrollDirection.Bottom)});
+            }).subscribe();
+        }
+    }
+
     // Updates the friends list via the event handler
     private onFriendsListChanged(users: User[]): void
     {
@@ -274,6 +308,12 @@ export class NgChat implements OnInit, IChatController {
                 chatWindow[0].messages.push(message);
 
                 this.scrollChatWindow(chatWindow[0], ScrollDirection.Bottom);
+
+                if (chatWindow[0].hasFocus)
+                {
+                    this.markMessagesAsRead([message]);
+                    this.onMessagesSeen.emit([message]);
+                }
             }
 
             this.emitMessageSound(chatWindow[0]);
@@ -318,7 +358,7 @@ export class NgChat implements OnInit, IChatController {
             // Loads the chat history via an RxJs Observable
             if (this.historyEnabled)
             {
-                this.loadMessageHistory(newChatWindow);
+                this.fetchMessageHistory(newChatWindow);
             }
 
             this.windows.unshift(newChatWindow);
@@ -630,22 +670,6 @@ export class NgChat implements OnInit, IChatController {
 
         return this.localization.statusDescription[currentStatus];
     }
-    
-    moreHistoryMessages(window: Window) {
-        window.isLoadingHistory = true;
-        this.loadMessageHistory(window);
-    }
-    
-    private loadMessageHistory(window: Window) {
-        this.adapter.loadMessageHistory(window.chattingTo.id, this.historyPageSize, ++window.historyPage)
-        .map((result: Message[]) => {
-            //newChatWindow.messages.push.apply(newChatWindow.messages, result);
-            window.messages = result.concat(window.messages);
-            window.isLoadingHistory = false;
-            let direction: ScrollDirection = (window.historyPage == 1) ? ScrollDirection.Bottom : ScrollDirection.Top;
-            window.hasMoreMessages = result.length == this.historyPageSize;    
-            setTimeout(() => { this.scrollChatWindow(window, direction)});
-        }).subscribe();
 
     triggerOpenChatWindow(user: User): void {
         if (user)

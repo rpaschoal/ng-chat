@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ChatAdapter } from 'ng-chat';
-import { DemoAdapter } from './demo-adapter'
+import { DemoAdapter } from './demo-adapter';
+import { DemoAdapterPagedHistory } from './demo-adapter-paged-history';
 
 @Component({
   selector: 'app-root',
@@ -11,4 +12,6 @@ export class AppComponent {
   title = 'app';
 
   public adapter: ChatAdapter = new DemoAdapter();
+
+  //public adapter: ChatAdapter = new DemoAdapterPagedHistory();
 }
