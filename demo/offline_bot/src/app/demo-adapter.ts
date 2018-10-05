@@ -64,24 +64,48 @@ export class DemoAdapter extends ChatAdapter
         avatar: "https://thumbnail.myheritageimages.com/502/323/78502323/000/000114_884889c3n33qfe004v5024_C_64x64C.jpg",
         status: UserStatus.Away
     }];
+    
+    private historyMessages: Message[] = [];
+    
+    constructor() {
+        super();
+        for(let i: number = 0; i < 20; i++) {
+            let msg = {
+                fromId: 1,
+                toId: 999,
+                message: `${20-i}. Hi there, just type any message bellow to test this Angular module.`
+            };
+            
+            this.historyMessages.push(msg);
+        }
+    }
+
+    
 
     listFriends(): Observable<User[]> {
         return Observable.of(this.mockedUsers);
     }
 
     getMessageHistory(userId: any): Observable<Message[]> {
-        let mockedHistory: Array<Message>;
-
-        mockedHistory = [
+       let mockedHistory: Array<Message>;
+       mockedHistory = [
             {
                 fromId: 1,
                 toId: 999,
                 message: "Hi there, just type any message bellow to test this Angular module."
             }
-        ];
+       ];
 
-        return Observable.of(mockedHistory);
+       return Observable.of(mockedHistory);
     }
+    
+    public getMessageHistoryByPage(userId: any, size: number, page: number) : Observable<Message[]> {
+       let startPosition: number = (page - 1) * size;
+       let endPosition: number = page * size;
+       let mockedHistory: Array<Message> = this.historyMessages.slice(startPosition, endPosition);
+       return Observable.of(mockedHistory.reverse()).delay(5000);
+    }
+    
     
     sendMessage(message: Message): void {
         setTimeout(() => {

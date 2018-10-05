@@ -4,6 +4,7 @@ import { User } from "./core/user";
 import { Message } from "./core/message";
 import { Window } from "./core/window";
 import { UserStatus } from "./core/user-status.enum";
+import { ScrollDirection } from "./core/scroll-direction.enum";
 import { Localization, StatusDescription } from './core/localization';
 import { IChatController } from './core/chat-controller'
 import 'rxjs/add/operator/map';
@@ -80,6 +81,9 @@ export class NgChat implements OnInit, IChatController {
 
     @Input()
     public browserNotificationTitle: string = "New message from";
+    
+    @Input()
+    public historyPageSize: number = 0;
 
     @Input()
     public localization: Localization;
@@ -269,7 +273,7 @@ export class NgChat implements OnInit, IChatController {
             if (!chatWindow[1] || !this.historyEnabled){
                 chatWindow[0].messages.push(message);
 
-                this.scrollChatWindowToBottom(chatWindow[0]);
+                this.scrollChatWindow(chatWindow[0], ScrollDirection.Bottom);
             }
 
             this.emitMessageSound(chatWindow[0]);
@@ -306,20 +310,15 @@ export class NgChat implements OnInit, IChatController {
                 messages:  [],
                 isLoadingHistory: this.historyEnabled,
                 hasFocus: false, // This will be triggered when the 'newMessage' input gets the current focus
-                isCollapsed: collapseWindow
+                isCollapsed: collapseWindow,
+                hasMoreMessages: false,
+                historyPage: 0
             };
 
             // Loads the chat history via an RxJs Observable
             if (this.historyEnabled)
             {
-                this.adapter.getMessageHistory(newChatWindow.chattingTo.id)
-                .map((result: Message[]) => {
-                    //newChatWindow.messages.push.apply(newChatWindow.messages, result);
-                    newChatWindow.messages = result.concat(newChatWindow.messages);
-                    newChatWindow.isLoadingHistory = false;
-
-                    setTimeout(() => { this.scrollChatWindowToBottom(newChatWindow)});
-                }).subscribe();
+                this.loadMessageHistory(newChatWindow);
             }
 
             this.windows.unshift(newChatWindow);
@@ -368,14 +367,16 @@ export class NgChat implements OnInit, IChatController {
     }
 
     // Scrolls a chat window message flow to the bottom
-    private scrollChatWindowToBottom(window: Window): void
+    private scrollChatWindow(window: Window, direction: ScrollDirection): void
     {
         if (!window.isCollapsed){
             let windowIndex = this.windows.indexOf(window);
-
             setTimeout(() => {
-                if (this.chatMessageClusters)
-                    this.chatMessageClusters.toArray()[windowIndex].nativeElement.scrollTop = this.chatMessageClusters.toArray()[windowIndex].nativeElement.scrollHeight;
+                if (this.chatMessageClusters){
+                    let element = this.chatMessageClusters.toArray()[windowIndex].nativeElement;
+                    let position = ( direction === ScrollDirection.Top ) ? 0 : element.scrollHeight;
+                    element.scrollTop = position;
+                }
             }); 
         }
     }
@@ -532,7 +533,7 @@ export class NgChat implements OnInit, IChatController {
         
                     window.newMessage = ""; // Resets the new message input
         
-                    this.scrollChatWindowToBottom(window);
+                    this.scrollChatWindow(window, ScrollDirection.Bottom);
                 }
                 break;
             case 9:
@@ -586,7 +587,7 @@ export class NgChat implements OnInit, IChatController {
     onChatWindowClicked(window: Window): void
     {
         window.isCollapsed = !window.isCollapsed;
-        this.scrollChatWindowToBottom(window);
+        this.scrollChatWindow(window, ScrollDirection.Bottom);
     }
 
     // Asserts if a user avatar is visible in a chat cluster
@@ -629,6 +630,22 @@ export class NgChat implements OnInit, IChatController {
 
         return this.localization.statusDescription[currentStatus];
     }
+    
+    moreHistoryMessages(window: Window) {
+        window.isLoadingHistory = true;
+        this.loadMessageHistory(window);
+    }
+    
+    private loadMessageHistory(window: Window) {
+        this.adapter.loadMessageHistory(window.chattingTo.id, this.historyPageSize, ++window.historyPage)
+        .map((result: Message[]) => {
+            //newChatWindow.messages.push.apply(newChatWindow.messages, result);
+            window.messages = result.concat(window.messages);
+            window.isLoadingHistory = false;
+            let direction: ScrollDirection = (window.historyPage == 1) ? ScrollDirection.Bottom : ScrollDirection.Top;
+            window.hasMoreMessages = result.length == this.historyPageSize;    
+            setTimeout(() => { this.scrollChatWindow(window, direction)});
+        }).subscribe();
 
     triggerOpenChatWindow(user: User): void {
         if (user)

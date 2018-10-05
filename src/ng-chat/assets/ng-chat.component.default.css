@@ -256,3 +256,14 @@
             margin-top: 0;
             margin-bottom: 5px;
         }
+.ng-chat-load-history
+{
+    height: 30px;
+    text-align: center;
+    font-size:0.9em;
+}
+	.ng-chat-load-history > a
+	{
+    	background-color: #E3E3E3;
+    	border-radius: 25px;
+	}    

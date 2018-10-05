@@ -42,6 +42,9 @@
                 <div *ngIf="window.isLoadingHistory" class="ng-chat-loading-wrapper">
                     <div class="loader">Loading history...</div>
                 </div>
+                <div *ngIf="window.hasMoreMessages && !window.isLoadingHistory" class="ng-chat-load-history">
+                	<a (click)="moreHistoryMessages(window)">Load older messages</a>
+                </div>
 
                 <div *ngFor="let message of window.messages; let i = index" [ngClass]="{'ng-chat-message': true, 'ng-chat-message-received': message.fromId != userId}">
                     <div *ngIf="!window.chattingTo.avatar && isAvatarVisible(window, message, i)" class="icon-wrapper">
