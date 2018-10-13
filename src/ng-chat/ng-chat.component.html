@@ -43,7 +43,7 @@
                     <div class="loader">Loading history...</div>
                 </div>
                 <div *ngIf="hasPagedHistory && window.hasMoreMessages && !window.isLoadingHistory" class="ng-chat-load-history">
-                	<a (click)="fetchMessageHistory(window)">Load older messages</a>
+                	<a (click)="fetchMessageHistory(window)">{{localization.loadMessageHistoryPlaceholder}}</a>
                 </div>
 
                 <div *ngFor="let message of window.messages; let i = index" [ngClass]="{'ng-chat-message': true, 'ng-chat-message-received': message.fromId != userId}">

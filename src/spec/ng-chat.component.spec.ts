@@ -735,7 +735,8 @@ describe('NgChat', () => {
                 away: 'test 06',
                 offline: 'test 07'
             },
-            browserNotificationTitle: 'test 08'
+            browserNotificationTitle: 'test 08',
+            loadMessageHistoryPlaceholder: 'Load more messages'
         };
 
         this.subject.initializeDefaultText();
@@ -746,6 +747,7 @@ describe('NgChat', () => {
         expect(this.subject.localization.messagePlaceholder).not.toBe(this.subject.messagePlaceholder);
         expect(this.subject.localization.statusDescription).not.toBe(this.subject.statusDescription);
         expect(this.subject.localization.browserNotificationTitle).not.toBe(this.subject.browserNotificationTitle);
+        expect(this.subject.localization.loadMessageHistoryPlaceholder).not.toBe('Load older messages');
     });
 
     it('FocusOnWindow exercise', () => {

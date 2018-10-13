@@ -242,7 +242,8 @@ export class NgChat implements OnInit, IChatController {
                 searchPlaceholder: this.searchPlaceholder, 
                 title: this.title,
                 statusDescription: this.statusDescription,
-                browserNotificationTitle: this.browserNotificationTitle
+                browserNotificationTitle: this.browserNotificationTitle,
+                loadMessageHistoryPlaceholder: "Load older messages"
             };
         }
     }
