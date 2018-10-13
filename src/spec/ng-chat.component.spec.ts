@@ -1193,6 +1193,48 @@ describe('NgChat', () => {
         expect(spy.calls.mostRecent().args.length).toBe(1);
     });
 
+    it('Must not invoke onMessagesSeen event when a window gets focus but there are no new messages', () => {
+        
+        spyOn(this.subject.onMessagesSeen, 'emit');
+        spyOn(this.subject, 'markMessagesAsRead');
+        
+        this.subject.windows = [];
+        
+        let user: User = {
+            id: 999,
+            displayName: 'Test user',
+            status: 1,
+            avatar: ''
+        };
+        
+        // Both messages have "seenOn" dates
+        let messages: Message[] = [
+            {
+                fromId: 999,
+                toId: 123,
+                message:'Hi',
+                seenOn: new Date()
+            },
+            {
+                fromId: 999,
+                toId: 123,
+                message:'Hi',
+                seenOn: new Date()
+            }
+        ];
+        
+        let window: Window = new Window();
+        window.chattingTo = user;
+        window.messages = messages;
+        
+        this.subject.windows.push(window);
+        
+        this.subject.toggleWindowFocus(window);
+
+        expect(this.subject.onMessagesSeen.emit).not.toHaveBeenCalled();
+        expect(this.subject.markMessagesAsRead).not.toHaveBeenCalled();
+    });
+
     it('Must invoke openChatWindow when triggerOpenChatWindow is invoked', () => {
         let spy = spyOn(this.subject, 'openChatWindow');
 

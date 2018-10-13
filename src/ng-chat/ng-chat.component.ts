@@ -675,12 +675,13 @@ export class NgChat implements OnInit, IChatController {
         window.hasFocus = !window.hasFocus;
         if(window.hasFocus) {
             let unreadMessages: Message[] = [];
-            window.messages.filter(message => message.seenOn == null && message.toId == this.userId).forEach(message => { 
-                unreadMessages.push(message);
-            });
+            unreadMessages = window.messages.filter(message => message.seenOn == null && message.toId == this.userId);
             
-            this.markMessagesAsRead(unreadMessages);
-            this.onMessagesSeen.emit(unreadMessages);
+            if (unreadMessages && unreadMessages.length > 0)
+            {
+                this.markMessagesAsRead(unreadMessages);
+                this.onMessagesSeen.emit(unreadMessages);
+            }
         }
     }
 
