@@ -429,9 +429,14 @@ export class NgChat implements OnInit, IChatController {
             let windowIndex = this.windows.indexOf(window);
             setTimeout(() => {
                 if (this.chatMessageClusters){
-                    let element = this.chatMessageClusters.toArray()[windowIndex].nativeElement;
-                    let position = ( direction === ScrollDirection.Top ) ? 0 : element.scrollHeight;
-                    element.scrollTop = position;
+                    let targetWindow = this.chatMessageClusters.toArray()[windowIndex];
+
+                    if (targetWindow)
+                    {
+                        let element = this.chatMessageClusters.toArray()[windowIndex].nativeElement;
+                        let position = ( direction === ScrollDirection.Top ) ? 0 : element.scrollHeight;
+                        element.scrollTop = position;
+                    }
                 }
             }); 
         }
