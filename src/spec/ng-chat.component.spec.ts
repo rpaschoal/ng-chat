@@ -165,6 +165,22 @@ describe('NgChat', () => {
         expect(this.subject.windows.length).toBe(2);
     });
 
+    it('Must hide friends list when there is not enough viewport to display at least one chat window ', () => {
+        this.subject.viewPortTotalArea = 400;
+
+        expect(this.subject.windows.length).toBe(0);
+
+        this.subject.windows = [
+            new Window(),
+            new Window()
+        ];
+
+        this.subject.NormalizeWindows();
+
+        expect(this.subject.windows.length).toBe(0);
+        expect(this.subject.unsupportedViewport).toBe(true);
+    });
+
     it('Must invoke adapter on fetchFriendsList', () => {
         spyOn(MockableAdapter.prototype, 'listFriends').and.returnValue(Observable.of([]));
 

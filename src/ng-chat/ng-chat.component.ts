@@ -26,7 +26,7 @@ export class NgChat implements OnInit, IChatController {
     constructor() { }
 
     // Exposes the enum for the template
-    UserStatus = UserStatus;
+    protected UserStatus = UserStatus;
 
     @Input()
     public adapter: ChatAdapter;
@@ -91,6 +91,9 @@ export class NgChat implements OnInit, IChatController {
     @Input()
     public localization: Localization;
 
+    @Input()
+    public hideFriendsListOnUnsupportedViewport: boolean = true;
+
     @Output()
     public onUserClicked: EventEmitter<User> = new EventEmitter<User>();
 
@@ -105,7 +108,7 @@ export class NgChat implements OnInit, IChatController {
 
     private browserNotificationsBootstrapped: boolean = false;
 
-    private hasPagedHistory: boolean = false;
+    protected hasPagedHistory: boolean = false;
 
     // Don't want to add this as a setting to simplify usage. Previous placeholder and title settings available to be used, or use full Localization object.
     private statusDescription: StatusDescription = {
@@ -119,7 +122,7 @@ export class NgChat implements OnInit, IChatController {
 
     public searchInput: string = '';
 
-    private users: User[];
+    protected users: User[];
 
     private get localStorageKey(): string 
     {
@@ -137,13 +140,16 @@ export class NgChat implements OnInit, IChatController {
     }
 
     // Defines the size of each opened window to calculate how many windows can be opened on the viewport at the same time.
-    private windowSizeFactor: number = 320;
+    protected windowSizeFactor: number = 320;
 
     // Total width size of the friends list section
-    private friendsListWidth: number = 262;
+    protected friendsListWidth: number = 262;
 
     // Available area to render the plugin
     private viewPortTotalArea: number;
+    
+    // Set to true if there is no space to display at least one chat window and 'hideFriendsListOnUnsupportedViewport' is true
+    protected unsupportedViewport: boolean = false;
 
     windows: Window[] = [];
 
@@ -172,6 +178,15 @@ export class NgChat implements OnInit, IChatController {
 
         if (difference >= 0){
             this.windows.splice(this.windows.length - 1 - difference);
+        }
+
+        // Viewport should have space for at least one chat window. Let's hide the friends list
+        if (this.hideFriendsListOnUnsupportedViewport && maxSupportedOpenedWindows <= 1)
+        {
+            this.unsupportedViewport = true;
+        }
+        else {
+            this.unsupportedViewport = false;
         }
     }
 
