@@ -475,7 +475,7 @@ export class NgChat implements OnInit, IChatController {
     {       
         if (this.browserNotificationsBootstrapped && !window.hasFocus && message) {
             let notification = new Notification(`${this.localization.browserNotificationTitle} ${window.chattingTo.displayName}`, {
-                'body': window.messages[window.messages.length - 1].message,
+                'body': message.message,
                 'icon': this.browserNotificationIconSource
             });
 

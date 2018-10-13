@@ -80,7 +80,7 @@ export class DemoAdapter extends ChatAdapter
             }
         ];
 
-        return Observable.of(mockedHistory);
+        return Observable.of(mockedHistory).delay(2000);
     }
     
     sendMessage(message: Message): void {
