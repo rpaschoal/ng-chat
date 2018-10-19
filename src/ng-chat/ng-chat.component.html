@@ -56,15 +56,23 @@
             </div>
 
             <div class="ng-chat-footer">
-                <input #chatWindowInput [ngModel]="window.newMessage | emojify:emojisEnabled" (ngModelChange)="window.newMessage=$event" type="text" (keydown)="onChatInputTyped($event, window)" [placeholder]="localization.messagePlaceholder" (blur)="toggleWindowFocus(window)" (focus)="toggleWindowFocus(window)"/>
+                <input #chatWindowInput 
+                    type="text" 
+                    [ngModel]="window.newMessage | emojify:emojisEnabled" 
+                    (ngModelChange)="window.newMessage=$event" 
+                    [placeholder]="localization.messagePlaceholder" 
+                    [ngClass]="{'has-side-action': fileUploadAdapter}"
+                    (keydown)="onChatInputTyped($event, window)" 
+                    (blur)="toggleWindowFocus(window)" 
+                    (focus)="toggleWindowFocus(window)"/>
 
                 <!-- File Upload -->
-                <ng-container>
-                    <a *ngIf="!uploading" class="btn-add-file" (click)="triggerNativeFileUpload()">
+                <ng-container *ngIf="fileUploadAdapter">
+                    <a *ngIf="!isUploadingFile" class="btn-add-file" (click)="triggerNativeFileUpload()">
                         <i class="upload-icon"></i>
                     </a>
-
-                    <input type="file" #nativeFileInput style="display: none" (change)="onFileChosen()" />
+                    <input type="file" #nativeFileInput style="display: none;" (change)="onFileChosen()" />
+                    <div *ngIf="isUploadingFile" class="loader"></div>
                 </ng-container>
             </div>
         </ng-container>

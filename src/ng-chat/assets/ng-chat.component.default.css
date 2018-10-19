@@ -207,17 +207,28 @@
             padding:0 5px;
             display:block;
             height: 100%;
-            width: calc(100% - 30px);
+            width: 100%;
             border: none;
             background-color: #FFF;
         }
-        .ng-chat-window .ng-chat-footer .btn-add-file{
+            .ng-chat-window .ng-chat-footer > input.has-side-action
+            {
+                width: calc(100% - 30px);
+            }
+        .ng-chat-window .ng-chat-footer .btn-add-file
+        {
             position: absolute;
             right: 5px;
             bottom: 7px;
             height: 20px;
             width: 20px;
             cursor: pointer;
+        }
+        .ng-chat-window .ng-chat-footer .loader
+        {
+            position: absolute;
+            right: 14px;
+            bottom: 8px;
         }    
     .ng-chat-window .ng-chat-load-history
     {

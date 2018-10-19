@@ -98,6 +98,9 @@ export class NgChat implements OnInit, IChatController {
     @Input()
     public hideFriendsListOnUnsupportedViewport: boolean = true;
 
+    @Input()
+    public fileUploadUrl: string;
+
     @Output()
     public onUserClicked: EventEmitter<User> = new EventEmitter<User>();
 
@@ -154,6 +157,11 @@ export class NgChat implements OnInit, IChatController {
     
     // Set to true if there is no space to display at least one chat window and 'hideFriendsListOnUnsupportedViewport' is true
     protected unsupportedViewport: boolean = false;
+
+    // File upload state
+    protected fileUploadProgress: Observable<Number>;
+    protected isUploadingFile = false;
+    protected fileUploadAdapter: IFileUploadAdapter;
 
     windows: Window[] = [];
 
@@ -226,6 +234,11 @@ export class NgChat implements OnInit, IChatController {
 
             this.hasPagedHistory = this.adapter instanceof PagedHistoryChatAdapter;
             
+            if (this.fileUploadUrl && this.fileUploadUrl !== "")
+            {
+                this.fileUploadAdapter = new DefaultFileUploadAdapter(this.fileUploadUrl, this._httpClient);
+            }
+
             this.isBootstrapped = true;
         }
 
@@ -526,7 +539,7 @@ export class NgChat implements OnInit, IChatController {
         }
         catch (ex)
         {
-            console.log(`An error occurred while restoring ng-chat windows state. Details: ${ex}`);
+            console.error(`An error occurred while restoring ng-chat windows state. Details: ${ex}`);
         }
     }
 
@@ -721,33 +734,23 @@ export class NgChat implements OnInit, IChatController {
         }
     }
 
-    // TODO: Tidy this state up 
-    progress: Observable<Number>;
-    uploading = false;
-    uploadSuccessful = false;
-
-    fileUploadAdapter: IFileUploadAdapter = new DefaultFileUploadAdapter('http://localhost:3000/uploadFile', this._httpClient);
-
     // Triggers native file upload for file selection from the user
     triggerNativeFileUpload(): void
     {
         this.nativeFileInput.nativeElement.click();
     }
 
-    // Handles file selection
+    // Handles file selection and uploads the selected file using the file upload adapter
     onFileChosen(): void {
-        debugger;
         const file: File = this.nativeFileInput.nativeElement.files[0];
 
-        // set the component state to "uploading"
-        this.uploading = true;
+        this.isUploadingFile = true;
 
-        // start the upload and save the progress map
-        this.progress = this.fileUploadAdapter.uploadFile(file);
+        this.fileUploadProgress = this.fileUploadAdapter.uploadFile(file);
 
-        this.progress.subscribe(end => {
-            this.uploadSuccessful = true;
-            this.uploading = false;
+        // TODO: Handle failure
+        this.fileUploadProgress.subscribe(end => {
+            this.isUploadingFile = false;
         });
       }
 }
