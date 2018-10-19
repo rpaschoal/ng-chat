@@ -54,7 +54,19 @@
                     <span [innerHtml]="message.message | emojify:emojisEnabled | linkfy:linkfyEnabled"></span>
                 </div>
             </div>
-            <input #chatWindowInput [ngModel]="window.newMessage | emojify:emojisEnabled" (ngModelChange)="window.newMessage=$event" type="text" (keydown)="onChatInputTyped($event, window)" [placeholder]="localization.messagePlaceholder" (blur)="toggleWindowFocus(window)" (focus)="toggleWindowFocus(window)"/>            
+
+            <div class="ng-chat-footer">
+                <input #chatWindowInput [ngModel]="window.newMessage | emojify:emojisEnabled" (ngModelChange)="window.newMessage=$event" type="text" (keydown)="onChatInputTyped($event, window)" [placeholder]="localization.messagePlaceholder" (blur)="toggleWindowFocus(window)" (focus)="toggleWindowFocus(window)"/>
+
+                <!-- File Upload -->
+                <ng-container>
+                    <a *ngIf="!uploading" class="btn-add-file" (click)="triggerNativeFileUpload()">
+                        <i class="upload-icon"></i>
+                    </a>
+
+                    <input type="file" #nativeFileInput style="display: none" (change)="onFileChosen()" />
+                </ng-container>
+            </div>
         </ng-container>
     </div>
 </div>

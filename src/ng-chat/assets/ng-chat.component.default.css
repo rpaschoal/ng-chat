@@ -189,17 +189,49 @@
 {
     height: 30px !important;
 }
-    .ng-chat-window > input
+    .ng-chat-window .ng-chat-footer
     {
-        font-size:0.8em;
         box-sizing: border-box;
-        padding:0 5px;
+        padding:0;
         display:block;
         height: calc(10%);
         width:100%;
         border: none;
+        background-color: #FFF;
         border-top: 1px solid #A3A3A3;
     }
+        .ng-chat-window .ng-chat-footer > input
+        {
+            font-size:0.8em;
+            box-sizing: border-box;
+            padding:0 5px;
+            display:block;
+            height: 100%;
+            width: calc(100% - 30px);
+            border: none;
+            background-color: #FFF;
+        }
+        .ng-chat-window .ng-chat-footer .btn-add-file{
+            position: absolute;
+            right: 5px;
+            bottom: 7px;
+            height: 20px;
+            width: 20px;
+            cursor: pointer;
+        }    
+    .ng-chat-window .ng-chat-load-history
+    {
+        height: 30px;
+        text-align: center;
+        font-size:0.8em;
+    }
+        .ng-chat-window  .ng-chat-load-history > a
+        {
+            background-color: #f1f1f1;
+            border-radius: 15px;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
     .ng-chat-window .ng-chat-messages
     {
         padding: 10px;
@@ -256,16 +288,3 @@
             margin-top: 0;
             margin-bottom: 5px;
         }
-.ng-chat-load-history
-{
-    height: 30px;
-    text-align: center;
-    font-size:0.8em;
-}
-	.ng-chat-load-history > a
-	{
-    	background-color: #f1f1f1;
-        border-radius: 15px;
-        cursor: pointer;
-        padding: 5px 10px;
-	}    

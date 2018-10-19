@@ -1,4 +1,5 @@
-import { Component, Input, OnInit, ViewChildren, HostListener, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, ViewChildren, ViewChild, HostListener, Output, EventEmitter, ElementRef } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 import { ChatAdapter } from './core/chat-adapter';
 import { User } from "./core/user";
@@ -9,8 +10,11 @@ import { ScrollDirection } from "./core/scroll-direction.enum";
 import { Localization, StatusDescription } from './core/localization';
 import { IChatController } from './core/chat-controller';
 import { PagedHistoryChatAdapter } from './core/paged-history-chat-adapter';
+import { IFileUploadAdapter } from './core/file-upload-adapter';
+import { DefaultFileUploadAdapter } from './core/default-file-upload-adapter';
 
 import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
     selector: 'ng-chat',
@@ -23,7 +27,7 @@ import 'rxjs/add/operator/map';
 })
 
 export class NgChat implements OnInit, IChatController {
-    constructor() { }
+    constructor(private _httpClient: HttpClient) { }
 
     // Exposes the enum for the template
     protected UserStatus = UserStatus;
@@ -158,6 +162,8 @@ export class NgChat implements OnInit, IChatController {
     @ViewChildren('chatMessages') chatMessageClusters: any;
 
     @ViewChildren('chatWindowInput') chatWindowInputs: any;
+
+    @ViewChild('nativeFileInput') nativeFileInput: ElementRef;
 
     ngOnInit() { 
         this.bootstrapChat();
@@ -714,4 +720,34 @@ export class NgChat implements OnInit, IChatController {
             this.onChatWindowClicked(openedWindow);
         }
     }
+
+    // TODO: Tidy this state up 
+    progress: Observable<Number>;
+    uploading = false;
+    uploadSuccessful = false;
+
+    fileUploadAdapter: IFileUploadAdapter = new DefaultFileUploadAdapter('http://localhost:3000/uploadFile', this._httpClient);
+
+    // Triggers native file upload for file selection from the user
+    triggerNativeFileUpload(): void
+    {
+        this.nativeFileInput.nativeElement.click();
+    }
+
+    // Handles file selection
+    onFileChosen(): void {
+        debugger;
+        const file: File = this.nativeFileInput.nativeElement.files[0];
+
+        // set the component state to "uploading"
+        this.uploading = true;
+
+        // start the upload and save the progress map
+        this.progress = this.fileUploadAdapter.uploadFile(file);
+
+        this.progress.subscribe(end => {
+            this.uploadSuccessful = true;
+            this.uploading = false;
+        });
+      }
 }
