@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { ChatAdapter } from './core/chat-adapter';
 import { User } from "./core/user";
 import { Message } from "./core/message";
+import { FileMessage } from "./core/file-message";
 import { Window } from "./core/window";
 import { UserStatus } from "./core/user-status.enum";
 import { ScrollDirection } from "./core/scroll-direction.enum";
@@ -335,6 +336,9 @@ export class NgChat implements OnInit, IChatController {
     // Handles received messages by the adapter
     private onMessageReceived(user: User, message: Message)
     {
+        console.log(message);
+        console.log((<FileMessage>message).mimeType);
+
         if (user && message)
         {
             let chatWindow = this.openChatWindow(user);
@@ -741,12 +745,12 @@ export class NgChat implements OnInit, IChatController {
     }
 
     // Handles file selection and uploads the selected file using the file upload adapter
-    onFileChosen(): void {
+    onFileChosen(userTo: User): void {
         const file: File = this.nativeFileInput.nativeElement.files[0];
 
         this.isUploadingFile = true;
 
-        this.fileUploadProgress = this.fileUploadAdapter.uploadFile(file);
+        this.fileUploadProgress = this.fileUploadAdapter.uploadFile(file, userTo);
 
         // TODO: Handle failure
         this.fileUploadProgress.subscribe(end => {

@@ -71,7 +71,7 @@
                     <a *ngIf="!isUploadingFile" class="btn-add-file" (click)="triggerNativeFileUpload()">
                         <i class="upload-icon"></i>
                     </a>
-                    <input type="file" #nativeFileInput style="display: none;" (change)="onFileChosen()" />
+                    <input type="file" #nativeFileInput style="display: none;" (change)="onFileChosen(window.chattingTo)" />
                     <div *ngIf="isUploadingFile" class="loader"></div>
                 </ng-container>
             </div>
