@@ -42,9 +42,5 @@ export class DefaultFileUploadAdapter implements IFileUploadAdapter
             });
 
         return uploadStatus;
-    }    
-    
-    onFileReceived(processedFileMetadata: any): void {
-        throw new Error("Method not implemented.");
     }
 }

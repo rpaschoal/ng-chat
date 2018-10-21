@@ -5,6 +5,7 @@ import { ChatAdapter } from './core/chat-adapter';
 import { User } from "./core/user";
 import { Message } from "./core/message";
 import { FileMessage } from "./core/file-message";
+import { MessageType } from "./core/message-type.enum";
 import { Window } from "./core/window";
 import { UserStatus } from "./core/user-status.enum";
 import { ScrollDirection } from "./core/scroll-direction.enum";
@@ -30,8 +31,9 @@ import { Observable } from 'rxjs/Observable';
 export class NgChat implements OnInit, IChatController {
     constructor(private _httpClient: HttpClient) { }
 
-    // Exposes the enum for the template
+    // Exposes enums for the ng-template
     protected UserStatus = UserStatus;
+    protected MessageType = MessageType;
 
     @Input()
     public adapter: ChatAdapter;
@@ -337,7 +339,6 @@ export class NgChat implements OnInit, IChatController {
     private onMessageReceived(user: User, message: Message)
     {
         console.log(message);
-        console.log((<FileMessage>message).mimeType);
 
         if (user && message)
         {

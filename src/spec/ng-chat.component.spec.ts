@@ -27,7 +27,7 @@ class MockableHTMLAudioElement {
 
 describe('NgChat', () => {
     beforeEach(() => {
-        this.subject = new NgChat();
+        this.subject = new NgChat(null); // TODO: Mock HttpClient and TestBed
         this.subject.userId = 123;
         this.subject.adapter = new MockableAdapter();
         this.subject.audioFile = new MockableHTMLAudioElement();

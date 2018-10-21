@@ -51,7 +51,10 @@
                         <i class="user-icon"></i>
                     </div>
                     <img *ngIf="window.chattingTo.avatar && isAvatarVisible(window, message, i)" alt="" class="avatar" height="30" width="30" [src]="window.chattingTo.avatar" />
-                    <span [innerHtml]="message.message | emojify:emojisEnabled | linkfy:linkfyEnabled"></span>
+                    <ng-container [ngSwitch]="message.type">
+                        <span *ngSwitchCase="MessageType.Text" [innerHtml]="message.message | emojify:emojisEnabled | linkfy:linkfyEnabled"></span>
+                        <span *ngSwitchCase="MessageType.File" [innerHtml]="message.message"></span>
+                    </ng-container>
                 </div>
             </div>
 
