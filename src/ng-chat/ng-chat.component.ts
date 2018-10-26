@@ -162,7 +162,6 @@ export class NgChat implements OnInit, IChatController {
     protected unsupportedViewport: boolean = false;
 
     // File upload state
-    protected fileUploadProgress: Observable<Number>;
     protected isUploadingFile = false;
     protected fileUploadAdapter: IFileUploadAdapter;
 
@@ -746,16 +745,24 @@ export class NgChat implements OnInit, IChatController {
     }
 
     // Handles file selection and uploads the selected file using the file upload adapter
-    onFileChosen(userTo: User): void {
+    onFileChosen(window: Window): void {
         const file: File = this.nativeFileInput.nativeElement.files[0];
 
         this.isUploadingFile = true;
 
-        this.fileUploadProgress = this.fileUploadAdapter.uploadFile(file, userTo);
-
         // TODO: Handle failure
-        this.fileUploadProgress.subscribe(end => {
-            this.isUploadingFile = false;
-        });
+        this.fileUploadAdapter.uploadFile(file, window.chattingTo)
+            .subscribe(fileMessage => {
+                this.isUploadingFile = false;
+
+                fileMessage.fromId = this.userId;
+
+                // Push file message to current user window   
+                window.messages.push(fileMessage);
+    
+                this.adapter.sendMessage(fileMessage);
+    
+                this.scrollChatWindow(window, ScrollDirection.Bottom);
+            });
       }
 }

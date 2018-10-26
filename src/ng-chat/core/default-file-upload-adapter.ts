@@ -3,6 +3,7 @@ import { HttpClient, HttpRequest, HttpEventType, HttpResponse, HttpHeaders } fro
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { User } from './user';
+import { Message } from './message';
 
 export class DefaultFileUploadAdapter implements IFileUploadAdapter
 {
@@ -13,34 +14,39 @@ export class DefaultFileUploadAdapter implements IFileUploadAdapter
     constructor(private _serverEndpointUrl: string, private _http: HttpClient) {
     }
 
-    uploadFile(file: File, userTo: User): Observable<Number> {
+    uploadFile(file: File, userTo: User): Observable<Message> {
         const formData: FormData = new FormData();
 
-        formData.append('ng-chat-userid', userTo.id);
+        //formData.append('ng-chat-sender-userid', currentUserId);
+        formData.append('ng-chat-destinatary-userid', userTo.id);
         formData.append('file', file, file.name);
 
-        const fileRequest = new HttpRequest('POST', this._serverEndpointUrl, formData, {
-            reportProgress: true
-        });
+        return this._http.post<Message>(this._serverEndpointUrl, formData);
 
-        const uploadProgress = new Subject<number>();
-        const uploadStatus = uploadProgress.asObservable();
+        // TODO: Leaving this if we want to track upload progress in detail in the future. Might neet a different Subject generic type wrapper
+        // const fileRequest = new HttpRequest('POST', this._serverEndpointUrl, formData, {
+        //     reportProgress: true
+        // });
 
-        this._http
-            .request(fileRequest)
-            .subscribe(event => {
-                if (event.type == HttpEventType.UploadProgress)
-                {
-                    const percentDone = Math.round(100 * event.loaded / event.total);
+        // const uploadProgress = new Subject<number>();
+        // const uploadStatus = uploadProgress.asObservable();
 
-                    uploadProgress.next(percentDone);
-                }
-                else if (event instanceof HttpResponse)
-                {
-                    uploadProgress.complete();
-                }
-            });
+        //const responsePromise = new Subject<Message>();
 
-        return uploadStatus;
+        // this._http
+        //     .request(fileRequest)
+        //     .subscribe(event => {
+        //         // if (event.type == HttpEventType.UploadProgress)
+        //         // {
+        //         //     const percentDone = Math.round(100 * event.loaded / event.total);
+
+        //         //     uploadProgress.next(percentDone);
+        //         // }
+        //         // else if (event instanceof HttpResponse)
+        //         // {
+                    
+        //         //     uploadProgress.complete();
+        //         // }
+        //     });
     }
 }

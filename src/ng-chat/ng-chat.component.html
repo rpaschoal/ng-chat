@@ -53,7 +53,15 @@
                     <img *ngIf="window.chattingTo.avatar && isAvatarVisible(window, message, i)" alt="" class="avatar" height="30" width="30" [src]="window.chattingTo.avatar" />
                     <ng-container [ngSwitch]="message.type">
                         <span *ngSwitchCase="MessageType.Text" [innerHtml]="message.message | emojify:emojisEnabled | linkfy:linkfyEnabled"></span>
-                        <span *ngSwitchCase="MessageType.File" [innerHtml]="message.message"></span>
+                        <div *ngSwitchCase="MessageType.File" [ngClass]="{'file-message-container': true, 'received': message.fromId != userId}">
+                            <div class="file-message-icon-container">
+                                <i class="paperclip-icon"></i>
+                            </div>
+                            <a class="file-details" [attr.href]="message.downloadUrl" target="_blank" rel="noopener noreferrer" download>
+                                <span class="file-message-title" [attr.title]="message.message">{{message.message}}</span>
+                                <span *ngIf="message.fileSizeInBytes" class="file-message-size">{{message.fileSizeInBytes}} Bytes</span>
+                            </a>
+                        </div>
                     </ng-container>
                 </div>
             </div>
@@ -74,7 +82,7 @@
                     <a *ngIf="!isUploadingFile" class="btn-add-file" (click)="triggerNativeFileUpload()">
                         <i class="upload-icon"></i>
                     </a>
-                    <input type="file" #nativeFileInput style="display: none;" (change)="onFileChosen(window.chattingTo)" />
+                    <input type="file" #nativeFileInput style="display: none;" (change)="onFileChosen(window)" />
                     <div *ngIf="isUploadingFile" class="loader"></div>
                 </ng-container>
             </div>

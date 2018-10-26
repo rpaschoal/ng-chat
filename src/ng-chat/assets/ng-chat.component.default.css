@@ -299,3 +299,61 @@
             margin-top: 0;
             margin-bottom: 5px;
         }
+            .ng-chat-window .ng-chat-messages .ng-chat-message .file-message-container
+            {
+                float: right;
+                width: 72%;
+                border: 3px solid #E3E3E3;
+                border-radius: 5px;
+                overflow: hidden;
+                margin-bottom: 5px;
+                display: block;
+                text-decoration: none;
+                font-size: 0.9em;
+            }
+            .ng-chat-window .ng-chat-messages .ng-chat-message .file-message-container.received
+            {
+                float: left;
+                margin-left: 40px;
+            }
+                .ng-chat-window .ng-chat-messages .ng-chat-message .file-message-container > .file-message-icon-container
+                {
+                    background-color: #E3E3E3;
+                    width: 20px;
+                    height: 35px;
+                    padding: 10px;
+                    float: left;
+                }
+                    .ng-chat-window .ng-chat-messages .ng-chat-message .file-message-container > .file-message-icon-container i
+                    {
+                        margin-top: 8px;
+                    }
+                .ng-chat-window .ng-chat-messages .ng-chat-message .file-message-container > .file-details
+                {
+                    float: left;
+                    padding: 10px;
+                    width: calc(100% - 60px);
+                    color: currentColor;
+                    text-decoration: none;
+                }
+                    .ng-chat-window .ng-chat-messages .ng-chat-message .file-message-container > .file-details:hover
+                    {
+                        text-decoration: underline;
+                    }
+                    .ng-chat-window .ng-chat-messages .ng-chat-message .file-message-container > .file-details span
+                    {
+                        display: block;
+                        width: 100%;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        white-space: nowrap;
+                    }
+                    .ng-chat-window .ng-chat-messages .ng-chat-message .file-message-container > .file-details .file-message-title
+                    {
+                        font-weight: bold;
+                    }
+                    .ng-chat-window .ng-chat-messages .ng-chat-message .file-message-container > .file-details .file-message-size
+                    {
+                        font-size: 0.8em;
+                        margin-top:5px;
+                    }

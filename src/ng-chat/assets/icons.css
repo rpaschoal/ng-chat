@@ -45,26 +45,62 @@
     border-top: none;
     border-radius: 1px;
 }
-
-.upload-icon:before {
-    content: '';
+    .upload-icon:before {
+        content: '';
+        position: absolute;
+        top: -8px;
+        left: 6px;
+        width: 1px;
+        height: 9px;
+        background-color: currentColor;
+    }
+    .upload-icon:after {
+        content: '';
+        position: absolute;
+        top: -8px;
+        left: 4px;
+        width: 4px;
+        height: 4px;
+        border-top: solid 1px currentColor;
+        border-right: solid 1px currentColor;
+        -webkit-transform: rotate(-45deg);
+                transform: rotate(-45deg);
+    }
+.paperclip-icon {
+    color: #000;
     position: absolute;
-    top: -8px;
-    left: 6px;
-    width: 1px;
-    height: 9px;
-    background-color: currentColor;
-}
-
-.upload-icon:after {
-    content: '';
-    position: absolute;
-    top: -8px;
-    left: 4px;
-    width: 4px;
-    height: 4px;
-    border-top: solid 1px currentColor;
+    margin-left: 9px;
+    margin-top: 2px;
+    width: 6px;
+    height: 12px;
+    border-radius: 4px 4px 0 0;
+    border-left: solid 1px currentColor;
     border-right: solid 1px currentColor;
-    -webkit-transform: rotate(-45deg);
-            transform: rotate(-45deg);
+    border-top: solid 1px currentColor;
+    -webkit-transform: rotate(45deg);
+            transform: rotate(45deg);
 }
+    .paperclip-icon:before {
+        content: '';
+        position: absolute;
+        top: 11px;
+        left: -1px;
+        width: 4px;
+        height: 6px;
+        border-radius: 0 0 3px 3px;
+        border-left: solid 1px currentColor;
+        border-right: solid 1px currentColor;
+        border-bottom: solid 1px currentColor;
+    }
+    .paperclip-icon:after {
+        content: '';
+        position: absolute;
+        left: 1px;
+        top: 1px;
+        width: 2px;
+        height: 10px;
+        border-radius: 4px 4px 0 0;
+        border-left: solid 1px currentColor;
+        border-right: solid 1px currentColor;
+        border-top: solid 1px currentColor;
+    }  
