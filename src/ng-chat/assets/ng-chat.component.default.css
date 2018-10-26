@@ -277,7 +277,7 @@
         .ng-chat-window .ng-chat-messages .ng-chat-message > span
         {
             float: right;
-            width: 65%;
+            width: 182px;
             padding: 0;
             margin-top: 0;
             background-color:#E3E3E3;
@@ -302,7 +302,7 @@
             .ng-chat-window .ng-chat-messages .ng-chat-message .file-message-container
             {
                 float: right;
-                width: 72%;
+                width: 196px;
                 border: 3px solid #E3E3E3;
                 border-radius: 5px;
                 overflow: hidden;
@@ -315,6 +315,7 @@
             {
                 float: left;
                 margin-left: 40px;
+                width: 202px;
             }
                 .ng-chat-window .ng-chat-messages .ng-chat-message .file-message-container > .file-message-icon-container
                 {
