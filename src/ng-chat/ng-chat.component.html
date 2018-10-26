@@ -57,7 +57,7 @@
                             <div class="file-message-icon-container">
                                 <i class="paperclip-icon"></i>
                             </div>
-                            <a class="file-details" [attr.href]="message.downloadUrl" target="_blank" rel="noopener noreferrer" download>
+                            <a class="file-details" [attr.href]="message.downloadUrl" target="_blank" rel="noopener noreferrer" (click)="this.markMessagesAsRead([message])" download>
                                 <span class="file-message-title" [attr.title]="message.message">{{message.message}}</span>
                                 <span *ngIf="message.fileSizeInBytes" class="file-message-size">{{message.fileSizeInBytes}} Bytes</span>
                             </a>

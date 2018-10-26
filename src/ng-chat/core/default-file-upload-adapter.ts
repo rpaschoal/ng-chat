@@ -23,7 +23,7 @@ export class DefaultFileUploadAdapter implements IFileUploadAdapter
 
         return this._http.post<Message>(this._serverEndpointUrl, formData);
 
-        // TODO: Leaving this if we want to track upload progress in detail in the future. Might neet a different Subject generic type wrapper
+        // TODO: Leaving this if we want to track upload progress in detail in the future. Might need a different Subject generic type wrapper
         // const fileRequest = new HttpRequest('POST', this._serverEndpointUrl, formData, {
         //     reportProgress: true
         // });

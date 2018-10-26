@@ -337,8 +337,6 @@ export class NgChat implements OnInit, IChatController {
     // Handles received messages by the adapter
     private onMessageReceived(user: User, message: Message)
     {
-        console.log(message);
-
         if (user && message)
         {
             let chatWindow = this.openChatWindow(user);
@@ -763,6 +761,9 @@ export class NgChat implements OnInit, IChatController {
                 this.adapter.sendMessage(fileMessage);
     
                 this.scrollChatWindow(window, ScrollDirection.Bottom);
+
+                // Resets the file upload element
+                this.nativeFileInput.nativeElement.value = '';
             });
       }
 }
