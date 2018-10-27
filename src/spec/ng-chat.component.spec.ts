@@ -7,6 +7,8 @@ import 'rxjs/add/observable/of';
 import { Message } from '../ng-chat/core/message';
 import { EventEmitter } from '@angular/core';
 import { ScrollDirection } from '../ng-chat/core/scroll-direction.enum';
+import { IFileUploadAdapter } from '../ng-chat/core/file-upload-adapter';
+import { FileMessage } from '../ng-chat/core/file-message';
 
 class MockableAdapter extends ChatAdapter {
     public listFriends(): Observable<User[]> {
@@ -16,6 +18,12 @@ class MockableAdapter extends ChatAdapter {
         throw new Error("Method not implemented.");
     }
     public sendMessage(message: Message): void {
+        throw new Error("Method not implemented.");
+    }
+}
+
+class MockableFileUploadAdapter implements IFileUploadAdapter {
+    uploadFile(file: File, userTo: User): Observable<Message> {
         throw new Error("Method not implemented.");
     }
 }
@@ -111,6 +119,10 @@ describe('NgChat', () => {
 
     it('onUserChatClosed must have a default event emitter', () => {
         expect(this.subject.onUserChatClosed).toBeDefined();
+    });
+
+    it('File upload url must be undefined by default', () => {
+        expect(this.subject.fileUploadAdapter).toBeUndefined();
     });
 
     it('Exercise users filter', () => {
@@ -1322,5 +1334,49 @@ describe('NgChat', () => {
         this.subject.triggerToggleChatWindowVisibility(1);
 
         expect(spy).not.toHaveBeenCalled();
+    });
+
+    it('Exercise for "onFileChosen" event', () => {
+        let mockedFileMessageServerResponse = new FileMessage();
+
+        spyOn(MockableFileUploadAdapter.prototype, 'uploadFile').and.callFake(() => {
+            // At this stage the 'isUploadingFile' should be true
+            expect(this.subject.isUploadingFile).toBeTruthy();
+
+            return Observable.of(mockedFileMessageServerResponse);
+        });
+        spyOn(MockableAdapter.prototype, 'sendMessage');
+        let scrollSpy = spyOn(this.subject, 'scrollChatWindow');
+
+        let chattingTo = new User();
+        chattingTo.id = 88;
+
+        let chatWindow = new Window();
+        chatWindow.chattingTo = chattingTo;
+
+        let fakeFile = new File([""], "filename", { type: 'text/html' });
+
+        let fakeFileElement = {
+            nativeElement:
+            {
+                value: 'test',
+                files: [fakeFile]
+            }
+        }
+
+        this.subject.nativeFileInput = fakeFileElement;
+        this.subject.fileUploadAdapter = new MockableFileUploadAdapter();
+
+        this.subject.onFileChosen(chatWindow);
+
+        expect(MockableFileUploadAdapter.prototype.uploadFile).toHaveBeenCalledTimes(1);
+        expect(MockableFileUploadAdapter.prototype.uploadFile).toHaveBeenCalledWith(fakeFile, chatWindow.chattingTo);
+        expect(MockableAdapter.prototype.sendMessage).toHaveBeenCalledTimes(1);
+        expect(MockableAdapter.prototype.sendMessage).toHaveBeenCalledWith(mockedFileMessageServerResponse);
+        expect(mockedFileMessageServerResponse.fromId).toBe(this.subject.userId);
+        expect(scrollSpy).toHaveBeenCalledTimes(1);
+        expect(scrollSpy.calls.mostRecent().args[1]).toBe(ScrollDirection.Bottom);
+        expect(fakeFileElement.nativeElement.value).toBe('');
+        expect(this.subject.isUploadingFile).toBeFalsy();
     });
 });
