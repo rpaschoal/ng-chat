@@ -6,6 +6,10 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import { Message } from '../ng-chat/core/message';
 import { EventEmitter } from '@angular/core';
+import { ScrollDirection } from '../ng-chat/core/scroll-direction.enum';
+import { IFileUploadAdapter } from '../ng-chat/core/file-upload-adapter';
+import { FileMessage } from '../ng-chat/core/file-message';
+import { MessageType } from '../ng-chat/core/message-type.enum';
 
 class MockableAdapter extends ChatAdapter {
     public listFriends(): Observable<User[]> {
@@ -19,6 +23,12 @@ class MockableAdapter extends ChatAdapter {
     }
 }
 
+class MockableFileUploadAdapter implements IFileUploadAdapter {
+    uploadFile(file: File, userTo: User): Observable<Message> {
+        throw new Error("Method not implemented.");
+    }
+}
+
 class MockableHTMLAudioElement {
     public play(): void { }
     public load(): void { }
@@ -26,7 +36,7 @@ class MockableHTMLAudioElement {
 
 describe('NgChat', () => {
     beforeEach(() => {
-        this.subject = new NgChat();
+        this.subject = new NgChat(null); // TODO: Mock HttpClient and TestBed
         this.subject.userId = 123;
         this.subject.adapter = new MockableAdapter();
         this.subject.audioFile = new MockableHTMLAudioElement();
@@ -112,6 +122,10 @@ describe('NgChat', () => {
         expect(this.subject.onUserChatClosed).toBeDefined();
     });
 
+    it('File upload url must be undefined by default', () => {
+        expect(this.subject.fileUploadAdapter).toBeUndefined();
+    });
+
     it('Exercise users filter', () => {
         this.subject.users = [{
             id: 1,
@@ -162,6 +176,22 @@ describe('NgChat', () => {
         this.subject.NormalizeWindows();
 
         expect(this.subject.windows.length).toBe(2);
+    });
+
+    it('Must hide friends list when there is not enough viewport to display at least one chat window ', () => {
+        this.subject.viewPortTotalArea = 400;
+
+        expect(this.subject.windows.length).toBe(0);
+
+        this.subject.windows = [
+            new Window(),
+            new Window()
+        ];
+
+        this.subject.NormalizeWindows();
+
+        expect(this.subject.windows.length).toBe(0);
+        expect(this.subject.unsupportedViewport).toBe(true);
     });
 
     it('Must invoke adapter on fetchFriendsList', () => {
@@ -363,11 +393,69 @@ describe('NgChat', () => {
 
         spyOn(this.subject, 'emitMessageSound');
         spyOn(this.subject, 'openChatWindow').and.returnValue([null, true]);
-        spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
+        spyOn(this.subject, 'scrollChatWindow'); // Masking this call as we're not testing this part on this spec
 
         this.subject.onMessageReceived(user, message);
 
         expect(this.subject.emitMessageSound).toHaveBeenCalledTimes(1);
+    });
+
+    it('Must invoke message type assertion method on new messages', () => {
+        let message = new Message();
+        let user = new User();
+
+        spyOn(this.subject, 'assertMessageType');
+
+        // Masking these calls as we're not testing this part on this spec
+        spyOn(this.subject, 'emitMessageSound');
+        spyOn(this.subject, 'openChatWindow').and.returnValue([null, true]);
+        spyOn(this.subject, 'scrollChatWindow');
+
+        this.subject.onMessageReceived(user, message);
+
+        expect(this.subject.assertMessageType).toHaveBeenCalledTimes(1);
+    });
+
+    it('Must mark message as seen on new messages if the current window has focus', () => {
+        let message = new Message();
+        let user = new User();
+        let window = new Window();
+
+        window.hasFocus = true;
+
+        let eventSpy = spyOn(this.subject.onMessagesSeen, 'emit');
+
+        spyOn(this.subject, 'markMessagesAsRead');
+        spyOn(this.subject, 'openChatWindow').and.returnValue([window, false]);
+        spyOn(this.subject, 'scrollChatWindow'); // Masking this call as we're not testing this part on this spec
+        spyOn(this.subject, 'emitMessageSound'); // Masking this call as we're not testing this part on this spec
+
+        this.subject.onMessageReceived(user, message);
+
+        expect(this.subject.markMessagesAsRead).toHaveBeenCalledTimes(1);
+        expect(eventSpy).toHaveBeenCalled();
+        expect(eventSpy).toHaveBeenCalledTimes(1);
+        expect(eventSpy.calls.mostRecent().args.length).toBe(1);
+    });
+
+    it('Must not mark message as seen on new messages if the current window does not have focus', () => {
+        let message = new Message();
+        let user = new User();
+        let window = new Window();
+
+        window.hasFocus = false;
+
+        let eventSpy = spyOn(this.subject.onMessagesSeen, 'emit');
+
+        spyOn(this.subject, 'markMessagesAsRead');
+        spyOn(this.subject, 'openChatWindow').and.returnValue([window, false]);
+        spyOn(this.subject, 'scrollChatWindow'); // Masking this call as we're not testing this part on this spec
+        spyOn(this.subject, 'emitMessageSound'); // Masking this call as we're not testing this part on this spec
+
+        this.subject.onMessageReceived(user, message);
+
+        expect(this.subject.markMessagesAsRead).not.toHaveBeenCalled();
+        expect(eventSpy).not.toHaveBeenCalled();
     });
 
     it('Should not use local storage persistency if persistWindowsState is disabled', () => {
@@ -469,13 +557,15 @@ describe('NgChat', () => {
         spyOn(MockableAdapter.prototype, 'sendMessage').and.callFake((message: Message) => {
             sentMessage = message;
         });
-        spyOn(this.subject, 'scrollChatWindowToBottom');
+        let spy = spyOn(this.subject, 'scrollChatWindow');
 
         this.subject.onChatInputTyped(event, currentWindow);
 
         expect(currentWindow.newMessage).toBe(""); // Should clean the message input after dispatching the message
         expect(MockableAdapter.prototype.sendMessage).toHaveBeenCalledTimes(1);
-        expect(this.subject.scrollChatWindowToBottom).toHaveBeenCalledTimes(1);
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(spy.calls.mostRecent().args[1]).toBe(ScrollDirection.Bottom);
+        
         expect(sentMessage).not.toBeNull();
         expect(sentMessage.message).toBe("Test");
     });
@@ -495,12 +585,12 @@ describe('NgChat', () => {
         spyOn(MockableAdapter.prototype, 'sendMessage').and.callFake((message: Message) => {
             sentMessage = message;
         });
-        spyOn(this.subject, 'scrollChatWindowToBottom');
+        spyOn(this.subject, 'scrollChatWindow');
 
         this.subject.onChatInputTyped(event, currentWindow);
 
         expect(MockableAdapter.prototype.sendMessage).not.toHaveBeenCalled();
-        expect(this.subject.scrollChatWindowToBottom).not.toHaveBeenCalled();
+        expect(this.subject.scrollChatWindow).not.toHaveBeenCalled();
         expect(sentMessage).toBeNull();
     });
 
@@ -690,7 +780,8 @@ describe('NgChat', () => {
                 away: 'test 06',
                 offline: 'test 07'
             },
-            browserNotificationTitle: 'test 08'
+            browserNotificationTitle: 'test 08',
+            loadMessageHistoryPlaceholder: 'Load more messages'
         };
 
         this.subject.initializeDefaultText();
@@ -701,6 +792,7 @@ describe('NgChat', () => {
         expect(this.subject.localization.messagePlaceholder).not.toBe(this.subject.messagePlaceholder);
         expect(this.subject.localization.statusDescription).not.toBe(this.subject.statusDescription);
         expect(this.subject.localization.browserNotificationTitle).not.toBe(this.subject.browserNotificationTitle);
+        expect(this.subject.localization.loadMessageHistoryPlaceholder).not.toBe('Load older messages');
     });
 
     it('FocusOnWindow exercise', () => {
@@ -825,7 +917,7 @@ describe('NgChat', () => {
 
         spyOn(this.subject, 'emitBrowserNotification');
         spyOn(this.subject, 'openChatWindow').and.returnValue([null, true]);
-        spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
+        spyOn(this.subject, 'scrollChatWindow'); // Masking this call as we're not testing this part on this spec
         spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
 
         this.subject.onMessageReceived(user, message);
@@ -862,7 +954,7 @@ describe('NgChat', () => {
 
         spyOn(this.subject, 'emitBrowserNotification');
         spyOn(this.subject, 'openChatWindow').and.returnValue([null, true]);
-        spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
+        spyOn(this.subject, 'scrollChatWindow'); // Masking this call as we're not testing this part on this spec
         spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
 
         this.subject.onMessageReceived(user, message);
@@ -880,7 +972,7 @@ describe('NgChat', () => {
 
         spyOn(this.subject, 'emitBrowserNotification');
         spyOn(this.subject, 'openChatWindow').and.returnValue([window, false]);
-        spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
+        spyOn(this.subject, 'scrollChatWindow'); // Masking this call as we're not testing this part on this spec
         spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
 
         this.subject.onMessageReceived(user, message);
@@ -898,7 +990,7 @@ describe('NgChat', () => {
 
         spyOn(this.subject, 'emitBrowserNotification');
         spyOn(this.subject, 'openChatWindow').and.returnValue([window, false]);
-        spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
+        spyOn(this.subject, 'scrollChatWindow'); // Masking this call as we're not testing this part on this spec
         spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
 
         this.subject.onMessageReceived(user, message);
@@ -916,7 +1008,7 @@ describe('NgChat', () => {
 
         spyOn(this.subject, 'emitBrowserNotification');
         spyOn(this.subject, 'openChatWindow').and.returnValue([window, true]);
-        spyOn(this.subject, 'scrollChatWindowToBottom'); // Masking this call as we're not testing this part on this spec
+        spyOn(this.subject, 'scrollChatWindow'); // Masking this call as we're not testing this part on this spec
         spyOn(this.subject, 'emitMessageSound');  // Masking this call as we're not testing this part on this spec
 
         this.subject.onMessageReceived(user, message);
@@ -1130,6 +1222,48 @@ describe('NgChat', () => {
         expect(spy.calls.mostRecent().args.length).toBe(1);
     });
 
+    it('Must not invoke onMessagesSeen event when a window gets focus but there are no new messages', () => {
+        
+        spyOn(this.subject.onMessagesSeen, 'emit');
+        spyOn(this.subject, 'markMessagesAsRead');
+        
+        this.subject.windows = [];
+        
+        let user: User = {
+            id: 999,
+            displayName: 'Test user',
+            status: 1,
+            avatar: ''
+        };
+        
+        // Both messages have "seenOn" dates
+        let messages: Message[] = [
+            {
+                fromId: 999,
+                toId: 123,
+                message:'Hi',
+                seenOn: new Date()
+            },
+            {
+                fromId: 999,
+                toId: 123,
+                message:'Hi',
+                seenOn: new Date()
+            }
+        ];
+        
+        let window: Window = new Window();
+        window.chattingTo = user;
+        window.messages = messages;
+        
+        this.subject.windows.push(window);
+        
+        this.subject.toggleWindowFocus(window);
+
+        expect(this.subject.onMessagesSeen.emit).not.toHaveBeenCalled();
+        expect(this.subject.markMessagesAsRead).not.toHaveBeenCalled();
+    });
+
     it('Must invoke openChatWindow when triggerOpenChatWindow is invoked', () => {
         let spy = spyOn(this.subject, 'openChatWindow');
 
@@ -1217,5 +1351,71 @@ describe('NgChat', () => {
         this.subject.triggerToggleChatWindowVisibility(1);
 
         expect(spy).not.toHaveBeenCalled();
+    });
+
+    it('Exercise for "onFileChosen" event', () => {
+        let mockedFileMessageServerResponse = new FileMessage();
+
+        spyOn(MockableFileUploadAdapter.prototype, 'uploadFile').and.callFake(() => {
+            // At this stage the 'isUploadingFile' should be true
+            expect(this.subject.isUploadingFile).toBeTruthy();
+
+            return Observable.of(mockedFileMessageServerResponse);
+        });
+        spyOn(MockableAdapter.prototype, 'sendMessage');
+        let scrollSpy = spyOn(this.subject, 'scrollChatWindow');
+
+        let chattingTo = new User();
+        chattingTo.id = 88;
+
+        let chatWindow = new Window();
+        chatWindow.chattingTo = chattingTo;
+
+        let fakeFile = new File([''], 'filename', { type: 'text/html' });
+
+        let fakeFileElement = {
+            nativeElement:
+            {
+                value: 'test',
+                files: [fakeFile]
+            }
+        }
+
+        this.subject.nativeFileInput = fakeFileElement;
+        this.subject.fileUploadAdapter = new MockableFileUploadAdapter();
+
+        this.subject.onFileChosen(chatWindow);
+
+        expect(MockableFileUploadAdapter.prototype.uploadFile).toHaveBeenCalledTimes(1);
+        expect(MockableFileUploadAdapter.prototype.uploadFile).toHaveBeenCalledWith(fakeFile, chatWindow.chattingTo);
+        expect(MockableAdapter.prototype.sendMessage).toHaveBeenCalledTimes(1);
+        expect(MockableAdapter.prototype.sendMessage).toHaveBeenCalledWith(mockedFileMessageServerResponse);
+        expect(mockedFileMessageServerResponse.fromId).toBe(this.subject.userId);
+        expect(scrollSpy).toHaveBeenCalledTimes(1);
+        expect(scrollSpy.calls.mostRecent().args[1]).toBe(ScrollDirection.Bottom);
+        expect(fakeFileElement.nativeElement.value).toBe('');
+        expect(this.subject.isUploadingFile).toBeFalsy();
+    });
+
+    it('Assert message type must default to text when no message type is defined in a message instance', () => {
+        let nullMessageType = new Message();
+        nullMessageType.type = null; // Overriding the default value
+
+        let undefinedMessageType: Message = {
+            fromId: 1,
+            toId: 2,
+            message: 'test'
+        };
+
+        let fileMessageType = new Message();
+        fileMessageType.type = MessageType.File; // This must remain as it is
+
+        this.subject.assertMessageType(nullMessageType);
+        this.subject.assertMessageType(undefinedMessageType);
+        this.subject.assertMessageType(fileMessageType);
+
+        expect(nullMessageType.type).toBe(MessageType.Text);
+        expect(undefinedMessageType.type).toBe(MessageType.Text);
+        expect(fileMessageType.type).not.toBe(MessageType.Text);
     });
 });

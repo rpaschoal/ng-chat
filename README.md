@@ -33,6 +33,7 @@ import { NgChatModule } from 'ng-chat';
   imports: [
     BrowserModule,
     FormsModule,
+    HttpClientModule,
     NgChatModule
   ],
   providers: [],
@@ -77,6 +78,7 @@ __Additional Settings__
 * [pollingInterval]{number}: Configures the long poll interval in milliseconds. Default is 5000.
 * [searchEnabled]{boolean}: Enables the search bar on the friends list. Default is true.
 * [historyEnabled]{boolean}: Defines whether the component should call the "getMessageHistory" from the chat-adapter. Default is true.
+* [historyPageSize]{number}: Set the page size for each request if you are using the paged history chat adapter (Beta). Default is 10.
 * [emojisEnabled]{boolean}: Enables emoji parsing on the messages. Default is true.
 * [linkfyEnabled]{boolean}: Transforms links within the messages to valid HTML links. Default is true.
 * [audioEnabled]{boolean}: Enables audio notifications on received messages. Default is true.
@@ -85,6 +87,8 @@ __Additional Settings__
 * [browserNotificationsEnabled]{boolean}: Enables browser notifications on received messages. Default is true.
 * [browserNotificationIconSource]{string}: Source URL of the icon displayed on the browser notification. Default is a RAW github PNG content from ng-chat repository.
 * [maximizeWindowOnNewMessage]{boolean}: If set to false new chat windows will render as collapsed when receiving new messages. Default is true.
+* [hideFriendsListOnUnsupportedViewport]{boolean}: Hides the friends list if there isn't enough space for at least one chat window on the current viewport. Default is true.
+* [fileUploadUrl]{string}: Defines a valid CORS enabled URL that can process a request form file and return a `FileMessage` for the destinatary user.
 
 __Localization__
 * [messagePlaceholder]{string}: The placeholder that is displayed in the text input on each chat window. Default is "Type a message".
@@ -130,6 +134,16 @@ If in doubt, I've provided 2 adapter implementations in this repo that can be fo
 * [Offline Bot Adapter](https://github.com/rpaschoal/ng-chat/blob/master/demo/offline_bot/src/app/demo-adapter.ts)
 * [SignalR Adapter](https://github.com/rpaschoal/ng-chat/blob/master/demo/aspnetcore_signalr/angularApp/core/app.ngchat.signalr.adapter.ts)
 
+#### File Upload:
+
+ng-chat supports attachment of any type of files. To do so you need to implement an API endpoint on your application that can receive a POST with a form file.
+
+On your ng-chat instance make sure you provide a valid URI for the `fileUploadUrl` parameter. This will enable the default file upload adapter and each chat window will render at the bottom right an attachment action which will trigger an input of type=file.
+
+Along with a request form file ng-chat will also send a field named as `ng-chat-destinatary-userid` containing the id of the user in which the file will be sent to. Make sure you use this value to compose a response message as your API endpoint will have to return a `FileMessage`. This `FileMessage` instance will be sent to the destinatary user automatically by ng-chat as soon as the file upload ends successfully.
+
+You can check a sample backend file upload implementation here: [ng-chat-nodejs](https://github.com/rpaschoal/ng-chat-nodejs/blob/master/server.js)
+
 #### Triggering ng-chat actions from elsewhere:
 
 Certain ng-chat actions can be triggered from your application by using the exported [IChatController](https://github.com/rpaschoal/ng-chat/blob/master/src/ng-chat/core/chat-controller.ts) interface.
@@ -152,6 +166,12 @@ You can now trigger some ng-chat actions such as opening a chat window from else
 ```
 this.ngChatInstance.triggerOpenChatWindow(user);
 ```
+
+#### Paged History Chat Adapter (BETA):
+
+This adapter is similar to `ChatAdapter` but provides a pagination button to load older messages from your message history. You have to implement one additional method: `getMessageHistoryByPage`. You can check a sample implementation for this under the demo project with the `DemoAdapterPagedHistory` class.
+
+If you like this feature and believe it should be the default behavior and implementation for ng-chat, please open an issue and vote for it here so we can potentially introduce it as the default chat adapter on subsequent versions of ng-chat.
 
 # Troubleshooting
 
