@@ -3,7 +3,7 @@ import { Observable } from "rxjs/Rx";
 
 export class DemoAdapter extends ChatAdapter
 {
-    private mockedUsers: User[] = [
+    public static mockedUsers: User[] = [
     {
         id: 1,
         displayName: "Arya Stark",
@@ -66,7 +66,7 @@ export class DemoAdapter extends ChatAdapter
     }];
 
     listFriends(): Observable<User[]> {
-        return Observable.of(this.mockedUsers);
+        return Observable.of(DemoAdapter.mockedUsers);
     }
 
     getMessageHistory(userId: any): Observable<Message[]> {
@@ -80,7 +80,7 @@ export class DemoAdapter extends ChatAdapter
             }
         ];
 
-        return Observable.of(mockedHistory);
+        return Observable.of(mockedHistory).delay(2000);
     }
     
     sendMessage(message: Message): void {
@@ -91,7 +91,7 @@ export class DemoAdapter extends ChatAdapter
             replyMessage.toId = message.fromId;
             replyMessage.message = "You have typed '" + message.message + "'";
             
-            let user = this.mockedUsers.find(x => x.id == replyMessage.fromId);
+            let user = DemoAdapter.mockedUsers.find(x => x.id == replyMessage.fromId);
 
             this.onMessageReceived(user, replyMessage);
         }, 1000);
