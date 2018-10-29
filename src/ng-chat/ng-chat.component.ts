@@ -306,10 +306,14 @@ export class NgChat implements OnInit, IChatController {
 
             this.adapter.getMessageHistoryByPage(window.chattingTo.id, this.historyPageSize, ++window.historyPage)
             .map((result: Message[]) => {
+                result.forEach((message) => this.assertMessageType(message));
+                
                 window.messages = result.concat(window.messages);
                 window.isLoadingHistory = false;
-                let direction: ScrollDirection = (window.historyPage == 1) ? ScrollDirection.Bottom : ScrollDirection.Top;
+
+                const direction: ScrollDirection = (window.historyPage == 1) ? ScrollDirection.Bottom : ScrollDirection.Top;
                 window.hasMoreMessages = result.length == this.historyPageSize;
+                
                 setTimeout(() => { this.scrollChatWindow(window, direction)});
             }).subscribe();
         }
@@ -317,6 +321,8 @@ export class NgChat implements OnInit, IChatController {
         {
             this.adapter.getMessageHistory(window.chattingTo.id)
             .map((result: Message[]) => {
+                result.forEach((message) => this.assertMessageType(message));
+
                 window.messages = result.concat(window.messages);
                 window.isLoadingHistory = false;
 
@@ -340,6 +346,8 @@ export class NgChat implements OnInit, IChatController {
         if (user && message)
         {
             let chatWindow = this.openChatWindow(user);
+
+            this.assertMessageType(message);
 
             if (!chatWindow[1] || !this.historyEnabled){
                 chatWindow[0].messages.push(message);
@@ -560,6 +568,14 @@ export class NgChat implements OnInit, IChatController {
         }
     }
 
+    private assertMessageType(message: Message): void {
+        // Always fallback to "Text" messages to avoid rendenring issues
+        if (!message.type)
+        {
+            message.type = MessageType.Text;
+        }
+    }
+
     // Returns the total unread messages from a chat window. TODO: Could use some Angular pipes in the future 
     unreadMessagesTotal(window: Window): string
     {
@@ -765,5 +781,5 @@ export class NgChat implements OnInit, IChatController {
                 // Resets the file upload element
                 this.nativeFileInput.nativeElement.value = '';
             });
-      }
+    }
 }

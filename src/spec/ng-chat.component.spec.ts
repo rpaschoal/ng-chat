@@ -9,6 +9,7 @@ import { EventEmitter } from '@angular/core';
 import { ScrollDirection } from '../ng-chat/core/scroll-direction.enum';
 import { IFileUploadAdapter } from '../ng-chat/core/file-upload-adapter';
 import { FileMessage } from '../ng-chat/core/file-message';
+import { MessageType } from '../ng-chat/core/message-type.enum';
 
 class MockableAdapter extends ChatAdapter {
     public listFriends(): Observable<User[]> {
@@ -397,6 +398,22 @@ describe('NgChat', () => {
         this.subject.onMessageReceived(user, message);
 
         expect(this.subject.emitMessageSound).toHaveBeenCalledTimes(1);
+    });
+
+    it('Must invoke message type assertion method on new messages', () => {
+        let message = new Message();
+        let user = new User();
+
+        spyOn(this.subject, 'assertMessageType');
+
+        // Masking these calls as we're not testing this part on this spec
+        spyOn(this.subject, 'emitMessageSound');
+        spyOn(this.subject, 'openChatWindow').and.returnValue([null, true]);
+        spyOn(this.subject, 'scrollChatWindow');
+
+        this.subject.onMessageReceived(user, message);
+
+        expect(this.subject.assertMessageType).toHaveBeenCalledTimes(1);
     });
 
     it('Must mark message as seen on new messages if the current window has focus', () => {
@@ -1354,7 +1371,7 @@ describe('NgChat', () => {
         let chatWindow = new Window();
         chatWindow.chattingTo = chattingTo;
 
-        let fakeFile = new File([""], "filename", { type: 'text/html' });
+        let fakeFile = new File([''], 'filename', { type: 'text/html' });
 
         let fakeFileElement = {
             nativeElement:
@@ -1378,5 +1395,27 @@ describe('NgChat', () => {
         expect(scrollSpy.calls.mostRecent().args[1]).toBe(ScrollDirection.Bottom);
         expect(fakeFileElement.nativeElement.value).toBe('');
         expect(this.subject.isUploadingFile).toBeFalsy();
+    });
+
+    it('Assert message type must default to text when no message type is defined in a message instance', () => {
+        let nullMessageType = new Message();
+        nullMessageType.type = null; // Overriding the default value
+
+        let undefinedMessageType: Message = {
+            fromId: 1,
+            toId: 2,
+            message: 'test'
+        };
+
+        let fileMessageType = new Message();
+        fileMessageType.type = MessageType.File; // This must remain as it is
+
+        this.subject.assertMessageType(nullMessageType);
+        this.subject.assertMessageType(undefinedMessageType);
+        this.subject.assertMessageType(fileMessageType);
+
+        expect(nullMessageType.type).toBe(MessageType.Text);
+        expect(undefinedMessageType.type).toBe(MessageType.Text);
+        expect(fileMessageType.type).not.toBe(MessageType.Text);
     });
 });
