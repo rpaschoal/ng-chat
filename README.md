@@ -77,7 +77,7 @@ __Additional Settings__
 * [pollingInterval]{number}: Configures the long poll interval in milliseconds. Default is 5000.
 * [searchEnabled]{boolean}: Enables the search bar on the friends list. Default is true.
 * [historyEnabled]{boolean}: Defines whether the component should call the "getMessageHistory" from the chat-adapter. Default is true.
-* [historyPageSize]{number}: Set the page size for each request if you are using the paged history chat adapter (Beta).
+* [historyPageSize]{number}: Set the page size for each request if you are using the paged history chat adapter (Beta). Default is 10.
 * [emojisEnabled]{boolean}: Enables emoji parsing on the messages. Default is true.
 * [linkfyEnabled]{boolean}: Transforms links within the messages to valid HTML links. Default is true.
 * [audioEnabled]{boolean}: Enables audio notifications on received messages. Default is true.
