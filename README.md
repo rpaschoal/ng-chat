@@ -33,6 +33,7 @@ import { NgChatModule } from 'ng-chat';
   imports: [
     BrowserModule,
     FormsModule,
+    HttpClientModule,
     NgChatModule
   ],
   providers: [],
