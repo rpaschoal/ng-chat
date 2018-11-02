@@ -182,6 +182,28 @@ describe('NgChat', () => {
         expect(this.subject.updateWindowsState).toHaveBeenCalledWith(this.subject.windows);
     });
 
+    it('Must display max visible windows on viewport when "hideFriendsList" is enabled', () => {
+        this.subject.viewPortTotalArea = 960;
+        this.subject.hideFriendsList = true
+
+        expect(this.subject.windows.length).toBe(0);
+
+        spyOn(this.subject, 'updateWindowsState');
+
+        this.subject.windows = [
+            new Window(),
+            new Window(),
+            new Window(),
+            new Window()
+        ];
+
+        this.subject.NormalizeWindows();
+
+        expect(this.subject.windows.length).toBe(3);
+        expect(this.subject.updateWindowsState).toHaveBeenCalledTimes(1);
+        expect(this.subject.updateWindowsState).toHaveBeenCalledWith(this.subject.windows);
+    });
+
     it('Must hide friends list when there is not enough viewport to display at least one chat window ', () => {
         this.subject.viewPortTotalArea = 400;
 
@@ -1078,6 +1100,100 @@ describe('NgChat', () => {
         expect(eventArgument).toBe(null);
     });
 
+    it('Must pop existing window when viewport does not have enough space for another window', () => {
+        const user: User = {
+            id: 777,
+            displayName: 'Test user',
+            status: 1,
+            avatar: ''
+        };
+        
+        const newUser: User = {
+            id: 888,
+            displayName: 'Test user 2',
+            status: 1,
+            avatar: ''
+        };
+
+        const userToBeRemoved: User = {
+            id: 999,
+            displayName: 'Test user 2',
+            status: 1,
+            avatar: ''
+        };
+        
+        const remainingWindow = new Window();
+        remainingWindow.chattingTo = user;
+
+        const windowToBeRemoved = new Window();
+        windowToBeRemoved.chattingTo = userToBeRemoved;
+        
+        this.subject.viewPortTotalArea = 960;
+        this.subject.historyEnabled = false;
+        this.subject.windows = [
+            remainingWindow,
+            windowToBeRemoved
+        ];
+
+        spyOn(this.subject, 'updateWindowsState');
+        spyOn(this.subject, 'focusOnWindow');
+        spyOn(this.subject, 'onUserChatOpened');
+
+        this.subject.openChatWindow(newUser, false, true);
+
+        expect(this.subject.windows.length).toBe(2);
+        expect(this.subject.windows[0].chattingTo).toBe(newUser);
+        expect(this.subject.windows[1].chattingTo).toBe(user);
+    });
+
+    it('Must push to viewport when friends list is disabled exercise', () => {
+        const user: User = {
+            id: 777,
+            displayName: 'Test user',
+            status: 1,
+            avatar: ''
+        };
+        
+        const newUser: User = {
+            id: 888,
+            displayName: 'Test user 2',
+            status: 1,
+            avatar: ''
+        };
+
+        const userThatWouldBeRemoved: User = {
+            id: 999,
+            displayName: 'Test user 2',
+            status: 1,
+            avatar: ''
+        };
+        
+        const remainingWindow = new Window();
+        remainingWindow.chattingTo = user;
+
+        const windowThatWouldBeRemoved = new Window();
+        windowThatWouldBeRemoved.chattingTo = userThatWouldBeRemoved;
+        
+        this.subject.hideFriendsList = true;
+        this.subject.viewPortTotalArea = 961; // Would be enough for only 2 if the friends list was enabled. 1px more than window factor * 3
+        this.subject.historyEnabled = false;
+        this.subject.windows = [
+            remainingWindow,
+            windowThatWouldBeRemoved
+        ];
+
+        spyOn(this.subject, 'updateWindowsState');
+        spyOn(this.subject, 'focusOnWindow');
+        spyOn(this.subject, 'onUserChatOpened');
+
+        this.subject.openChatWindow(newUser, false, true);
+
+        expect(this.subject.windows.length).toBe(3);
+        expect(this.subject.windows[0].chattingTo).toBe(newUser);
+        expect(this.subject.windows[1].chattingTo).toBe(user);
+        expect(this.subject.windows[2].chattingTo).toBe(userThatWouldBeRemoved);
+    });
+    
     it('Must invoke onUserChatClosed event when a window is closed', () => {
 
         let window = new Window();
