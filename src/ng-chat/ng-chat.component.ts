@@ -99,6 +99,9 @@ export class NgChat implements OnInit, IChatController {
     public localization: Localization;
 
     @Input()
+    public hideFriendsList: boolean = false;
+
+    @Input()
     public hideFriendsListOnUnsupportedViewport: boolean = true;
 
     @Input()
@@ -189,21 +192,15 @@ export class NgChat implements OnInit, IChatController {
     // Checks if there are more opened windows than the view port can display
     private NormalizeWindows(): void
     {
-        let maxSupportedOpenedWindows = Math.floor(this.viewPortTotalArea / this.windowSizeFactor);
+        let maxSupportedOpenedWindows = Math.floor((this.viewPortTotalArea - (!this.hideFriendsList ? this.friendsListWidth : 0)) / this.windowSizeFactor);
         let difference = this.windows.length - maxSupportedOpenedWindows;
 
         if (difference >= 0){
-            this.windows.splice(this.windows.length - 1 - difference);
+            this.windows.splice(this.windows.length - difference);
         }
 
-        // Viewport should have space for at least one chat window. Let's hide the friends list
-        if (this.hideFriendsListOnUnsupportedViewport && maxSupportedOpenedWindows <= 1)
-        {
-            this.unsupportedViewport = true;
-        }
-        else {
-            this.unsupportedViewport = false;
-        }
+        // Viewport should have space for at least one chat window.
+        this.unsupportedViewport = this.hideFriendsListOnUnsupportedViewport && maxSupportedOpenedWindows < 1;
     }
 
     // Initializes the chat plugin and the messaging adapter
@@ -409,7 +406,7 @@ export class NgChat implements OnInit, IChatController {
             this.windows.unshift(newChatWindow);
 
             // Is there enough space left in the view port ?
-            if (this.windows.length * this.windowSizeFactor >= this.viewPortTotalArea - this.friendsListWidth)
+            if (this.windows.length * this.windowSizeFactor >= this.viewPortTotalArea - (!this.hideFriendsList ? this.friendsListWidth : 0))
             {                
                 this.windows.pop();
             }

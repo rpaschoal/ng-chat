@@ -1,5 +1,5 @@
 <div id="ng-chat" *ngIf="isBootstrapped && !unsupportedViewport">
-    <div id="ng-chat-people" [ngClass]="{'ng-chat-people-collapsed':isCollapsed}">
+    <div *ngIf="!hideFriendsList" id="ng-chat-people" [ngClass]="{'ng-chat-people-collapsed':isCollapsed}">
         <a href="javascript:void(0);" class="ng-chat-title shadowed" (click)="onChatTitleClicked($event)">
             <span>
                 {{localization.title}}
@@ -18,7 +18,7 @@
             </li>
         </ul>
     </div>
-    <div *ngFor="let window of windows; let i = index" [ngClass]="{'ng-chat-window': true, 'ng-chat-window-collapsed': window.isCollapsed}" [ngStyle]="{'right': friendsListWidth + 20 + windowSizeFactor * i + 'px'}">
+    <div *ngFor="let window of windows; let i = index" [ngClass]="{'ng-chat-window': true, 'ng-chat-window-collapsed': window.isCollapsed}" [ngStyle]="{'right': (!hideFriendsList ? friendsListWidth : 0) + 20 + windowSizeFactor * i + 'px'}">
         <ng-container *ngIf="window.isCollapsed">
             <div class="ng-chat-title" (click)="onChatWindowClicked(window)">
                 <strong title="{{window.chattingTo.displayName}}">
