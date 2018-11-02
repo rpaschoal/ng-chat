@@ -167,6 +167,8 @@ describe('NgChat', () => {
 
         expect(this.subject.windows.length).toBe(0);
 
+        spyOn(this.subject, 'updateWindowsState');
+
         this.subject.windows = [
             new Window(),
             new Window(),
@@ -176,6 +178,8 @@ describe('NgChat', () => {
         this.subject.NormalizeWindows();
 
         expect(this.subject.windows.length).toBe(2);
+        expect(this.subject.updateWindowsState).toHaveBeenCalledTimes(1);
+        expect(this.subject.updateWindowsState).toHaveBeenCalledWith(this.subject.windows);
     });
 
     it('Must hide friends list when there is not enough viewport to display at least one chat window ', () => {

@@ -199,6 +199,8 @@ export class NgChat implements OnInit, IChatController {
             this.windows.splice(this.windows.length - difference);
         }
 
+        this.updateWindowsState(this.windows);
+
         // Viewport should have space for at least one chat window.
         this.unsupportedViewport = this.hideFriendsListOnUnsupportedViewport && maxSupportedOpenedWindows < 1;
     }
@@ -311,7 +313,7 @@ export class NgChat implements OnInit, IChatController {
                 const direction: ScrollDirection = (window.historyPage == 1) ? ScrollDirection.Bottom : ScrollDirection.Top;
                 window.hasMoreMessages = result.length == this.historyPageSize;
                 
-                setTimeout(() => { this.scrollChatWindow(window, direction)});
+                setTimeout(this.onFetchMessageHistoryLoaded(result, window, direction, true));
             }).subscribe();
         }
         else
@@ -323,8 +325,21 @@ export class NgChat implements OnInit, IChatController {
                 window.messages = result.concat(window.messages);
                 window.isLoadingHistory = false;
 
-                setTimeout(() => { this.scrollChatWindow(window, ScrollDirection.Bottom)});
+                setTimeout(this.onFetchMessageHistoryLoaded(result, window, ScrollDirection.Bottom));
             }).subscribe();
+        }
+    }
+
+    private onFetchMessageHistoryLoaded(messages: Message[], window: Window, direction: ScrollDirection, forceMarkMessagesAsSeen: boolean = false): void 
+    {
+        this.scrollChatWindow(window, direction)
+
+        if (window.hasFocus || forceMarkMessagesAsSeen)
+        {
+            const unseenMessages = messages.filter(m => !m.seenOn);
+
+            this.markMessagesAsRead(unseenMessages);
+            this.onMessagesSeen.emit(unseenMessages);
         }
     }
 
