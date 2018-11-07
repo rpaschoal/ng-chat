@@ -16,7 +16,8 @@ import { IFileUploadAdapter } from './core/file-upload-adapter';
 import { DefaultFileUploadAdapter } from './core/default-file-upload-adapter';
 
 import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'ng-chat',
@@ -287,9 +288,11 @@ export class NgChat implements OnInit, IChatController {
     private fetchFriendsList(isBootstrapping: boolean): void
     {
         this.adapter.listFriends()
-        .map((users: User[]) => {
-            this.users = users;
-        }).subscribe(() => {
+        .pipe(
+            map((users: User[]) => {
+                this.users = users;
+            })
+        ).subscribe(() => {
             if (isBootstrapping)
             {
                 this.restoreWindowsState();
@@ -304,29 +307,33 @@ export class NgChat implements OnInit, IChatController {
             window.isLoadingHistory = true;
 
             this.adapter.getMessageHistoryByPage(window.chattingTo.id, this.historyPageSize, ++window.historyPage)
-            .map((result: Message[]) => {
-                result.forEach((message) => this.assertMessageType(message));
-                
-                window.messages = result.concat(window.messages);
-                window.isLoadingHistory = false;
-
-                const direction: ScrollDirection = (window.historyPage == 1) ? ScrollDirection.Bottom : ScrollDirection.Top;
-                window.hasMoreMessages = result.length == this.historyPageSize;
-                
-                setTimeout(this.onFetchMessageHistoryLoaded(result, window, direction, true));
-            }).subscribe();
+            .pipe(
+                map((result: Message[]) => {
+                    result.forEach((message) => this.assertMessageType(message));
+                    
+                    window.messages = result.concat(window.messages);
+                    window.isLoadingHistory = false;
+    
+                    const direction: ScrollDirection = (window.historyPage == 1) ? ScrollDirection.Bottom : ScrollDirection.Top;
+                    window.hasMoreMessages = result.length == this.historyPageSize;
+                    
+                    setTimeout(() => this.onFetchMessageHistoryLoaded(result, window, direction, true));
+                })
+            ).subscribe();
         }
         else
         {
             this.adapter.getMessageHistory(window.chattingTo.id)
-            .map((result: Message[]) => {
-                result.forEach((message) => this.assertMessageType(message));
-
-                window.messages = result.concat(window.messages);
-                window.isLoadingHistory = false;
-
-                setTimeout(this.onFetchMessageHistoryLoaded(result, window, ScrollDirection.Bottom));
-            }).subscribe();
+            .pipe(
+                map((result: Message[]) => {
+                    result.forEach((message) => this.assertMessageType(message));
+    
+                    window.messages = result.concat(window.messages);
+                    window.isLoadingHistory = false;
+    
+                    setTimeout(() => this.onFetchMessageHistoryLoaded(result, window, ScrollDirection.Bottom));
+                })
+            ).subscribe();
         }
     }
 

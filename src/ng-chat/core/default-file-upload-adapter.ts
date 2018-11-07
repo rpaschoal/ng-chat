@@ -1,7 +1,6 @@
 import { IFileUploadAdapter } from './file-upload-adapter';
 import { HttpClient, HttpRequest, HttpEventType, HttpResponse, HttpHeaders } from '@angular/common/http';
-import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs/Observable';
+import { Observable, Subject } from 'rxjs';
 import { User } from './user';
 import { Message } from './message';
 

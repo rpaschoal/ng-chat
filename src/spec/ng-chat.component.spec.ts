@@ -2,7 +2,7 @@ import { NgChat } from '../ng-chat/ng-chat.component';
 import { User } from '../ng-chat/core/user';
 import { Window } from '../ng-chat/core/window';
 import { ChatAdapter } from '../ng-chat/core/chat-adapter';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import 'rxjs/add/observable/of';
 import { Message } from '../ng-chat/core/message';
 import { EventEmitter } from '@angular/core';

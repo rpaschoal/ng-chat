@@ -1,7 +1,7 @@
 import { TestBed, getTestBed, async, inject } from '@angular/core/testing';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import 'rxjs/add/observable/of';
 import { DefaultFileUploadAdapter } from '../ng-chat/core/default-file-upload-adapter';
 import { User } from '../ng-chat/core/user';
