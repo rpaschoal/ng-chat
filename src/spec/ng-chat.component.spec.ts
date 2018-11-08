@@ -1536,6 +1536,6 @@ describe('NgChat', () => {
 
         expect(nullMessageType.type).toBe(MessageType.Text);
         expect(undefinedMessageType.type).toBe(MessageType.Text);
-        expect(fileMessageType.type).not.toBe(MessageType.Text);
+        expect(fileMessageType.type).toBe(MessageType.File);
     });
 });

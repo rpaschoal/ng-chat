@@ -40,7 +40,7 @@
     "@angular/platform-browser-dynamic": "^5.2.0",
     "@angular/router": "^5.2.0",
     "@angular/tsc-wrapped": "0.5.1",
-    "@types/jasmine": "^2.8.6",
+    "@types/jasmine": "^2.8.11",
     "@types/marked": "0.0.28",
     "@types/node": "7.0.0",
     "@types/webpack": "^4.1.0",
@@ -81,7 +81,7 @@
     "tslint": "^5.9.1",
     "tslint-config-valorsoft": "^2.1.1",
     "typedoc": "0.5.5",
-    "typescript": "2.4.2",
+    "typescript": "^2.4.2",
     "wallaby-webpack": "0.0.30",
     "webdriver-manager": "11.1.1",
     "zone.js": "^0.8.20"
