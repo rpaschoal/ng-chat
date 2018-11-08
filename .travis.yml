@@ -29,10 +29,6 @@ script:
   
   # FIX (Tests): node_modules/@angular/core/src/render3/ng_dev_mode.d.ts(9,11): error TS2451: Cannot redeclare block-scoped variable 'ngDevMode'.
   - rm -f node_modules/@angular/core/src/render3/ng_dev_mode.d.ts
-  
-  # Jasmine does not work with TypeScript >= 3.x.x
-  - npm install typescript@2.4.2
-  - npm link typescript
 
   - ng test --sourcemaps=false --code-coverage --watch=false
   
