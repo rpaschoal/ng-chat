@@ -15,16 +15,16 @@ import { PagedHistoryChatAdapter } from './core/paged-history-chat-adapter';
 import { IFileUploadAdapter } from './core/file-upload-adapter';
 import { DefaultFileUploadAdapter } from './core/default-file-upload-adapter';
 
-import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'ng-chat',
     templateUrl: 'ng-chat.component.html',
     styleUrls: [
-        '/assets/icons.css',
-        '/assets/ng-chat.component.default.css',
-        '/assets/loading-spinner.css'
+        'assets/icons.css',
+        'assets/ng-chat.component.default.css',
+        'assets/loading-spinner.css'
     ]
 })
 
@@ -32,8 +32,8 @@ export class NgChat implements OnInit, IChatController {
     constructor(private _httpClient: HttpClient) { }
 
     // Exposes enums for the ng-template
-    protected UserStatus = UserStatus;
-    protected MessageType = MessageType;
+    public UserStatus = UserStatus;
+    public MessageType = MessageType;
 
     @Input()
     public adapter: ChatAdapter;
@@ -121,7 +121,7 @@ export class NgChat implements OnInit, IChatController {
 
     private browserNotificationsBootstrapped: boolean = false;
 
-    protected hasPagedHistory: boolean = false;
+    public hasPagedHistory: boolean = false;
 
     // Don't want to add this as a setting to simplify usage. Previous placeholder and title settings available to be used, or use full Localization object.
     private statusDescription: StatusDescription = {
@@ -153,20 +153,20 @@ export class NgChat implements OnInit, IChatController {
     }
 
     // Defines the size of each opened window to calculate how many windows can be opened on the viewport at the same time.
-    protected windowSizeFactor: number = 320;
+    public windowSizeFactor: number = 320;
 
     // Total width size of the friends list section
-    protected friendsListWidth: number = 262;
+    public friendsListWidth: number = 262;
 
     // Available area to render the plugin
     private viewPortTotalArea: number;
     
     // Set to true if there is no space to display at least one chat window and 'hideFriendsListOnUnsupportedViewport' is true
-    protected unsupportedViewport: boolean = false;
+    public unsupportedViewport: boolean = false;
 
     // File upload state
-    protected isUploadingFile = false;
-    protected fileUploadAdapter: IFileUploadAdapter;
+    public isUploadingFile = false;
+    public fileUploadAdapter: IFileUploadAdapter;
 
     windows: Window[] = [];
 
@@ -287,9 +287,11 @@ export class NgChat implements OnInit, IChatController {
     private fetchFriendsList(isBootstrapping: boolean): void
     {
         this.adapter.listFriends()
-        .map((users: User[]) => {
-            this.users = users;
-        }).subscribe(() => {
+        .pipe(
+            map((users: User[]) => {
+                this.users = users;
+            })
+        ).subscribe(() => {
             if (isBootstrapping)
             {
                 this.restoreWindowsState();
@@ -304,29 +306,33 @@ export class NgChat implements OnInit, IChatController {
             window.isLoadingHistory = true;
 
             this.adapter.getMessageHistoryByPage(window.chattingTo.id, this.historyPageSize, ++window.historyPage)
-            .map((result: Message[]) => {
-                result.forEach((message) => this.assertMessageType(message));
-                
-                window.messages = result.concat(window.messages);
-                window.isLoadingHistory = false;
-
-                const direction: ScrollDirection = (window.historyPage == 1) ? ScrollDirection.Bottom : ScrollDirection.Top;
-                window.hasMoreMessages = result.length == this.historyPageSize;
-                
-                setTimeout(this.onFetchMessageHistoryLoaded(result, window, direction, true));
-            }).subscribe();
+            .pipe(
+                map((result: Message[]) => {
+                    result.forEach((message) => this.assertMessageType(message));
+                    
+                    window.messages = result.concat(window.messages);
+                    window.isLoadingHistory = false;
+    
+                    const direction: ScrollDirection = (window.historyPage == 1) ? ScrollDirection.Bottom : ScrollDirection.Top;
+                    window.hasMoreMessages = result.length == this.historyPageSize;
+                    
+                    setTimeout(() => this.onFetchMessageHistoryLoaded(result, window, direction, true));
+                })
+            ).subscribe();
         }
         else
         {
             this.adapter.getMessageHistory(window.chattingTo.id)
-            .map((result: Message[]) => {
-                result.forEach((message) => this.assertMessageType(message));
-
-                window.messages = result.concat(window.messages);
-                window.isLoadingHistory = false;
-
-                setTimeout(this.onFetchMessageHistoryLoaded(result, window, ScrollDirection.Bottom));
-            }).subscribe();
+            .pipe(
+                map((result: Message[]) => {
+                    result.forEach((message) => this.assertMessageType(message));
+    
+                    window.messages = result.concat(window.messages);
+                    window.isLoadingHistory = false;
+    
+                    setTimeout(() => this.onFetchMessageHistoryLoaded(result, window, ScrollDirection.Bottom));
+                })
+            ).subscribe();
         }
     }
 
@@ -387,7 +393,7 @@ export class NgChat implements OnInit, IChatController {
 
     // Opens a new chat whindow. Takes care of available viewport
     // Returns => [Window: Window object reference, boolean: Indicates if this window is a new chat window]
-    private openChatWindow(user: User, focusOnNewWindow: boolean = false, invokedByUserClick: boolean = false): [Window, boolean]
+    public openChatWindow(user: User, focusOnNewWindow: boolean = false, invokedByUserClick: boolean = false): [Window, boolean]
     {
         // Is this window opened?
         let openedWindow = this.windows.find(x => x.chattingTo.id == user.id);
@@ -484,7 +490,7 @@ export class NgChat implements OnInit, IChatController {
     }
 
     // Marks all messages provided as read with the current time.
-    private markMessagesAsRead(messages: Message[]): void
+    public markMessagesAsRead(messages: Message[]): void
     {
         let currentDate = new Date();
 

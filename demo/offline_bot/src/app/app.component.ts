@@ -14,4 +14,9 @@ export class AppComponent {
   public adapter: ChatAdapter = new DemoAdapter();
 
   //public adapter: ChatAdapter = new DemoAdapterPagedHistory();
+
+  public messageSeen(event: any)
+  {
+    console.log(event);
+  }
 }

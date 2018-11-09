@@ -1,5 +1,6 @@
 import { ChatAdapter, User, Message, UserStatus } from 'ng-chat';
-import { Observable } from "rxjs/Rx";
+import { Observable, of } from 'rxjs';
+import { delay } from "rxjs/operators";
 
 export class DemoAdapter extends ChatAdapter
 {
@@ -66,7 +67,7 @@ export class DemoAdapter extends ChatAdapter
     }];
 
     listFriends(): Observable<User[]> {
-        return Observable.of(DemoAdapter.mockedUsers);
+        return of(DemoAdapter.mockedUsers);
     }
 
     getMessageHistory(userId: any): Observable<Message[]> {
@@ -80,7 +81,7 @@ export class DemoAdapter extends ChatAdapter
             }
         ];
 
-        return Observable.of(mockedHistory).delay(2000);
+        return of(mockedHistory).pipe(delay(2000));
     }
     
     sendMessage(message: Message): void {

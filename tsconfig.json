@@ -13,7 +13,9 @@
     "lib": [
       "es2017",
       "dom"
-    ]
+    ],
+    "module": "es2015",
+    "baseUrl": "./"
   },
   "include": [
     "demo/offline_bot/src/**/*",

@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - "6"
+  - "10"
 
 before_install:
   - export CHROME_BIN=chromium-browser
@@ -29,8 +29,8 @@ script:
   
   # FIX (Tests): node_modules/@angular/core/src/render3/ng_dev_mode.d.ts(9,11): error TS2451: Cannot redeclare block-scoped variable 'ngDevMode'.
   - rm -f node_modules/@angular/core/src/render3/ng_dev_mode.d.ts
-  
-  - ng test --sourcemaps=false --code-coverage --watch=false
+
+  - ng test --code-coverage --watch=false
   
 after_success:
   - ./node_modules/.bin/codecov

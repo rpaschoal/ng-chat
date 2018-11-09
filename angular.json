@@ -1,0 +1,115 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "ng-chat": {
+      "root": "demo/offline_bot",
+      "sourceRoot": "demo/offline_bot/src",
+      "projectType": "application",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "demo/offline_bot/dist",
+            "index": "demo/offline_bot/src/index.html",
+            "main": "demo/offline_bot/src/main.ts",
+            "tsConfig": "demo/offline_bot/src/../../../tsconfig.json",
+            "assets": [
+              "demo/offline_bot/src/assets"
+            ],
+            "styles": [],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "fileReplacements": [
+                {
+                  "replace": "demo/offline_bot/src/environments/environment.ts",
+                  "with": "demo/offline_bot/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "ng-chat:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "ng-chat:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "ng-chat:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "demo/offline_bot/src/../../../test.ts",
+            "karmaConfig": "karma.conf.js",
+            "scripts": [],
+            "styles": [],
+            "assets": [
+              "demo/offline_bot/src/assets"
+            ],
+            "tsConfig": "demo/offline_bot/src/../../../tsconfig.json",
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [],
+            "exclude": []
+          }
+        }
+      }
+    },
+    "ng-chat-e2e": {
+      "root": "demo/offline_bot/e2e",
+      "sourceRoot": "demo/offline_bot/e2e",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "protractor.conf.js",
+            "devServerTarget": "ng-chat:serve"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [],
+            "exclude": []
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "ng-chat",
+  "schematics": {
+    "@schematics/angular:component": {
+      "prefix": "",
+      "styleext": "css"
+    },
+    "@schematics/angular:directive": {
+      "prefix": ""
+    }
+  }
+}

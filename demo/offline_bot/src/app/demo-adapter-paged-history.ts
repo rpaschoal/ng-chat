@@ -1,6 +1,7 @@
 import { ChatAdapter, User, Message, UserStatus, PagedHistoryChatAdapter } from 'ng-chat';
-import { Observable } from 'rxjs/Rx';
+import { Observable, of } from 'rxjs';
 import { DemoAdapter } from './demo-adapter';
+import { delay } from "rxjs/operators";
 
 export class DemoAdapterPagedHistory extends PagedHistoryChatAdapter
 {   
@@ -21,7 +22,7 @@ export class DemoAdapterPagedHistory extends PagedHistoryChatAdapter
     }
 
     listFriends(): Observable<User[]> {
-        return Observable.of(DemoAdapter.mockedUsers);
+        return of(DemoAdapter.mockedUsers);
     }
 
     getMessageHistory(userId: any): Observable<Message[]> {
@@ -35,14 +36,14 @@ export class DemoAdapterPagedHistory extends PagedHistoryChatAdapter
             }
        ];
 
-       return Observable.of(mockedHistory);
+       return of(mockedHistory);
     }
     
     public getMessageHistoryByPage(userId: any, size: number, page: number) : Observable<Message[]> {
        let startPosition: number = (page - 1) * size;
        let endPosition: number = page * size;
        let mockedHistory: Array<Message> = this.historyMessages.slice(startPosition, endPosition);
-       return Observable.of(mockedHistory.reverse()).delay(5000);
+       return of(mockedHistory.reverse()).pipe(delay(5000));
     }
     
     
