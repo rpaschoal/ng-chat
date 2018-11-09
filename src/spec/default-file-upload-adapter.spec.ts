@@ -1,8 +1,7 @@
 import { TestBed, getTestBed, async, inject } from '@angular/core/testing';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { Observable } from 'rxjs';
-import 'rxjs/add/observable/of';
+import { Observable, of } from 'rxjs';
 import { DefaultFileUploadAdapter } from '../ng-chat/core/default-file-upload-adapter';
 import { User } from '../ng-chat/core/user';
 
@@ -47,7 +46,7 @@ describe('DefaultFileUploadAdapter', () => {
             expect(sentFormData.get('ng-chat-destinatary-userid')).toBe(String(chattingTo.id));
             expect(postUrl).toBe(uploadUlrMock);
 
-            return Observable.of(null);
+            return of(null);
         });
 
         let subject = new DefaultFileUploadAdapter(uploadUlrMock, mockHttp);

@@ -30,9 +30,6 @@ script:
   # FIX (Tests): node_modules/@angular/core/src/render3/ng_dev_mode.d.ts(9,11): error TS2451: Cannot redeclare block-scoped variable 'ngDevMode'.
   - rm -f node_modules/@angular/core/src/render3/ng_dev_mode.d.ts
 
-  # TODO: Temporary fix before tests are upgraded to Angular 7. Remove this after upgrading
-  - rm -rf demo/offline_bot/node_modules/ng-chat/spec
-
   - ng test --sourcemaps=false --code-coverage --watch=false
   
 after_success:
