@@ -23,8 +23,9 @@ import { Observable } from 'rxjs';
     templateUrl: 'ng-chat.component.html',
     styleUrls: [
         'assets/icons.css',
+        'assets/loading-spinner.css',
         'assets/ng-chat.component.default.css',
-        'assets/loading-spinner.css'
+        'assets/themes/ng-chat.theme.default.css'
     ]
 })
 
