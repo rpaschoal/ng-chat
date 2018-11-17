@@ -1,4 +1,6 @@
-<div id="ng-chat" *ngIf="isBootstrapped && !unsupportedViewport" class="primary-text">
+<link *ngIf="customTheme" rel="stylesheet" [href]='sanitizer.bypassSecurityTrustResourceUrl(customTheme)'>
+
+<div id="ng-chat" *ngIf="isBootstrapped && !unsupportedViewport" [ngClass]="theme">
     <div *ngIf="!hideFriendsList" id="ng-chat-people" [ngClass]="{'primary-outline-color': true, 'primary-background': true, 'ng-chat-people-collapsed': isCollapsed}">
         <a href="javascript:void(0);" class="ng-chat-title secondary-background shadowed" (click)="onChatTitleClicked($event)">
             <span>

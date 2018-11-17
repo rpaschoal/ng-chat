@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, ViewChildren, ViewChild, HostListener, Output, EventEmitter, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { DomSanitizer } from '@angular/platform-browser';
 
 import { ChatAdapter } from './core/chat-adapter';
 import { User } from "./core/user";
@@ -14,6 +15,7 @@ import { IChatController } from './core/chat-controller';
 import { PagedHistoryChatAdapter } from './core/paged-history-chat-adapter';
 import { IFileUploadAdapter } from './core/file-upload-adapter';
 import { DefaultFileUploadAdapter } from './core/default-file-upload-adapter';
+import { Theme } from './core/theme.enum';
 
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -25,13 +27,13 @@ import { Observable } from 'rxjs';
         'assets/icons.css',
         'assets/loading-spinner.css',
         'assets/ng-chat.component.default.css',
-        //'assets/themes/ng-chat.theme.default.css'
-        'assets/themes/ng-chat.theme.dark.css'
-    ]
+        'assets/themes/ng-chat.theme.default.scss',
+        'assets/themes/ng-chat.theme.dark.scss'
+    ],
 })
 
 export class NgChat implements OnInit, IChatController {
-    constructor(private _httpClient: HttpClient) { }
+    constructor(public sanitizer: DomSanitizer, private _httpClient: HttpClient) { }
 
     // Exposes enums for the ng-template
     public UserStatus = UserStatus;
@@ -109,6 +111,12 @@ export class NgChat implements OnInit, IChatController {
     @Input()
     public fileUploadUrl: string;
 
+    @Input()
+    public theme: Theme = Theme.Light;
+
+    @Input()
+    public customTheme: string;
+
     @Output()
     public onUserClicked: EventEmitter<User> = new EventEmitter<User>();
 
@@ -122,6 +130,8 @@ export class NgChat implements OnInit, IChatController {
     public onMessagesSeen: EventEmitter<Message[]> = new EventEmitter<Message[]>();
 
     private browserNotificationsBootstrapped: boolean = false;
+
+    public currentThemeClass: string;
 
     public hasPagedHistory: boolean = false;
 
@@ -214,6 +224,7 @@ export class NgChat implements OnInit, IChatController {
         {
             this.viewPortTotalArea = window.innerWidth;
 
+            this.initializeTheme();
             this.initializeDefaultText();
             this.initializeBrowserNotifications();
 
@@ -282,6 +293,16 @@ export class NgChat implements OnInit, IChatController {
                 browserNotificationTitle: this.browserNotificationTitle,
                 loadMessageHistoryPlaceholder: "Load older messages"
             };
+        }
+    }
+
+    private initializeTheme(): void
+    {
+        // TODO: Check if supplied theme is a valid value in the Enum otherwise fallback to the light theme
+
+        if (this.customTheme)
+        {
+            this.theme = Theme.Custom;
         }
     }
 
