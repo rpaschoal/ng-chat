@@ -5,7 +5,7 @@
                 {{localization.title}}
             </span>
         </a>
-        <input *ngIf="searchEnabled" id="ng-chat-search_friend" class="friends-search-bar-background" type="search" [placeholder]="localization.searchPlaceholder" [(ngModel)]="searchInput" />
+        <input *ngIf="searchEnabled" id="ng-chat-search_friend" class="friends-search-bar" type="search" [placeholder]="localization.searchPlaceholder" [(ngModel)]="searchInput" />
         <ul id="ng-chat-users" *ngIf="!isCollapsed" [ngClass]="{'offset-search': searchEnabled}">
             <li *ngFor="let user of filteredUsers" (click)="openChatWindow(user, true, true)">
                 <div *ngIf="!user.avatar"  class="icon-wrapper">
@@ -72,7 +72,7 @@
                     [ngModel]="window.newMessage | emojify:emojisEnabled" 
                     (ngModelChange)="window.newMessage=$event" 
                     [placeholder]="localization.messagePlaceholder" 
-                    [ngClass]="{'has-side-action': fileUploadAdapter}"
+                    [ngClass]="{'chat-window-input': true, 'has-side-action': fileUploadAdapter}"
                     (keydown)="onChatInputTyped($event, window)" 
                     (blur)="toggleWindowFocus(window)" 
                     (focus)="toggleWindowFocus(window)"/>

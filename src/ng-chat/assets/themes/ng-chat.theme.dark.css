@@ -1,0 +1,54 @@
+.primary-background
+{
+    background-color: #565656;
+}
+.secondary-background
+{
+    background-color: #444444;
+}
+.primary-outline-color
+{
+    border-color:#353535;
+}
+.primary-text
+{
+    color: #FFF;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.friends-search-bar
+{
+    background-color: #444;
+    border: 1px solid #444;
+    color: #FFF;
+}
+.unread-messages-counter-container
+{
+    background-color: #FFF;
+    color: #444444;
+}
+.load-history-action
+{
+    background-color: #444;
+}
+.chat-window-input
+{
+    background-color: #444444;
+    color: #FFF;
+}
+.sent-chat-message-container
+{
+    background-color: #444;
+}
+.received-chat-message-container
+{
+    background-color:#565656;
+    border-color: #444444;
+}
+.file-message-container
+{
+    border-color: #444;
+}
+.file-message-icon-container
+{
+    background-color: #444;
+}
