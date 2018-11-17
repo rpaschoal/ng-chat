@@ -131,8 +131,6 @@ export class NgChat implements OnInit, IChatController {
 
     private browserNotificationsBootstrapped: boolean = false;
 
-    public currentThemeClass: string;
-
     public hasPagedHistory: boolean = false;
 
     // Don't want to add this as a setting to simplify usage. Previous placeholder and title settings available to be used, or use full Localization object.
