@@ -218,40 +218,49 @@ export class NgChat implements OnInit, IChatController {
     // Initializes the chat plugin and the messaging adapter
     private bootstrapChat(): void
     {
+        let initializationException = null;
+
         if (this.adapter != null && this.userId != null)
         {
-            this.viewPortTotalArea = window.innerWidth;
-
-            this.initializeTheme();
-            this.initializeDefaultText();
-            this.initializeBrowserNotifications();
-
-            // Binding event listeners
-            this.adapter.messageReceivedHandler = (user, msg) => this.onMessageReceived(user, msg);
-            this.adapter.friendsListChangedHandler = (users) => this.onFriendsListChanged(users);
-
-            // Loading current users list
-            if (this.pollFriendsList){
-                // Setting a long poll interval to update the friends list
-                this.fetchFriendsList(true);
-                setInterval(() => this.fetchFriendsList(false), this.pollingInterval);
-            }
-            else
+            try
             {
-                // Since polling was disabled, a friends list update mechanism will have to be implemented in the ChatAdapter.
-                this.fetchFriendsList(true);
-            }
-            
-            this.bufferAudioFile();
+                this.viewPortTotalArea = window.innerWidth;
 
-            this.hasPagedHistory = this.adapter instanceof PagedHistoryChatAdapter;
-            
-            if (this.fileUploadUrl && this.fileUploadUrl !== "")
+                this.initializeTheme();
+                this.initializeDefaultText();
+                this.initializeBrowserNotifications();
+
+                // Binding event listeners
+                this.adapter.messageReceivedHandler = (user, msg) => this.onMessageReceived(user, msg);
+                this.adapter.friendsListChangedHandler = (users) => this.onFriendsListChanged(users);
+
+                // Loading current users list
+                if (this.pollFriendsList){
+                    // Setting a long poll interval to update the friends list
+                    this.fetchFriendsList(true);
+                    setInterval(() => this.fetchFriendsList(false), this.pollingInterval);
+                }
+                else
+                {
+                    // Since polling was disabled, a friends list update mechanism will have to be implemented in the ChatAdapter.
+                    this.fetchFriendsList(true);
+                }
+                
+                this.bufferAudioFile();
+
+                this.hasPagedHistory = this.adapter instanceof PagedHistoryChatAdapter;
+                
+                if (this.fileUploadUrl && this.fileUploadUrl !== "")
+                {
+                    this.fileUploadAdapter = new DefaultFileUploadAdapter(this.fileUploadUrl, this._httpClient);
+                }
+
+                this.isBootstrapped = true;
+            }
+            catch(ex)
             {
-                this.fileUploadAdapter = new DefaultFileUploadAdapter(this.fileUploadUrl, this._httpClient);
+                initializationException = ex;
             }
-
-            this.isBootstrapped = true;
         }
 
         if (!this.isBootstrapped){
@@ -262,6 +271,11 @@ export class NgChat implements OnInit, IChatController {
             }
             if (this.adapter == null){
                 console.error("ng-chat can't be bootstrapped without a ChatAdapter. Please make sure you've provided a ChatAdapter implementation as a parameter of the ng-chat component.");
+            }
+            if (initializationException)
+            {
+                console.error(`An exception has occurred while initializing ng-chat. Details: ${initializationException.message}`);
+                console.error(initializationException);
             }
         }
     }
@@ -296,11 +310,14 @@ export class NgChat implements OnInit, IChatController {
 
     private initializeTheme(): void
     {
-        // TODO: Check if supplied theme is a valid value in the Enum otherwise fallback to the light theme
-
         if (this.customTheme)
         {
             this.theme = Theme.Custom;
+        }
+        else if (this.theme != Theme.Light && this.theme != Theme.Dark)
+        {
+            // TODO: Use es2017 in future with Object.values(Theme).includes(this.theme) to do this check
+            throw new Error(`Invalid theme configuration for ng-chat. "${this.theme}" is not a valid theme value.`);
         }
     }
 
