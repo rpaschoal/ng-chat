@@ -1,0 +1,72 @@
+$primary-color: #565656;
+$secondary-color: #444;
+$text-color: #FFF;
+
+%text-definition {
+    color: #FFF;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.dark-theme
+{
+    @extend %text-definition;
+
+    .primary-background
+    {
+        background-color: $primary-color;
+    }
+    .secondary-background
+    {
+        background-color: $secondary-color;
+    }
+    .primary-outline-color
+    {
+        border-color:#353535;
+    }
+    .primary-text
+    {
+        @extend %text-definition;
+    }
+    .friends-search-bar
+    {
+        background-color: $secondary-color;
+        border: 1px solid $secondary-color;
+        color: $text-color;
+    }
+    .unread-messages-counter-container
+    {
+        background-color: #FFF;
+        color: $secondary-color;
+    }
+    .load-history-action
+    {
+        background-color: $secondary-color;
+    }
+    .chat-window-input
+    {
+        background-color: $secondary-color;
+        color: #FFF;
+    }
+    .sent-chat-message-container
+    {
+        background-color: $secondary-color;
+    }
+    .received-chat-message-container
+    {
+        background-color: $primary-color;
+        border-color: $secondary-color;
+    }
+    .file-message-container
+    {
+        border-color: $secondary-color;
+    }
+    .file-message-icon-container
+    {
+        background-color: $secondary-color;
+    }
+
+    .ng-chat-footer
+    {
+        background-color: $secondary-color;
+    }
+}

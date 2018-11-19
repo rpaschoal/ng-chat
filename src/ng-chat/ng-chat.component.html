@@ -1,11 +1,13 @@
-<div id="ng-chat" *ngIf="isBootstrapped && !unsupportedViewport">
-    <div *ngIf="!hideFriendsList" id="ng-chat-people" [ngClass]="{'ng-chat-people-collapsed':isCollapsed}">
-        <a href="javascript:void(0);" class="ng-chat-title shadowed" (click)="onChatTitleClicked($event)">
+<link *ngIf="customTheme" rel="stylesheet" [href]='sanitizer.bypassSecurityTrustResourceUrl(customTheme)'>
+
+<div id="ng-chat" *ngIf="isBootstrapped && !unsupportedViewport" [ngClass]="theme">
+    <div *ngIf="!hideFriendsList" id="ng-chat-people" [ngClass]="{'primary-outline-color': true, 'primary-background': true, 'ng-chat-people-collapsed': isCollapsed}">
+        <a href="javascript:void(0);" class="ng-chat-title secondary-background shadowed" (click)="onChatTitleClicked($event)">
             <span>
                 {{localization.title}}
             </span>
         </a>
-        <input *ngIf="searchEnabled" id="ng-chat-search_friend" type="search" [placeholder]="localization.searchPlaceholder" [(ngModel)]="searchInput" />
+        <input *ngIf="searchEnabled" id="ng-chat-search_friend" class="friends-search-bar" type="search" [placeholder]="localization.searchPlaceholder" [(ngModel)]="searchInput" />
         <ul id="ng-chat-users" *ngIf="!isCollapsed" [ngClass]="{'offset-search': searchEnabled}">
             <li *ngFor="let user of filteredUsers" (click)="openChatWindow(user, true, true)">
                 <div *ngIf="!user.avatar"  class="icon-wrapper">
@@ -14,36 +16,36 @@
                 <img *ngIf="user.avatar" alt="" class="avatar" height="30" width="30"  src="{{user.avatar}}"/>
                 <strong title="{{user.displayName}}">{{user.displayName}}</strong>
                 <span [ngClass]="{'ng-chat-user-status': true, 'online': user.status == UserStatus.Online, 'busy': user.status == UserStatus.Busy, 'away': user.status == UserStatus.Away, 'offline': user.status == UserStatus.Offline}" title="{{getStatusTitle(user.status)}}"></span>
-                <span *ngIf="unreadMessagesTotalByUser(user).length > 0" class="ng-chat-unread-messages-count">{{unreadMessagesTotalByUser(user)}}</span>
+                <span *ngIf="unreadMessagesTotalByUser(user).length > 0" class="ng-chat-unread-messages-count unread-messages-counter-container primary-text">{{unreadMessagesTotalByUser(user)}}</span>
             </li>
         </ul>
     </div>
-    <div *ngFor="let window of windows; let i = index" [ngClass]="{'ng-chat-window': true, 'ng-chat-window-collapsed': window.isCollapsed}" [ngStyle]="{'right': (!hideFriendsList ? friendsListWidth : 0) + 20 + windowSizeFactor * i + 'px'}">
+    <div *ngFor="let window of windows; let i = index" [ngClass]="{'ng-chat-window': true, 'primary-outline-color': true, 'ng-chat-window-collapsed': window.isCollapsed}" [ngStyle]="{'right': (!hideFriendsList ? friendsListWidth : 0) + 20 + windowSizeFactor * i + 'px'}">
         <ng-container *ngIf="window.isCollapsed">
-            <div class="ng-chat-title" (click)="onChatWindowClicked(window)">
+            <div class="ng-chat-title secondary-background" (click)="onChatWindowClicked(window)">
                 <strong title="{{window.chattingTo.displayName}}">
                     {{window.chattingTo.displayName}}
                 </strong>
                 <span [ngClass]="{'ng-chat-user-status': true, 'online': window.chattingTo.status == UserStatus.Online, 'busy': window.chattingTo.status == UserStatus.Busy, 'away': window.chattingTo.status == UserStatus.Away, 'offline': window.chattingTo.status == UserStatus.Offline}" title="{{getStatusTitle(window.chattingTo.status)}}"></span>
-                <span *ngIf="unreadMessagesTotal(window).length > 0" class="ng-chat-unread-messages-count">{{unreadMessagesTotal(window)}}</span>
-                <a href="javascript:void(0);" class="ng-chat-close" (click)="onCloseChatWindow(window)">X</a>
+                <span *ngIf="unreadMessagesTotal(window).length > 0" class="ng-chat-unread-messages-count unread-messages-counter-container primary-text">{{unreadMessagesTotal(window)}}</span>
+                <a href="javascript:void(0);" class="ng-chat-close primary-text" (click)="onCloseChatWindow(window)">X</a>
             </div>
         </ng-container>
         <ng-container *ngIf="!window.isCollapsed">
-            <div class="ng-chat-title" (click)="onChatWindowClicked(window)">
+            <div class="ng-chat-title secondary-background" (click)="onChatWindowClicked(window)">
                 <strong title="{{window.chattingTo.displayName}}">
                     {{window.chattingTo.displayName}}
                 </strong>
                 <span [ngClass]="{'ng-chat-user-status': true, 'online': window.chattingTo.status == UserStatus.Online, 'busy': window.chattingTo.status == UserStatus.Busy, 'away': window.chattingTo.status == UserStatus.Away, 'offline': window.chattingTo.status == UserStatus.Offline}" title="{{getStatusTitle(window.chattingTo.status)}}"></span>
-                <span *ngIf="unreadMessagesTotal(window).length > 0" class="ng-chat-unread-messages-count">{{unreadMessagesTotal(window)}}</span>
-                <a href="javascript:void(0);" class="ng-chat-close" (click)="onCloseChatWindow(window)">X</a>
+                <span *ngIf="unreadMessagesTotal(window).length > 0" class="ng-chat-unread-messages-count unread-messages-counter-container primary-text">{{unreadMessagesTotal(window)}}</span>
+                <a href="javascript:void(0);" class="ng-chat-close primary-text" (click)="onCloseChatWindow(window)">X</a>
             </div>
-            <div #chatMessages class="ng-chat-messages">
+            <div #chatMessages class="ng-chat-messages primary-background">
                 <div *ngIf="window.isLoadingHistory" class="ng-chat-loading-wrapper">
                     <div class="loader">Loading history...</div>
                 </div>
                 <div *ngIf="hasPagedHistory && window.hasMoreMessages && !window.isLoadingHistory" class="ng-chat-load-history">
-                	<a (click)="fetchMessageHistory(window)">{{localization.loadMessageHistoryPlaceholder}}</a>
+                	<a class="load-history-action" (click)="fetchMessageHistory(window)">{{localization.loadMessageHistoryPlaceholder}}</a>
                 </div>
 
                 <div *ngFor="let message of window.messages; let i = index" [ngClass]="{'ng-chat-message': true, 'ng-chat-message-received': message.fromId != userId}">
@@ -52,7 +54,7 @@
                     </div>
                     <img *ngIf="window.chattingTo.avatar && isAvatarVisible(window, message, i)" alt="" class="avatar" height="30" width="30" [src]="window.chattingTo.avatar" />
                     <ng-container [ngSwitch]="message.type">
-                        <span *ngSwitchCase="MessageType.Text" [innerHtml]="message.message | emojify:emojisEnabled | linkfy:linkfyEnabled"></span>
+                        <span *ngSwitchCase="MessageType.Text" [innerHtml]="message.message | emojify:emojisEnabled | linkfy:linkfyEnabled" [ngClass]="{'sent-chat-message-container': message.fromId == userId, 'received-chat-message-container': message.fromId != userId}"></span>
                         <div *ngSwitchCase="MessageType.File" [ngClass]="{'file-message-container': true, 'received': message.fromId != userId}">
                             <div class="file-message-icon-container">
                                 <i class="paperclip-icon"></i>
@@ -66,13 +68,13 @@
                 </div>
             </div>
 
-            <div class="ng-chat-footer">
+            <div class="ng-chat-footer primary-outline-color primary-background">
                 <input #chatWindowInput 
                     type="text" 
                     [ngModel]="window.newMessage | emojify:emojisEnabled" 
                     (ngModelChange)="window.newMessage=$event" 
                     [placeholder]="localization.messagePlaceholder" 
-                    [ngClass]="{'has-side-action': fileUploadAdapter}"
+                    [ngClass]="{'chat-window-input': true, 'has-side-action': fileUploadAdapter}"
                     (keydown)="onChatInputTyped($event, window)" 
                     (blur)="toggleWindowFocus(window)" 
                     (focus)="toggleWindowFocus(window)"/>

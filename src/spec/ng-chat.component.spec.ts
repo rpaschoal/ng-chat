@@ -9,6 +9,7 @@ import { ScrollDirection } from '../ng-chat/core/scroll-direction.enum';
 import { IFileUploadAdapter } from '../ng-chat/core/file-upload-adapter';
 import { FileMessage } from '../ng-chat/core/file-message';
 import { MessageType } from '../ng-chat/core/message-type.enum';
+import { Theme } from '../ng-chat/core/theme.enum';
 
 class MockableAdapter extends ChatAdapter {
     public listFriends(): Observable<User[]> {
@@ -38,7 +39,7 @@ let subject: any = null;
 
 describe('NgChat', () => {
     beforeEach(() => {
-        subject = new NgChat(null); // HttpClient related methods are tested elsewhere
+        subject = new NgChat(null, null); // HttpClient related methods are tested elsewhere
         subject.userId = 123;
         subject.adapter = new MockableAdapter();
         subject.audioFile = new MockableHTMLAudioElement();
@@ -126,6 +127,14 @@ describe('NgChat', () => {
 
     it('File upload url must be undefined by default', () => {
         expect(subject.fileUploadAdapter).toBeUndefined();
+    });
+
+    it('Default theme must be Light', () => {
+        expect(subject.theme).toBe(Theme.Light);
+    });
+
+    it('Custom theme must be undefined by default', () => {
+        expect(subject.customTheme).toBeUndefined();
     });
 
     it('Exercise users filter', () => {
@@ -1539,5 +1548,19 @@ describe('NgChat', () => {
         expect(nullMessageType.type).toBe(MessageType.Text);
         expect(undefinedMessageType.type).toBe(MessageType.Text);
         expect(fileMessageType.type).toBe(MessageType.File);
+    });
+
+    it('Must set theme to "Custom" if a custom theme URL is set', () => {
+        subject.customTheme = "https://sample.test/custom-theme.css";
+
+        subject.initializeTheme();
+
+        expect(subject.theme).toBe(Theme.Custom);
+    });
+
+    it('Must throw Error on theme initialization if a unknown theme schema is set', () => {
+        subject.theme = "invalid-theme";
+
+        expect(() => subject.initializeTheme()).toThrow(new Error(`Invalid theme configuration for ng-chat. "${subject.theme}" is not a valid theme value.`));
     });
 });
