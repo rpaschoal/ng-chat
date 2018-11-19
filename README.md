@@ -90,6 +90,8 @@ __Additional Settings__
 * [hideFriendsList]{boolean}: Hides the friends list. Chat windows can still be opened, closed and toggled by using `IChatController`. Default is false.
 * [hideFriendsListOnUnsupportedViewport]{boolean}: Hides the friends list if there isn't enough space for at least one chat window on the current viewport. Default is true.
 * [fileUploadUrl]{string}: Defines a valid CORS enabled URL that can process a request form file and return a `FileMessage` for the destinatary user.
+* [theme]{ng-chat/core/theme.enum:Theme}: Defines the styling theme. There is a light (default) and a dark theme available. You can also supply this as a string.
+* [customTheme]{string}: Source URL of the stylesheet asset to use for custom CSS styles. Works with assets relative to the project using ng-chat.
 
 __Localization__
 * [messagePlaceholder]{string}: The placeholder that is displayed in the text input on each chat window. Default is "Type a message".
