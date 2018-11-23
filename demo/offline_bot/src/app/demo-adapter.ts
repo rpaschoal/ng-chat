@@ -1,4 +1,4 @@
-import { ChatAdapter, User, Message, UserStatus } from 'ng-chat';
+import { ChatAdapter, User, Message, UserStatus, UserResponse, UserMetadata } from 'ng-chat';
 import { Observable, of } from 'rxjs';
 import { delay } from "rxjs/operators";
 
@@ -66,8 +66,17 @@ export class DemoAdapter extends ChatAdapter
         status: UserStatus.Away
     }];
 
-    listFriends(): Observable<User[]> {
-        return of(DemoAdapter.mockedUsers);
+    listFriends(): Observable<UserResponse[]> {
+        return of(DemoAdapter.mockedUsers.map(user => {
+            let userResponse = new UserResponse();
+
+            userResponse.User = user;
+            userResponse.Metadata = {
+                totalUnreadMessages: Math.floor(Math.random() * 10)
+            }
+
+            return userResponse;
+        }));
     }
 
     getMessageHistory(userId: any): Observable<Message[]> {

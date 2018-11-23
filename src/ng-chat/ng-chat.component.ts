@@ -4,6 +4,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 import { ChatAdapter } from './core/chat-adapter';
 import { User } from "./core/user";
+import { UserResponse } from "./core/user-response";
 import { Message } from "./core/message";
 import { FileMessage } from "./core/file-message";
 import { MessageType } from "./core/message-type.enum";
@@ -146,6 +147,10 @@ export class NgChat implements OnInit, IChatController {
     public searchInput: string = '';
 
     protected users: User[];
+
+    protected usersResponse: UserResponse[];
+
+    private usersInteractedWith: User[] = [];
 
     private get localStorageKey(): string 
     {
@@ -326,8 +331,12 @@ export class NgChat implements OnInit, IChatController {
     {
         this.adapter.listFriends()
         .pipe(
-            map((users: User[]) => {
-                this.users = users;
+            map((userResponse: UserResponse[]) => {
+                this.usersResponse = userResponse;
+
+                this.users = userResponse.map((response: UserResponse) => {
+                    return response.User;
+                });
             })
         ).subscribe(() => {
             if (isBootstrapping)
@@ -388,11 +397,19 @@ export class NgChat implements OnInit, IChatController {
     }
 
     // Updates the friends list via the event handler
-    private onFriendsListChanged(users: User[]): void
+    private onFriendsListChanged(usersResponse: UserResponse[]): void
     {
-        if (users) 
+        if (usersResponse) 
         {
-            this.users = users;
+            map((usersResponse: UserResponse[]) => {
+                this.usersResponse = usersResponse;
+
+                this.users = usersResponse.map((response: UserResponse) => {
+                    return response.User;
+                });
+            });
+
+            this.usersInteractedWith = [];
         }
     }
 
@@ -477,6 +494,8 @@ export class NgChat implements OnInit, IChatController {
                 this.focusOnWindow(newChatWindow);
             }
             
+            this.usersInteractedWith.push(user);
+
             this.onUserChatOpened.emit(user);
 
             return [newChatWindow, true];
@@ -632,23 +651,30 @@ export class NgChat implements OnInit, IChatController {
         }
     }
 
+    private formatUnreadMessagesTotal(totalUnreadMessages: number): string
+    {
+        if (totalUnreadMessages > 0){
+
+            if (totalUnreadMessages > 99) 
+                return  "99+";
+            else
+                return String(totalUnreadMessages); 
+        }
+
+        // Empty fallback.
+        return "";
+    }
+
     // Returns the total unread messages from a chat window. TODO: Could use some Angular pipes in the future 
     unreadMessagesTotal(window: Window): string
     {
-        if (window){
-            let totalUnreadMessages = window.messages.filter(x => x.fromId != this.userId && !x.seenOn).length;
-            
-            if (totalUnreadMessages > 0){
+        let totalUnreadMessages = 0;
 
-                if (totalUnreadMessages > 99) 
-                    return  "99+";
-                else
-                    return String(totalUnreadMessages); 
-            }
+        if (window){
+            totalUnreadMessages = window.messages.filter(x => x.fromId != this.userId && !x.seenOn).length;
         }
             
-        // Empty fallback.
-        return "";
+        return this.formatUnreadMessagesTotal(totalUnreadMessages);
     }
 
     unreadMessagesTotalByUser(user: User): string
@@ -658,9 +684,16 @@ export class NgChat implements OnInit, IChatController {
         if (openedWindow){
             return this.unreadMessagesTotal(openedWindow);
         }
-            
-        // Empty fallback.
-        return "";
+        else
+        {
+            let totalUnreadMessages = this.usersResponse
+                .filter(x => x.User.id == user.id && !this.usersInteractedWith.find(u => u.id == user.id) && x.Metadata && x.Metadata.totalUnreadMessages > 0)
+                .map((userResponse) => {
+                    return userResponse.Metadata.totalUnreadMessages
+                })[0];
+
+            return this.formatUnreadMessagesTotal(totalUnreadMessages);
+        }
     }
 
     /*  Monitors pressed keys on a chat window

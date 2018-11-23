@@ -1,4 +1,4 @@
-import { ChatAdapter, User, Message, UserStatus, PagedHistoryChatAdapter } from 'ng-chat';
+import { ChatAdapter, User, Message, UserStatus, PagedHistoryChatAdapter, UserResponse, UserMetadata } from 'ng-chat';
 import { Observable, of } from 'rxjs';
 import { DemoAdapter } from './demo-adapter';
 import { delay } from "rxjs/operators";
@@ -21,8 +21,17 @@ export class DemoAdapterPagedHistory extends PagedHistoryChatAdapter
         }
     }
 
-    listFriends(): Observable<User[]> {
-        return of(DemoAdapter.mockedUsers);
+    listFriends(): Observable<UserResponse[]> {
+        return of(DemoAdapter.mockedUsers.map(user => {
+            let userResponse = new UserResponse();
+
+            userResponse.User = user;
+            userResponse.Metadata = {
+                totalUnreadMessages: 4 // Demo history page size
+            }
+
+            return userResponse;
+        }));
     }
 
     getMessageHistory(userId: any): Observable<Message[]> {

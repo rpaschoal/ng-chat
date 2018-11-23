@@ -1,12 +1,13 @@
 import { Observable } from 'rxjs';
 import { Message } from "./message";
 import { User } from "./user";
+import { UserResponse } from "./user-response";
 
 export abstract class ChatAdapter
 {
     // ### Abstract adapter methods ###
 
-    public abstract listFriends(): Observable<User[]>;
+    public abstract listFriends(): Observable<UserResponse[]>;
     
     public abstract getMessageHistory(userId: any): Observable<Message[]>;
 
@@ -14,9 +15,9 @@ export abstract class ChatAdapter
 
     // ### Adapter/Chat income/ingress events ###
 
-    public onFriendsListChanged(users: User[]): void
+    public onFriendsListChanged(usersResponse: UserResponse[]): void
     {
-        this.friendsListChangedHandler(users);
+        this.friendsListChangedHandler(usersResponse);
     }
 
     public onMessageReceived(user: User, message: Message): void
@@ -25,6 +26,6 @@ export abstract class ChatAdapter
     }
     
     // Event handlers
-    friendsListChangedHandler: (users: User[]) => void  = (users: User[]) => {};
+    friendsListChangedHandler: (usersResponse: UserResponse[]) => void  = (usersResponse: UserResponse[]) => {};
     messageReceivedHandler: (user: User, message: Message) => void = (user: User, message: Message) => {};
 }
