@@ -118,6 +118,12 @@ export class NgChat implements OnInit, IChatController {
     @Input()
     public customTheme: string;
 
+    @Input()
+    public messageDatePipeFormat: string = "short";
+
+    @Input()
+    public showMessageDate: boolean = true;
+
     @Output()
     public onUserClicked: EventEmitter<User> = new EventEmitter<User>();
 
@@ -713,6 +719,7 @@ export class NgChat implements OnInit, IChatController {
                     message.fromId = this.userId;
                     message.toId = window.chattingTo.id;
                     message.message = window.newMessage;
+                    message.dateSent = new Date();
         
                     window.messages.push(message);
         

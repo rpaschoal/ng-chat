@@ -63,6 +63,7 @@ export class DemoAdapterPagedHistory extends PagedHistoryChatAdapter
             replyMessage.fromId = message.toId;
             replyMessage.toId = message.fromId;
             replyMessage.message = "You have typed '" + message.message + "'";
+            replyMessage.dateSent = new Date();
             
             let user = DemoAdapter.mockedUsers.find(x => x.id == replyMessage.fromId);
 
