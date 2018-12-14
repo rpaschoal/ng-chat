@@ -389,7 +389,7 @@ export class NgChat implements OnInit, IChatController {
 
         if (window.hasFocus || forceMarkMessagesAsSeen)
         {
-            const unseenMessages = messages.filter(m => !m.seenOn);
+            const unseenMessages = messages.filter(m => !m.dateSeen);
 
             this.markMessagesAsRead(unseenMessages);
             this.onMessagesSeen.emit(unseenMessages);
@@ -552,7 +552,7 @@ export class NgChat implements OnInit, IChatController {
         let currentDate = new Date();
 
         messages.forEach((msg)=>{
-            msg.seenOn = currentDate;
+            msg.dateSeen = currentDate;
         });
     }
 
@@ -671,7 +671,7 @@ export class NgChat implements OnInit, IChatController {
         let totalUnreadMessages = 0;
 
         if (window){
-            totalUnreadMessages = window.messages.filter(x => x.fromId != this.userId && !x.seenOn).length;
+            totalUnreadMessages = window.messages.filter(x => x.fromId != this.userId && !x.dateSeen).length;
         }
             
         return this.formatUnreadMessagesTotal(totalUnreadMessages);
@@ -800,7 +800,7 @@ export class NgChat implements OnInit, IChatController {
     {
         window.hasFocus = !window.hasFocus;
         if(window.hasFocus) {
-            const unreadMessages = window.messages.filter(message => message.seenOn == null && message.toId == this.userId);
+            const unreadMessages = window.messages.filter(message => message.dateSeen == null && message.toId == this.userId);
             
             if (unreadMessages && unreadMessages.length > 0)
             {

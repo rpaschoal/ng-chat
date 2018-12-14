@@ -384,10 +384,10 @@ describe('NgChat', () => {
         subject.markMessagesAsRead(messages);
 
         expect(messages.length).toBe(2);
-        expect(messages[0].seenOn).not.toBeUndefined();
-        expect(messages[0].seenOn.getTime()).toBeGreaterThan(new Date().getTime() - 60000);
-        expect(messages[1].seenOn).not.toBeUndefined();
-        expect(messages[1].seenOn.getTime()).toBeGreaterThan(new Date().getTime() - 60000);
+        expect(messages[0].dateSeen).not.toBeUndefined();
+        expect(messages[0].dateSeen.getTime()).toBeGreaterThan(new Date().getTime() - 60000);
+        expect(messages[1].dateSeen).not.toBeUndefined();
+        expect(messages[1].dateSeen.getTime()).toBeGreaterThan(new Date().getTime() - 60000);
     });
 
     it('Should play HTMLAudioElement when emitting a message sound on an unfocused window', () => {
@@ -1331,7 +1331,7 @@ describe('NgChat', () => {
                 fromId: 999,
                 toId: 123,
                 message:'Hi',
-                seenOn: new Date()
+                dateSeen: new Date()
             },
             {
                 fromId: 999,
@@ -1367,19 +1367,19 @@ describe('NgChat', () => {
             avatar: ''
         };
         
-        // Both messages have "seenOn" dates
+        // Both messages have "dateSeen" dates
         let messages: Message[] = [
             {
                 fromId: 999,
                 toId: 123,
                 message:'Hi',
-                seenOn: new Date()
+                dateSeen: new Date()
             },
             {
                 fromId: 999,
                 toId: 123,
                 message:'Hi',
-                seenOn: new Date()
+                dateSeen: new Date()
             }
         ];
         
