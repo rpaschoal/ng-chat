@@ -1,5 +1,6 @@
 import { NgChat } from '../ng-chat/ng-chat.component';
 import { User } from '../ng-chat/core/user';
+import { UserResponse } from '../ng-chat/core/user-response';
 import { Window } from '../ng-chat/core/window';
 import { ChatAdapter } from '../ng-chat/core/chat-adapter';
 import { Observable, of } from 'rxjs';
@@ -12,7 +13,7 @@ import { MessageType } from '../ng-chat/core/message-type.enum';
 import { Theme } from '../ng-chat/core/theme.enum';
 
 class MockableAdapter extends ChatAdapter {
-    public listFriends(): Observable<User[]> {
+    public listFriends(): Observable<UserResponse[]> {
         throw new Error("Method not implemented.");
     }
     public getMessageHistory(userId: any): Observable<Message[]> {
@@ -258,14 +259,18 @@ describe('NgChat', () => {
     });
 
     it('Must update users property when onFriendsListChanged is invoked', () => {
-        expect(subject.users).toBeUndefined();
+        expect(subject.usersResponse).toBeUndefined();
+
+        subject.usersInteractedWith = [new User()];
 
         subject.onFriendsListChanged([
-            new User(),
-            new User()
+            new UserResponse(),
+            new UserResponse()
         ]);
 
+        expect(subject.usersResponse.length).toBe(2);
         expect(subject.users.length).toBe(2);
+        expect(subject.usersInteractedWith.length).toBe(0);
     });
 
     it('Must return existing open chat window when requesting a chat window instance', () => {

@@ -86,7 +86,8 @@ export class DemoAdapter extends ChatAdapter
             {
                 fromId: 1,
                 toId: 999,
-                message: "Hi there, just type any message bellow to test this Angular module."
+                message: "Hi there, just type any message bellow to test this Angular module.",
+                dateSent: new Date()
             }
         ];
 

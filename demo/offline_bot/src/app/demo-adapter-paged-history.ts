@@ -14,7 +14,7 @@ export class DemoAdapterPagedHistory extends PagedHistoryChatAdapter
                 fromId: 1,
                 toId: 999,
                 message: `${20-i}. Hi there, just type any message bellow to test this Angular module.`,
-                dateSeen: new Date()
+                dateSent: new Date()
             };
             
             this.historyMessages.push(msg);
@@ -41,7 +41,7 @@ export class DemoAdapterPagedHistory extends PagedHistoryChatAdapter
                 fromId: 1,
                 toId: 999,
                 message: "Hi there, just type any message bellow to test this Angular module.",
-                dateSeen: new Date()
+                dateSent: new Date()
             }
        ];
 

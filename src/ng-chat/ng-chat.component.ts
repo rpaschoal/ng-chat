@@ -243,7 +243,7 @@ export class NgChat implements OnInit, IChatController {
 
                 // Binding event listeners
                 this.adapter.messageReceivedHandler = (user, msg) => this.onMessageReceived(user, msg);
-                this.adapter.friendsListChangedHandler = (users) => this.onFriendsListChanged(users);
+                this.adapter.friendsListChangedHandler = (userResponses) => this.onFriendsListChanged(userResponses);
 
                 // Loading current users list
                 if (this.pollFriendsList){
@@ -407,12 +407,10 @@ export class NgChat implements OnInit, IChatController {
     {
         if (usersResponse) 
         {
-            map((usersResponse: UserResponse[]) => {
-                this.usersResponse = usersResponse;
+            this.usersResponse = usersResponse;
 
-                this.users = usersResponse.map((response: UserResponse) => {
-                    return response.User;
-                });
+            this.users = usersResponse.map((response: UserResponse) => {
+                return response.User;
             });
 
             this.usersInteractedWith = [];
