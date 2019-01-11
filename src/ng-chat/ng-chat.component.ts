@@ -4,6 +4,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 import { ChatAdapter } from './core/chat-adapter';
 import { User } from "./core/user";
+import { UserResponse } from "./core/user-response";
 import { Message } from "./core/message";
 import { FileMessage } from "./core/file-message";
 import { MessageType } from "./core/message-type.enum";
@@ -117,6 +118,12 @@ export class NgChat implements OnInit, IChatController {
     @Input()
     public customTheme: string;
 
+    @Input()
+    public messageDatePipeFormat: string = "short";
+
+    @Input()
+    public showMessageDate: boolean = true;
+
     @Output()
     public onUserClicked: EventEmitter<User> = new EventEmitter<User>();
 
@@ -146,6 +153,10 @@ export class NgChat implements OnInit, IChatController {
     public searchInput: string = '';
 
     protected users: User[];
+
+    protected usersResponse: UserResponse[];
+
+    private usersInteractedWith: User[] = [];
 
     private get localStorageKey(): string 
     {
@@ -232,7 +243,7 @@ export class NgChat implements OnInit, IChatController {
 
                 // Binding event listeners
                 this.adapter.messageReceivedHandler = (user, msg) => this.onMessageReceived(user, msg);
-                this.adapter.friendsListChangedHandler = (users) => this.onFriendsListChanged(users);
+                this.adapter.friendsListChangedHandler = (userResponses) => this.onFriendsListChanged(userResponses);
 
                 // Loading current users list
                 if (this.pollFriendsList){
@@ -326,8 +337,12 @@ export class NgChat implements OnInit, IChatController {
     {
         this.adapter.listFriends()
         .pipe(
-            map((users: User[]) => {
-                this.users = users;
+            map((userResponse: UserResponse[]) => {
+                this.usersResponse = userResponse;
+
+                this.users = userResponse.map((response: UserResponse) => {
+                    return response.User;
+                });
             })
         ).subscribe(() => {
             if (isBootstrapping)
@@ -380,7 +395,7 @@ export class NgChat implements OnInit, IChatController {
 
         if (window.hasFocus || forceMarkMessagesAsSeen)
         {
-            const unseenMessages = messages.filter(m => !m.seenOn);
+            const unseenMessages = messages.filter(m => !m.dateSeen);
 
             this.markMessagesAsRead(unseenMessages);
             this.onMessagesSeen.emit(unseenMessages);
@@ -388,11 +403,17 @@ export class NgChat implements OnInit, IChatController {
     }
 
     // Updates the friends list via the event handler
-    private onFriendsListChanged(users: User[]): void
+    private onFriendsListChanged(usersResponse: UserResponse[]): void
     {
-        if (users) 
+        if (usersResponse) 
         {
-            this.users = users;
+            this.usersResponse = usersResponse;
+
+            this.users = usersResponse.map((response: UserResponse) => {
+                return response.User;
+            });
+
+            this.usersInteractedWith = [];
         }
     }
 
@@ -477,6 +498,8 @@ export class NgChat implements OnInit, IChatController {
                 this.focusOnWindow(newChatWindow);
             }
             
+            this.usersInteractedWith.push(user);
+
             this.onUserChatOpened.emit(user);
 
             return [newChatWindow, true];
@@ -533,7 +556,7 @@ export class NgChat implements OnInit, IChatController {
         let currentDate = new Date();
 
         messages.forEach((msg)=>{
-            msg.seenOn = currentDate;
+            msg.dateSeen = currentDate;
         });
     }
 
@@ -632,23 +655,30 @@ export class NgChat implements OnInit, IChatController {
         }
     }
 
+    private formatUnreadMessagesTotal(totalUnreadMessages: number): string
+    {
+        if (totalUnreadMessages > 0){
+
+            if (totalUnreadMessages > 99) 
+                return  "99+";
+            else
+                return String(totalUnreadMessages); 
+        }
+
+        // Empty fallback.
+        return "";
+    }
+
     // Returns the total unread messages from a chat window. TODO: Could use some Angular pipes in the future 
     unreadMessagesTotal(window: Window): string
     {
-        if (window){
-            let totalUnreadMessages = window.messages.filter(x => x.fromId != this.userId && !x.seenOn).length;
-            
-            if (totalUnreadMessages > 0){
+        let totalUnreadMessages = 0;
 
-                if (totalUnreadMessages > 99) 
-                    return  "99+";
-                else
-                    return String(totalUnreadMessages); 
-            }
+        if (window){
+            totalUnreadMessages = window.messages.filter(x => x.fromId != this.userId && !x.dateSeen).length;
         }
             
-        // Empty fallback.
-        return "";
+        return this.formatUnreadMessagesTotal(totalUnreadMessages);
     }
 
     unreadMessagesTotalByUser(user: User): string
@@ -658,9 +688,16 @@ export class NgChat implements OnInit, IChatController {
         if (openedWindow){
             return this.unreadMessagesTotal(openedWindow);
         }
-            
-        // Empty fallback.
-        return "";
+        else
+        {
+            let totalUnreadMessages = this.usersResponse
+                .filter(x => x.User.id == user.id && !this.usersInteractedWith.find(u => u.id == user.id) && x.Metadata && x.Metadata.totalUnreadMessages > 0)
+                .map((userResponse) => {
+                    return userResponse.Metadata.totalUnreadMessages
+                })[0];
+
+            return this.formatUnreadMessagesTotal(totalUnreadMessages);
+        }
     }
 
     /*  Monitors pressed keys on a chat window
@@ -680,6 +717,7 @@ export class NgChat implements OnInit, IChatController {
                     message.fromId = this.userId;
                     message.toId = window.chattingTo.id;
                     message.message = window.newMessage;
+                    message.dateSent = new Date();
         
                     window.messages.push(message);
         
@@ -767,7 +805,7 @@ export class NgChat implements OnInit, IChatController {
     {
         window.hasFocus = !window.hasFocus;
         if(window.hasFocus) {
-            const unreadMessages = window.messages.filter(message => message.seenOn == null && message.toId == this.userId);
+            const unreadMessages = window.messages.filter(message => message.dateSeen == null && message.toId == this.userId);
             
             if (unreadMessages && unreadMessages.length > 0)
             {

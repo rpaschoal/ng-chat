@@ -1,4 +1,4 @@
-import { ChatAdapter, User, Message, UserStatus, PagedHistoryChatAdapter } from 'ng-chat';
+import { ChatAdapter, User, Message, UserStatus, PagedHistoryChatAdapter, UserResponse, UserMetadata } from 'ng-chat';
 import { Observable, of } from 'rxjs';
 import { DemoAdapter } from './demo-adapter';
 import { delay } from "rxjs/operators";
@@ -14,15 +14,24 @@ export class DemoAdapterPagedHistory extends PagedHistoryChatAdapter
                 fromId: 1,
                 toId: 999,
                 message: `${20-i}. Hi there, just type any message bellow to test this Angular module.`,
-                seenOn: new Date()
+                dateSent: new Date()
             };
             
             this.historyMessages.push(msg);
         }
     }
 
-    listFriends(): Observable<User[]> {
-        return of(DemoAdapter.mockedUsers);
+    listFriends(): Observable<UserResponse[]> {
+        return of(DemoAdapter.mockedUsers.map(user => {
+            let userResponse = new UserResponse();
+
+            userResponse.User = user;
+            userResponse.Metadata = {
+                totalUnreadMessages: 4 // Demo history page size
+            }
+
+            return userResponse;
+        }));
     }
 
     getMessageHistory(userId: any): Observable<Message[]> {
@@ -32,7 +41,7 @@ export class DemoAdapterPagedHistory extends PagedHistoryChatAdapter
                 fromId: 1,
                 toId: 999,
                 message: "Hi there, just type any message bellow to test this Angular module.",
-                seenOn: new Date()
+                dateSent: new Date()
             }
        ];
 
@@ -54,6 +63,7 @@ export class DemoAdapterPagedHistory extends PagedHistoryChatAdapter
             replyMessage.fromId = message.toId;
             replyMessage.toId = message.fromId;
             replyMessage.message = "You have typed '" + message.message + "'";
+            replyMessage.dateSent = new Date();
             
             let user = DemoAdapter.mockedUsers.find(x => x.id == replyMessage.fromId);
 
