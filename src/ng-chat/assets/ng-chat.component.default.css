@@ -8,6 +8,10 @@
     font-size: 11pt;
     text-align: left;
 }
+    #ng-chat .shadowed
+    {
+        box-shadow: 0 4px 8px rgba(0,0,0,.25);
+    }
 .ng-chat-loading-wrapper
 {
     height: 30px;
@@ -48,10 +52,6 @@
     font-weight: 400;
     cursor: pointer;
 }
-.ng-chat-title.shadowed
-{
-    box-shadow: 0 4px 8px rgba(0,0,0,.25);
-}
     .ng-chat-title > strong{
         font-weight: 600;
         display: block;
@@ -59,7 +59,7 @@
         height: 30px;
         text-overflow: ellipsis;
         white-space: nowrap;
-        max-width: 85%;
+        max-width: 80%;
         float:left;
     }
     .ng-chat-title > .ng-chat-user-status
@@ -355,3 +355,8 @@
                         font-size: 0.8em;
                         margin-top:5px;
                     }
+.ng-chat-options-container
+{
+    float: right;
+    margin-right: 5px;
+}

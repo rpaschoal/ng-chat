@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChildren, ViewChild, HostListener, Output, EventEmitter, ElementRef } from '@angular/core';
+import { Component, Input, OnInit, ViewChildren, ViewChild, HostListener, Output, EventEmitter, ElementRef, ViewEncapsulation } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -31,6 +31,7 @@ import { Observable } from 'rxjs';
         'assets/themes/ng-chat.theme.default.scss',
         'assets/themes/ng-chat.theme.dark.scss'
     ],
+    encapsulation: ViewEncapsulation.None
 })
 
 export class NgChat implements OnInit, IChatController {
