@@ -52,17 +52,22 @@
     font-weight: 400;
     cursor: pointer;
 }
-    .ng-chat-title > strong{
+    .ng-chat-title .ng-chat-title-visibility-toggle-area
+    {
+        display: inline-block;
+        width: 85%;
+    }
+    .ng-chat-title .ng-chat-title-visibility-toggle-area > strong{
         font-weight: 600;
         display: block;
         overflow: hidden;
         height: 30px;
         text-overflow: ellipsis;
         white-space: nowrap;
-        max-width: 80%;
+        max-width: 85%;
         float:left;
     }
-    .ng-chat-title > .ng-chat-user-status
+    .ng-chat-title .ng-chat-title-visibility-toggle-area .ng-chat-user-status
     {
         float: left;
         margin-left: 5px;
@@ -93,7 +98,12 @@
     {
         top: 84px;
     }
-
+    #ng-chat-users .ng-chat-users-checkbox
+    {
+        float: left;
+        margin-right: 5px;
+        margin-top: 8px;
+    }
     #ng-chat-users li
     {
         clear: both;
@@ -102,25 +112,29 @@
         cursor: pointer;
         max-height: 30px;
     }
-        #ng-chat-users li > img, #ng-chat-users li > .icon-wrapper
+        #ng-chat-users li > .ng-chat-friends-list-selectable-offset
+        {
+            margin-left: 22px;
+        }
+        #ng-chat-users li .ng-chat-friends-list-container > img, #ng-chat-users li .ng-chat-friends-list-container > .icon-wrapper
         {
             float: left;
             margin-right: 5px;
             border-radius: 25px;
         }
-        #ng-chat-users li > .icon-wrapper
+        #ng-chat-users li .ng-chat-friends-list-container > .icon-wrapper
         {
             background-color: #BABABA;
             overflow: hidden;
             width: 30px;
             height: 30px;
         }
-            #ng-chat-users li > .icon-wrapper > i
+            #ng-chat-users li .ng-chat-friends-list-container > .icon-wrapper > i
             {
                 color: #FFF;
                 transform: scale(0.7);
             }
-        #ng-chat-users li > strong
+        #ng-chat-users li .ng-chat-friends-list-container > strong
         {
             float: left;
             line-height: 30px;
@@ -131,12 +145,13 @@
             white-space: nowrap;
             text-overflow: ellipsis;
         }
-        #ng-chat-users li > .ng-chat-user-status
+        #ng-chat-users li .ng-chat-friends-list-container > .ng-chat-user-status
         {
             float: right;
         }
 .ng-chat-user-status
 {
+    display: inline-block;
     border-radius: 25px;
     width: 8px;
     height: 8px;

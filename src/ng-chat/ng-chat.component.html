@@ -9,37 +9,43 @@
         </a>
         <input *ngIf="searchEnabled" id="ng-chat-search_friend" class="friends-search-bar" type="search" [placeholder]="localization.searchPlaceholder" [(ngModel)]="searchInput" />
         <ul id="ng-chat-users" *ngIf="!isCollapsed" [ngClass]="{'offset-search': searchEnabled}">
-            <li *ngFor="let user of filteredUsers" (click)="openChatWindow(user, true, true)">
-                <div *ngIf="!user.avatar"  class="icon-wrapper">
-                    <i class="user-icon"></i>
+            <li *ngFor="let user of filteredUsers">
+                <input *ngIf="isSelectingFromFriendsList" type="checkbox" class="ng-chat-users-checkbox" />
+                <div [ngClass]="{'ng-chat-friends-list-selectable-offset': isSelectingFromFriendsList, 'ng-chat-friends-list-container': true}" (click)="openChatWindow(user, true, true)">
+                    <div *ngIf="!user.avatar"  class="icon-wrapper">
+                        <i class="user-icon"></i>
+                    </div>
+                    <img *ngIf="user.avatar" alt="" class="avatar" height="30" width="30"  src="{{user.avatar}}"/>
+                    <strong title="{{user.displayName}}">{{user.displayName}}</strong>
+                    <span [ngClass]="{'ng-chat-user-status': true, 'online': user.status == UserStatus.Online, 'busy': user.status == UserStatus.Busy, 'away': user.status == UserStatus.Away, 'offline': user.status == UserStatus.Offline}" title="{{getStatusTitle(user.status)}}"></span>
+                    <span *ngIf="unreadMessagesTotalByUser(user).length > 0" class="ng-chat-unread-messages-count unread-messages-counter-container primary-text">{{unreadMessagesTotalByUser(user)}}</span>
                 </div>
-                <img *ngIf="user.avatar" alt="" class="avatar" height="30" width="30"  src="{{user.avatar}}"/>
-                <strong title="{{user.displayName}}">{{user.displayName}}</strong>
-                <span [ngClass]="{'ng-chat-user-status': true, 'online': user.status == UserStatus.Online, 'busy': user.status == UserStatus.Busy, 'away': user.status == UserStatus.Away, 'offline': user.status == UserStatus.Offline}" title="{{getStatusTitle(user.status)}}"></span>
-                <span *ngIf="unreadMessagesTotalByUser(user).length > 0" class="ng-chat-unread-messages-count unread-messages-counter-container primary-text">{{unreadMessagesTotalByUser(user)}}</span>
             </li>
         </ul>
     </div>
     <div *ngFor="let window of windows; let i = index" [ngClass]="{'ng-chat-window': true, 'primary-outline-color': true, 'ng-chat-window-collapsed': window.isCollapsed}" [ngStyle]="{'right': (!hideFriendsList ? friendsListWidth : 0) + 20 + windowSizeFactor * i + 'px'}">
         <ng-container *ngIf="window.isCollapsed">
             <div class="ng-chat-title secondary-background">
-                <strong title="{{window.chattingTo.displayName}}" (click)="onChatWindowClicked(window)">
-                    {{window.chattingTo.displayName}}
-                </strong>
-                <span [ngClass]="{'ng-chat-user-status': true, 'online': window.chattingTo.status == UserStatus.Online, 'busy': window.chattingTo.status == UserStatus.Busy, 'away': window.chattingTo.status == UserStatus.Away, 'offline': window.chattingTo.status == UserStatus.Offline}" title="{{getStatusTitle(window.chattingTo.status)}}"></span>
-                <span *ngIf="unreadMessagesTotal(window).length > 0" class="ng-chat-unread-messages-count unread-messages-counter-container primary-text">{{unreadMessagesTotal(window)}}</span>
+                <div class="ng-chat-title-visibility-toggle-area" (click)="onChatWindowClicked(window)">
+                    <strong title="{{window.chattingTo.displayName}}">
+                        {{window.chattingTo.displayName}}
+                    </strong>
+                    <span [ngClass]="{'ng-chat-user-status': true, 'online': window.chattingTo.status == UserStatus.Online, 'busy': window.chattingTo.status == UserStatus.Busy, 'away': window.chattingTo.status == UserStatus.Away, 'offline': window.chattingTo.status == UserStatus.Offline}" title="{{getStatusTitle(window.chattingTo.status)}}"></span>
+                    <span *ngIf="unreadMessagesTotal(window).length > 0" class="ng-chat-unread-messages-count unread-messages-counter-container primary-text">{{unreadMessagesTotal(window)}}</span>
+                </div>
                 <a href="javascript:void(0);" class="ng-chat-close primary-text" (click)="onCloseChatWindow(window)">X</a>
             </div>
         </ng-container>
         <ng-container *ngIf="!window.isCollapsed">
             <div class="ng-chat-title secondary-background">
-                <strong title="{{window.chattingTo.displayName}}" (click)="onChatWindowClicked(window)">
-                    {{window.chattingTo.displayName}}
-                </strong>
-                <span [ngClass]="{'ng-chat-user-status': true, 'online': window.chattingTo.status == UserStatus.Online, 'busy': window.chattingTo.status == UserStatus.Busy, 'away': window.chattingTo.status == UserStatus.Away, 'offline': window.chattingTo.status == UserStatus.Offline}" title="{{getStatusTitle(window.chattingTo.status)}}"></span>
-                <span *ngIf="unreadMessagesTotal(window).length > 0" class="ng-chat-unread-messages-count unread-messages-counter-container primary-text">{{unreadMessagesTotal(window)}}</span>    
+                <div class="ng-chat-title-visibility-toggle-area" (click)="onChatWindowClicked(window)">
+                    <strong title="{{window.chattingTo.displayName}}">
+                        {{window.chattingTo.displayName}}
+                    </strong>
+                    <span [ngClass]="{'ng-chat-user-status': true, 'online': window.chattingTo.status == UserStatus.Online, 'busy': window.chattingTo.status == UserStatus.Busy, 'away': window.chattingTo.status == UserStatus.Away, 'offline': window.chattingTo.status == UserStatus.Offline}" title="{{getStatusTitle(window.chattingTo.status)}}"></span>
+                    <span *ngIf="unreadMessagesTotal(window).length > 0" class="ng-chat-unread-messages-count unread-messages-counter-container primary-text">{{unreadMessagesTotal(window)}}</span>    
+                </div>
                 <a href="javascript:void(0);" class="ng-chat-close primary-text" (click)="onCloseChatWindow(window)">X</a>
-
                 <ng-chat-options [ngClass]="'ng-chat-options-container'" [options]="defaultWindowOptions" [chattingTo]="window"></ng-chat-options>
             </div>
             <div #chatMessages class="ng-chat-messages primary-background">

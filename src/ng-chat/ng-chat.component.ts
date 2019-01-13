@@ -160,12 +160,16 @@ export class NgChat implements OnInit, IChatController {
 
     private usersInteractedWith: User[] = [];
 
+    public isSelectingFromFriendsList: boolean = false;
+
     public get defaultWindowOptions(): IChatOption[]
     {
         return [{
             action: (chattingTo: Window) => {
                 console.log('Chat options selected. Window:');
                 console.log(chattingTo);
+
+                this.isSelectingFromFriendsList = !this.isSelectingFromFriendsList;
             },
             displayLabel: 'Add People'
         }];
