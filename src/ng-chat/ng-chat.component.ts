@@ -17,6 +17,7 @@ import { PagedHistoryChatAdapter } from './core/paged-history-chat-adapter';
 import { IFileUploadAdapter } from './core/file-upload-adapter';
 import { DefaultFileUploadAdapter } from './core/default-file-upload-adapter';
 import { Theme } from './core/theme.enum';
+import { IChatOption } from './core/chat-option';
 
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -158,6 +159,17 @@ export class NgChat implements OnInit, IChatController {
     protected usersResponse: UserResponse[];
 
     private usersInteractedWith: User[] = [];
+
+    public get defaultWindowOptions(): IChatOption[]
+    {
+        return [{
+            action: (chattingTo: Window) => {
+                console.log('Chat options selected. Window:');
+                console.log(chattingTo);
+            },
+            displayLabel: 'Add People'
+        }];
+    }
 
     private get localStorageKey(): string 
     {

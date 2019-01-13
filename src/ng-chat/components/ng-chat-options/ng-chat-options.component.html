@@ -3,8 +3,8 @@
     <span class="primary-text">...</span>
   </button>
   <div class="ng-chat-options-content primary-background shadowed">
-    <a class="primary-text" href="#">Option 1</a>
-    <a class="primary-text" href="#">Option 2</a>
-    <a class="primary-text" href="#">Option 3</a>
+    <a *ngFor="let option of options; let i = index" [ngClass]="'primary-text'" href="javascript:void(0)" (click)="onOptionClicked(option)">
+      {{option.displayLabel}}
+    </a>
   </div>      
 </div>
