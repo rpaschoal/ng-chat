@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NgChatOptionsComponent } from './ng-chat-options.component';
+import { NgChatOptionsComponent } from '../../ng-chat/components/ng-chat-options/ng-chat-options.component';
 
 describe('NgChatOptionsComponent', () => {
   let component: NgChatOptionsComponent;
