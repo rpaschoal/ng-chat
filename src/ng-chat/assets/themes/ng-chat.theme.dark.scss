@@ -33,7 +33,7 @@ $text-color: #FFF;
         border: 1px solid $secondary-color;
         color: $text-color;
     }
-    .unread-messages-counter-container
+    .unread-messages-counter-container, .ng-chat-people-action, .ng-chat-people-action > i
     {
         background-color: #FFF;
         color: $secondary-color;
@@ -64,7 +64,6 @@ $text-color: #FFF;
     {
         background-color: $secondary-color;
     }
-
     .ng-chat-footer
     {
         background-color: $secondary-color;

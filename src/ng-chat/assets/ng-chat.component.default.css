@@ -72,6 +72,25 @@
         float: left;
         margin-left: 5px;
     }
+.ng-chat-people-actions
+{
+    position: absolute;
+    top: 4px;
+    right: 5px;
+    margin: 0;
+    padding: 0;
+    z-index: 2;
+}
+.ng-chat-people-actions > a.ng-chat-people-action {
+    display: inline-block;
+    width: 21px;
+    height: 21px;
+    margin-right: 8px;
+    text-decoration: none;
+    border: none;
+    border-radius: 25px;
+    padding: 1px;
+}
 #ng-chat-search_friend
 {
     display: block;

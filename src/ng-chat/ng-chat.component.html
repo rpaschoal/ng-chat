@@ -7,6 +7,14 @@
                 {{localization.title}}
             </span>
         </a>
+        <div *ngIf="isSelectingFromFriendsList" class="ng-chat-people-actions">
+            <a href="javascript:void(0);" class="ng-chat-people-action">
+                <i class="remove-icon"></i>
+            </a>
+            <a href="javascript:void(0);" class="ng-chat-people-action">
+                <i class="check-icon"></i>
+            </a>
+        </div>
         <input *ngIf="searchEnabled" id="ng-chat-search_friend" class="friends-search-bar" type="search" [placeholder]="localization.searchPlaceholder" [(ngModel)]="searchInput" />
         <ul id="ng-chat-users" *ngIf="!isCollapsed" [ngClass]="{'offset-search': searchEnabled}">
             <li *ngFor="let user of filteredUsers">
