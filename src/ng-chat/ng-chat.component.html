@@ -25,7 +25,7 @@
                     (change)="onFriendsListCheckboxChange(user, $event.target.checked)" 
                     [checked]="isUserSelectedFromFriendsList(user)"/>
                 <div [ngClass]="{'ng-chat-friends-list-selectable-offset': isSelectingFromFriendsList, 'ng-chat-friends-list-container': true}" (click)="openChatWindow(user, true, true)">
-                    <div *ngIf="!user.avatar"  class="icon-wrapper">
+                    <div *ngIf="!user.avatar" class="icon-wrapper">
                         <i class="user-icon"></i>
                     </div>
                     <img *ngIf="user.avatar" alt="" class="avatar" height="30" width="30"  src="{{user.avatar}}"/>

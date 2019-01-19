@@ -293,6 +293,7 @@
                 overflow: hidden;
                 width: 30px;
                 height: 30px;
+                padding: 0;
             }
                 .ng-chat-window .ng-chat-messages .ng-chat-message > .icon-wrapper > i
                 {
@@ -319,7 +320,7 @@
             font-size: 0.9em;
             word-wrap: break-word;
         }
-        .ng-chat-window .ng-chat-messages .ng-chat-message.ng-chat-message-received > div
+        .ng-chat-window .ng-chat-messages .ng-chat-message.ng-chat-message-received > div.received-chat-message-container
         {
             float: left;
             margin-left: 40px;
