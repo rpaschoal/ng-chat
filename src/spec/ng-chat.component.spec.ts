@@ -16,7 +16,7 @@ class MockableAdapter extends ChatAdapter {
     public listFriends(): Observable<UserResponse[]> {
         throw new Error("Method not implemented.");
     }
-    public getMessageHistory(userId: any): Observable<Message[]> {
+    public getMessageHistory(destinataryId: any): Observable<Message[]> {
         throw new Error("Method not implemented.");
     }
     public sendMessage(message: Message): void {

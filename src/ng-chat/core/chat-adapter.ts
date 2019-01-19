@@ -9,7 +9,7 @@ export abstract class ChatAdapter
 
     public abstract listFriends(): Observable<UserResponse[]>;
     
-    public abstract getMessageHistory(userId: any): Observable<Message[]>;
+    public abstract getMessageHistory(destinataryId: any): Observable<Message[]>;
 
     public abstract sendMessage(message: Message): void;
 

@@ -37,7 +37,7 @@ export class SignalRAdapter extends ChatAdapter {
         return this._dataService.ListFriends();
     }
 
-    getMessageHistory(userId: any): Observable<Message[]> {
+    getMessageHistory(destinataryId: any): Observable<Message[]> {
         return Observable.of([]); // TODO: History not necessary for the demo adapter (Could call an API endpoint here)
     }
 

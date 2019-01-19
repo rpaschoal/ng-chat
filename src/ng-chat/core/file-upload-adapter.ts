@@ -4,5 +4,5 @@ import { Message } from './message';
 
 export interface IFileUploadAdapter
 {
-    uploadFile(file: File, userTo: User): Observable<Message>;
+    uploadFile(file: File, recipientId: any): Observable<Message>;
 }

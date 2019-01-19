@@ -18,6 +18,8 @@ import { IFileUploadAdapter } from './core/file-upload-adapter';
 import { DefaultFileUploadAdapter } from './core/default-file-upload-adapter';
 import { Theme } from './core/theme.enum';
 import { IChatOption } from './core/chat-option';
+import { Group } from "./core/group";
+import { WindowChatType } from "./core/window-chat-type-enum";
 
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -158,7 +160,7 @@ export class NgChat implements OnInit, IChatController {
 
     protected usersResponse: UserResponse[];
 
-    private usersInteractedWith: User[] = [];
+    private usersInteractedWith: (User|Group)[] = [];
 
     public isSelectingFromFriendsList: boolean = false;
 
@@ -168,7 +170,8 @@ export class NgChat implements OnInit, IChatController {
     {
         return [{
             action: (chattingWindow: Window) => {
-                this.selectedUsersFromFriendsList.push(chattingWindow.chattingTo);
+                // TODO: filter out from current context based on ID
+                // this.selectedUsersFromFriendsList = this.selectedUsersFromFriendsList.concat(chattingWindow.chattingToUser);
                 this.isSelectingFromFriendsList = !this.isSelectingFromFriendsList;
             },
             displayLabel: 'Add People'
@@ -375,7 +378,7 @@ export class NgChat implements OnInit, IChatController {
         {
             window.isLoadingHistory = true;
 
-            this.adapter.getMessageHistoryByPage(window.chattingTo.id, this.historyPageSize, ++window.historyPage)
+            this.adapter.getMessageHistoryByPage(window.id, this.historyPageSize, ++window.historyPage)
             .pipe(
                 map((result: Message[]) => {
                     result.forEach((message) => this.assertMessageType(message));
@@ -392,7 +395,7 @@ export class NgChat implements OnInit, IChatController {
         }
         else
         {
-            this.adapter.getMessageHistory(window.chattingTo.id)
+            this.adapter.getMessageHistory(window.id)
             .pipe(
                 map((result: Message[]) => {
                     result.forEach((message) => this.assertMessageType(message));
@@ -468,31 +471,24 @@ export class NgChat implements OnInit, IChatController {
     }
 
     // Opens a new chat whindow. Takes care of available viewport
+    // Works for opening a chat window for an user or for a group
     // Returns => [Window: Window object reference, boolean: Indicates if this window is a new chat window]
-    public openChatWindow(user: User, focusOnNewWindow: boolean = false, invokedByUserClick: boolean = false): [Window, boolean]
+    public openChatWindow(userOrGroup: User | Group, focusOnNewWindow: boolean = false, invokedByUserClick: boolean = false, chatWindowType: WindowChatType = WindowChatType.User): [Window, boolean]
     {
         // Is this window opened?
-        let openedWindow = this.windows.find(x => x.chattingTo.id == user.id);
+        let openedWindow = this.windows.find(x => x.id == userOrGroup.id);
 
         if (!openedWindow)
         {
-            if (invokedByUserClick) 
+            if (invokedByUserClick && chatWindowType == WindowChatType.User) 
             {
-                this.onUserClicked.emit(user);
+                this.onUserClicked.emit(userOrGroup as User);
             }
 
             // Refer to issue #58 on Github 
             let collapseWindow = invokedByUserClick ? false : !this.maximizeWindowOnNewMessage;
 
-            let newChatWindow: Window = {
-                chattingTo: user,
-                messages:  [],
-                isLoadingHistory: this.historyEnabled,
-                hasFocus: false, // This will be triggered when the 'newMessage' input gets the current focus
-                isCollapsed: collapseWindow,
-                hasMoreMessages: false,
-                historyPage: 0
-            };
+            let newChatWindow: Window = new Window(userOrGroup, this.historyEnabled, collapseWindow);
 
             // Loads the chat history via an RxJs Observable
             if (this.historyEnabled)
@@ -514,10 +510,13 @@ export class NgChat implements OnInit, IChatController {
             {
                 this.focusOnWindow(newChatWindow);
             }
-            
-            this.usersInteractedWith.push(user);
 
-            this.onUserChatOpened.emit(user);
+            this.usersInteractedWith.push(userOrGroup);
+
+            if (chatWindowType == WindowChatType.User)
+            {
+                this.onUserChatOpened.emit(userOrGroup as User);
+            }
 
             return [newChatWindow, true];
         }
@@ -526,6 +525,11 @@ export class NgChat implements OnInit, IChatController {
             // Returns the existing chat window     
             return [openedWindow, false];       
         }
+    }
+
+    public openGroupChatWindow(userOrGroup: Group, focusOnNewWindow: boolean = false, invokedByUserClick: boolean = false): [Window, boolean]
+    {
+        return this.openChatWindow(userOrGroup, focusOnNewWindow, invokedByUserClick, WindowChatType.Group);
     }
 
     // Focus on the input element of the supplied window
@@ -599,7 +603,7 @@ export class NgChat implements OnInit, IChatController {
     private emitBrowserNotification(window: Window, message: Message): void
     {       
         if (this.browserNotificationsBootstrapped && !window.hasFocus && message) {
-            let notification = new Notification(`${this.localization.browserNotificationTitle} ${window.chattingTo.displayName}`, {
+            let notification = new Notification(`${this.localization.browserNotificationTitle} ${window.displayName}`, {
                 'body': message.message,
                 'icon': this.browserNotificationIconSource
             });
@@ -616,7 +620,7 @@ export class NgChat implements OnInit, IChatController {
         if (this.persistWindowsState)
         {
             let usersIds = windows.map((w) => {
-                return w.chattingTo.id;
+                return w.id;
             });
 
             localStorage.setItem(this.localStorageKey, JSON.stringify(usersIds));
@@ -700,7 +704,7 @@ export class NgChat implements OnInit, IChatController {
 
     unreadMessagesTotalByUser(user: User): string
     {
-        let openedWindow = this.windows.find(x => x.chattingTo.id == user.id);
+        let openedWindow = this.windows.find(x => x.id == user.id);
 
         if (openedWindow){
             return this.unreadMessagesTotal(openedWindow);
@@ -732,7 +736,7 @@ export class NgChat implements OnInit, IChatController {
                     let message = new Message();
              
                     message.fromId = this.userId;
-                    message.toId = window.chattingTo.id;
+                    message.toId = window.id;
                     message.message = window.newMessage;
                     message.dateSent = new Date();
         
@@ -783,7 +787,8 @@ export class NgChat implements OnInit, IChatController {
 
         this.updateWindowsState(this.windows);
 
-        this.onUserChatClosed.emit(window.chattingTo);
+        // TODO: Refactor this event
+        // this.onUserChatClosed.emit(window.chattingToUser);
     }
 
     // Toggle friends list visibility
@@ -848,7 +853,7 @@ export class NgChat implements OnInit, IChatController {
     }
 
     triggerCloseChatWindow(userId: any): void {
-        let openedWindow = this.windows.find(x => x.chattingTo.id == userId);
+        let openedWindow = this.windows.find(x => x.id == userId);
 
         if (openedWindow){
             this.onCloseChatWindow(openedWindow);
@@ -856,7 +861,7 @@ export class NgChat implements OnInit, IChatController {
     }
 
     triggerToggleChatWindowVisibility(userId: any): void {
-        let openedWindow = this.windows.find(x => x.chattingTo.id == userId);
+        let openedWindow = this.windows.find(x => x.id == userId);
 
         if (openedWindow){
             this.onChatWindowClicked(openedWindow);
@@ -876,7 +881,7 @@ export class NgChat implements OnInit, IChatController {
         this.isUploadingFile = true;
 
         // TODO: Handle failure
-        this.fileUploadAdapter.uploadFile(file, window.chattingTo)
+        this.fileUploadAdapter.uploadFile(file, window.id)
             .subscribe(fileMessage => {
                 this.isUploadingFile = false;
 

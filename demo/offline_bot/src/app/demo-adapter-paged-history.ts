@@ -34,7 +34,7 @@ export class DemoAdapterPagedHistory extends PagedHistoryChatAdapter
         }));
     }
 
-    getMessageHistory(userId: any): Observable<Message[]> {
+    getMessageHistory(destinataryId: any): Observable<Message[]> {
        let mockedHistory: Array<Message>;
        mockedHistory = [
             {
@@ -48,7 +48,7 @@ export class DemoAdapterPagedHistory extends PagedHistoryChatAdapter
        return of(mockedHistory);
     }
     
-    public getMessageHistoryByPage(userId: any, size: number, page: number) : Observable<Message[]> {
+    public getMessageHistoryByPage(destinataryId: any, size: number, page: number) : Observable<Message[]> {
        let startPosition: number = (page - 1) * size;
        let endPosition: number = page * size;
        let mockedHistory: Array<Message> = this.historyMessages.slice(startPosition, endPosition);

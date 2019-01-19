@@ -79,7 +79,7 @@ export class DemoAdapter extends ChatAdapter
         }));
     }
 
-    getMessageHistory(userId: any): Observable<Message[]> {
+    getMessageHistory(destinataryId: any): Observable<Message[]> {
         let mockedHistory: Array<Message>;
 
         mockedHistory = [
