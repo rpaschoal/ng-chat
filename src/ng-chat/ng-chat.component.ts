@@ -162,13 +162,13 @@ export class NgChat implements OnInit, IChatController {
 
     public isSelectingFromFriendsList: boolean = false;
 
+    protected selectedUsersFromFriendsList: User[] = [];
+
     public get defaultWindowOptions(): IChatOption[]
     {
         return [{
-            action: (chattingTo: Window) => {
-                console.log('Chat options selected. Window:');
-                console.log(chattingTo);
-
+            action: (chattingWindow: Window) => {
+                this.selectedUsersFromFriendsList.push(chattingWindow.chattingTo);
                 this.isSelectingFromFriendsList = !this.isSelectingFromFriendsList;
             },
             displayLabel: 'Add People'
@@ -892,5 +892,33 @@ export class NgChat implements OnInit, IChatController {
                 // Resets the file upload element
                 this.nativeFileInput.nativeElement.value = '';
             });
+    }
+    
+    onFriendsListCheckboxChange(selectedUser: User, isChecked: boolean): void
+    {
+        if(isChecked) {
+            this.selectedUsersFromFriendsList.push(selectedUser);
+        } 
+        else 
+        {
+            this.selectedUsersFromFriendsList.splice(this.selectedUsersFromFriendsList.indexOf(selectedUser), 1);
+        }
+    }
+
+    onFriendsListActionCancelClicked(): void
+    {
+        this.isSelectingFromFriendsList = false;
+        this.selectedUsersFromFriendsList = [];
+    }
+
+    onFriendsListActionConfirmClicked() : void
+    {
+        this.selectedUsersFromFriendsList = [];
+        this.isSelectingFromFriendsList = false;
+    }
+
+    protected isUserSelectedFromFriendsList(user: User) : boolean
+    {
+        return (this.selectedUsersFromFriendsList.filter(item => item.id == user.id)).length > 0
     }
 }

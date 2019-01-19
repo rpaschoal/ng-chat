@@ -7,18 +7,23 @@
                 {{localization.title}}
             </span>
         </a>
-        <div *ngIf="isSelectingFromFriendsList" class="ng-chat-people-actions">
+        <div *ngIf="isSelectingFromFriendsList" class="ng-chat-people-actions" (click)="onFriendsListActionCancelClicked()">
             <a href="javascript:void(0);" class="ng-chat-people-action">
                 <i class="remove-icon"></i>
             </a>
-            <a href="javascript:void(0);" class="ng-chat-people-action">
+            <a href="javascript:void(0);" class="ng-chat-people-action" (click)="onFriendsListActionConfirmClicked()">
                 <i class="check-icon"></i>
             </a>
         </div>
         <input *ngIf="searchEnabled" id="ng-chat-search_friend" class="friends-search-bar" type="search" [placeholder]="localization.searchPlaceholder" [(ngModel)]="searchInput" />
         <ul id="ng-chat-users" *ngIf="!isCollapsed" [ngClass]="{'offset-search': searchEnabled}">
             <li *ngFor="let user of filteredUsers">
-                <input *ngIf="isSelectingFromFriendsList" type="checkbox" class="ng-chat-users-checkbox" />
+                <input 
+                    *ngIf="isSelectingFromFriendsList" 
+                    type="checkbox" 
+                    class="ng-chat-users-checkbox" 
+                    (change)="onFriendsListCheckboxChange(user, $event.target.checked)" 
+                    [checked]="isUserSelectedFromFriendsList(user)"/>
                 <div [ngClass]="{'ng-chat-friends-list-selectable-offset': isSelectingFromFriendsList, 'ng-chat-friends-list-container': true}" (click)="openChatWindow(user, true, true)">
                     <div *ngIf="!user.avatar"  class="icon-wrapper">
                         <i class="user-icon"></i>
