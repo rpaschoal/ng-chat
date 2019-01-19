@@ -40,10 +40,10 @@
         <ng-container *ngIf="window.isCollapsed">
             <div class="ng-chat-title secondary-background">
                 <div class="ng-chat-title-visibility-toggle-area" (click)="onChatWindowClicked(window)">
-                    <strong title="{{window.displayName}}">
-                        {{window.displayName}}
+                    <strong title="{{window.participant.displayName}}">
+                        {{window.participant.displayName}}
                     </strong>
-                    <span [ngClass]="{'ng-chat-user-status': true, 'online': window.status == UserStatus.Online, 'busy': window.status == UserStatus.Busy, 'away': window.status == UserStatus.Away, 'offline': window.status == UserStatus.Offline}" title="{{getStatusTitle(window.status)}}"></span>
+                    <span [ngClass]="{'ng-chat-user-status': true, 'online': window.participant.status == UserStatus.Online, 'busy': window.participant.status == UserStatus.Busy, 'away': window.participant.status == UserStatus.Away, 'offline': window.participant.status == UserStatus.Offline}" title="{{getStatusTitle(window.participant.status)}}"></span>
                     <span *ngIf="unreadMessagesTotal(window).length > 0" class="ng-chat-unread-messages-count unread-messages-counter-container primary-text">{{unreadMessagesTotal(window)}}</span>
                 </div>
                 <a href="javascript:void(0);" class="ng-chat-close primary-text" (click)="onCloseChatWindow(window)">X</a>
@@ -52,10 +52,10 @@
         <ng-container *ngIf="!window.isCollapsed">
             <div class="ng-chat-title secondary-background">
                 <div class="ng-chat-title-visibility-toggle-area" (click)="onChatWindowClicked(window)">
-                    <strong title="{{window.displayName}}">
-                        {{window.displayName}}
+                    <strong title="{{window.participant.displayName}}">
+                        {{window.participant.displayName}}
                     </strong>
-                    <span [ngClass]="{'ng-chat-user-status': true, 'online': window.status == UserStatus.Online, 'busy': window.status == UserStatus.Busy, 'away': window.status == UserStatus.Away, 'offline': window.status == UserStatus.Offline}" title="{{getStatusTitle(window.status)}}"></span>
+                    <span [ngClass]="{'ng-chat-user-status': true, 'online': window.participant.status == UserStatus.Online, 'busy': window.participant.status == UserStatus.Busy, 'away': window.participant.status == UserStatus.Away, 'offline': window.participant.status == UserStatus.Offline}" title="{{getStatusTitle(window.participant.status)}}"></span>
                     <span *ngIf="unreadMessagesTotal(window).length > 0" class="ng-chat-unread-messages-count unread-messages-counter-container primary-text">{{unreadMessagesTotal(window)}}</span>    
                 </div>
                 <a href="javascript:void(0);" class="ng-chat-close primary-text" (click)="onCloseChatWindow(window)">X</a>
@@ -70,10 +70,10 @@
                 </div>
 
                 <div *ngFor="let message of window.messages; let i = index" [ngClass]="{'ng-chat-message': true, 'ng-chat-message-received': message.fromId != userId}">
-                    <div *ngIf="!window.avatar && isAvatarVisible(window, message, i)" class="icon-wrapper">
+                    <div *ngIf="!window.participant.avatar && isAvatarVisible(window, message, i)" class="icon-wrapper">
                         <i class="user-icon"></i>
                     </div>
-                    <img *ngIf="window.avatar && isAvatarVisible(window, message, i)" alt="" class="avatar" height="30" width="30" [src]="window.avatar" />
+                    <img *ngIf="window.participant.avatar && isAvatarVisible(window, message, i)" alt="" class="avatar" height="30" width="30" [src]="window.participant.avatar" />
                     <ng-container [ngSwitch]="message.type">
                         <div *ngSwitchCase="MessageType.Text" [ngClass]="{'sent-chat-message-container': message.fromId == userId, 'received-chat-message-container': message.fromId != userId}">
                             <span>

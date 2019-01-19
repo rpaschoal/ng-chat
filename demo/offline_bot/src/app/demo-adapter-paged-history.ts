@@ -1,10 +1,10 @@
-import { ChatAdapter, User, Message, UserStatus, PagedHistoryChatAdapter, UserResponse, UserMetadata } from 'ng-chat';
+import { ChatAdapter, IChatGroupAdapter, Group, User, Message, UserStatus, PagedHistoryChatAdapter, UserResponse, UserMetadata } from 'ng-chat';
 import { Observable, of } from 'rxjs';
 import { DemoAdapter } from './demo-adapter';
 import { delay } from "rxjs/operators";
 
-export class DemoAdapterPagedHistory extends PagedHistoryChatAdapter
-{   
+export class DemoAdapterPagedHistory extends PagedHistoryChatAdapter implements IChatGroupAdapter
+{
     private historyMessages: Message[] = [];
     
     constructor() {
@@ -57,6 +57,8 @@ export class DemoAdapterPagedHistory extends PagedHistoryChatAdapter
     
     
     sendMessage(message: Message): void {
+        debugger;
+
         setTimeout(() => {
             let replyMessage = new Message();
             
@@ -70,4 +72,8 @@ export class DemoAdapterPagedHistory extends PagedHistoryChatAdapter
             this.onMessageReceived(user, replyMessage);
         }, 1000);
     }
+
+    groupCreated(group: Group): void {
+        //DemoAdapter.mockedUsers.push()
+    }   
 }
