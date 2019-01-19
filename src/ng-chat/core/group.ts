@@ -6,7 +6,7 @@ import { ChatParticipantType } from "./chat-participant-type.enum";
 
 export class Group implements IChatParticipant
 {
-    constructor(participants: User[], currentUserDisplayName: string)
+    constructor(participants: User[])
     {   
         this.chattingTo = participants;
         this.status = ChatParticipantStatus.Online;
