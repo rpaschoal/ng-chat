@@ -134,13 +134,13 @@ export class NgChat implements OnInit, IChatController {
     public showMessageDate: boolean = true;
 
     @Output()
-    public onUserClicked: EventEmitter<User> = new EventEmitter<User>();
+    public onParticipantClicked: EventEmitter<IChatParticipant> = new EventEmitter<IChatParticipant>();
 
     @Output()
-    public onUserChatOpened: EventEmitter<User> = new EventEmitter<User>();
+    public onParticipantChatOpened: EventEmitter<IChatParticipant> = new EventEmitter<IChatParticipant>();
 
     @Output()
-    public onUserChatClosed: EventEmitter<User> = new EventEmitter<User>();
+    public onParticipantChatClosed: EventEmitter<IChatParticipant> = new EventEmitter<IChatParticipant>();
     
     @Output()
     public onMessagesSeen: EventEmitter<Message[]> = new EventEmitter<Message[]>();
@@ -177,7 +177,6 @@ export class NgChat implements OnInit, IChatController {
         {
             return [{
                 action: (chattingWindow: Window) => {
-                    // TODO: filter out from current context based on ID
                     this.selectedUsersFromFriendsList = this.selectedUsersFromFriendsList.concat(chattingWindow.participant as User);
                     this.isSelectingFromFriendsList = !this.isSelectingFromFriendsList;
                 },
@@ -490,9 +489,9 @@ export class NgChat implements OnInit, IChatController {
 
         if (!openedWindow)
         {
-            if (invokedByUserClick && participant.participantType == ChatParticipantType.User) 
+            if (invokedByUserClick) 
             {
-                this.onUserClicked.emit(participant as User);
+                this.onParticipantClicked.emit(participant);
             }
 
             // Refer to issue #58 on Github 
@@ -521,13 +520,8 @@ export class NgChat implements OnInit, IChatController {
                 this.focusOnWindow(newChatWindow);
             }
 
-            // TODO: Refactor this collection to be IChatParticipant
-            //this.usersInteractedWith.push(participant);
-
-            if (participant.participantType == ChatParticipantType.User)
-            {
-                this.onUserChatOpened.emit(participant as User);
-            }
+            this.participantsInteractedWith.push(participant);
+            this.onParticipantChatOpened.emit(participant);
 
             return [newChatWindow, true];
         }
@@ -793,8 +787,7 @@ export class NgChat implements OnInit, IChatController {
 
         this.updateWindowsState(this.windows);
 
-        // TODO: Refactor this event
-        // this.onUserChatClosed.emit(window.chattingToUser);
+        this.onParticipantChatClosed.emit(window.participant);
     }
 
     // Toggle friends list visibility
