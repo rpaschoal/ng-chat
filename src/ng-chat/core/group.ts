@@ -6,9 +6,13 @@ import { ChatParticipantType } from "./chat-participant-type.enum";
 
 export class Group implements IChatParticipant
 {
-    constructor(participants: User[])
-    {
+    constructor(participants: User[], currentUserDisplayName: string)
+    {   
         this.chattingTo = participants;
+        this.status = ChatParticipantStatus.Online;
+
+        // TODO: Add some customization for this in future releases
+        this.displayName = participants.map((p) => p.displayName).sort((first, second) => second > first ? -1 : 1).join(", ");
     }
 
     public id: string = Guid.newGuid();

@@ -171,14 +171,14 @@ export class NgChat implements OnInit, IChatController {
 
     protected selectedUsersFromFriendsList: User[] = [];
 
-    public get defaultWindowOptions(): IChatOption[]
+    public defaultWindowOptions(currentWindow: Window): IChatOption[]
     {
-        if (this.groupAdapter)
+        if (this.groupAdapter && currentWindow.participant.participantType == ChatParticipantType.User)
         {
             return [{
                 action: (chattingWindow: Window) => {
                     // TODO: filter out from current context based on ID
-                    // this.selectedUsersFromFriendsList = this.selectedUsersFromFriendsList.concat(chattingWindow.chattingToUser);
+                    this.selectedUsersFromFriendsList = this.selectedUsersFromFriendsList.concat(chattingWindow.participant as User);
                     this.isSelectingFromFriendsList = !this.isSelectingFromFriendsList;
                 },
                 displayLabel: 'Add People'
@@ -927,6 +927,11 @@ export class NgChat implements OnInit, IChatController {
         let newGroup = new Group(this.selectedUsersFromFriendsList);
 
         this.openChatWindow(newGroup);
+
+        if (this.groupAdapter)
+        {
+            this.groupAdapter.groupCreated(newGroup);
+        }
 
         this.selectedUsersFromFriendsList = [];
         this.isSelectingFromFriendsList = false;

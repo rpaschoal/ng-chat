@@ -1,10 +1,10 @@
-import { ChatAdapter, User, Message, ChatParticipantStatus, ParticipantResponse, ParticipantMetadata, ChatParticipantType } from 'ng-chat';
+import { ChatAdapter, User, Message, ChatParticipantStatus, ParticipantResponse, ParticipantMetadata, ChatParticipantType, IChatParticipant } from 'ng-chat';
 import { Observable, of } from 'rxjs';
 import { delay } from "rxjs/operators";
 
 export class DemoAdapter extends ChatAdapter
 {
-    public static mockedUsers: User[] = [
+    public static mockerParticipants: IChatParticipant[] = [
     {
         participantType: ChatParticipantType.User,
         id: 1,
@@ -77,7 +77,7 @@ export class DemoAdapter extends ChatAdapter
     }];
 
     listFriends(): Observable<ParticipantResponse[]> {
-        return of(DemoAdapter.mockedUsers.map(user => {
+        return of(DemoAdapter.mockerParticipants.map(user => {
             let participantResponse = new ParticipantResponse();
 
             participantResponse.participant = user;
@@ -113,7 +113,7 @@ export class DemoAdapter extends ChatAdapter
             replyMessage.message = "You have typed '" + message.message + "'";
             replyMessage.dateSent = new Date();
             
-            let user = DemoAdapter.mockedUsers.find(x => x.id == replyMessage.fromId);
+            let user = DemoAdapter.mockerParticipants.find(x => x.id == replyMessage.fromId);
 
             this.onMessageReceived(user, replyMessage);
         }, 1000);

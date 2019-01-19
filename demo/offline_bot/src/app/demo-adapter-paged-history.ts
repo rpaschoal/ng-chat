@@ -22,7 +22,7 @@ export class DemoAdapterPagedHistory extends PagedHistoryChatAdapter implements 
     }
 
     listFriends(): Observable<ParticipantResponse[]> {
-        return of(DemoAdapter.mockedUsers.map(user => {
+        return of(DemoAdapter.mockerParticipants.map(user => {
             let participantResponse = new ParticipantResponse();
 
             participantResponse.participant = user;
@@ -67,13 +67,18 @@ export class DemoAdapterPagedHistory extends PagedHistoryChatAdapter implements 
             replyMessage.message = "You have typed '" + message.message + "'";
             replyMessage.dateSent = new Date();
             
-            let user = DemoAdapter.mockedUsers.find(x => x.id == replyMessage.fromId);
+            let user = DemoAdapter.mockerParticipants.find(x => x.id == replyMessage.fromId);
 
             this.onMessageReceived(user, replyMessage);
         }, 1000);
     }
 
     groupCreated(group: Group): void {
-        //DemoAdapter.mockedUsers.push()
+        DemoAdapter.mockerParticipants.push(group);
+
+        // Trigger update of friends list
+        this.listFriends().subscribe(response => {
+            this.onFriendsListChanged(response);
+        });
     }   
 }
