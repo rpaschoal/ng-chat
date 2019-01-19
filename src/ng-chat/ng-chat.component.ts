@@ -5,7 +5,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ChatAdapter } from './core/chat-adapter';
 import { IChatGroupAdapter } from './core/chat-group-adapter';
 import { User } from "./core/user";
-import { UserResponse } from "./core/user-response";
+import { ParticipantResponse } from "./core/participant-response";
 import { Message } from "./core/message";
 import { FileMessage } from "./core/file-message";
 import { MessageType } from "./core/message-type.enum";
@@ -161,11 +161,11 @@ export class NgChat implements OnInit, IChatController {
 
     public searchInput: string = '';
 
-    protected users: User[];
+    protected participants: IChatParticipant[];
 
-    protected usersResponse: UserResponse[];
+    protected participantsResponse: ParticipantResponse[];
 
-    private usersInteractedWith: (User|Group)[] = [];
+    private participantsInteractedWith: IChatParticipant[] = [];
 
     public isSelectingFromFriendsList: boolean = false;
 
@@ -193,14 +193,14 @@ export class NgChat implements OnInit, IChatController {
         return `ng-chat-users-${this.userId}`; // Appending the user id so the state is unique per user in a computer.   
     }; 
 
-    get filteredUsers(): User[]
+    get filteredParticipants(): IChatParticipant[]
     {
         if (this.searchInput.length > 0){
             // Searches in the friend list by the inputted search string
-            return this.users.filter(x => x.displayName.toUpperCase().includes(this.searchInput.toUpperCase()));
+            return this.participants.filter(x => x.displayName.toUpperCase().includes(this.searchInput.toUpperCase()));
         }
 
-        return this.users;
+        return this.participants;
     }
 
     // Defines the size of each opened window to calculate how many windows can be opened on the viewport at the same time.
@@ -272,8 +272,8 @@ export class NgChat implements OnInit, IChatController {
                 this.initializeBrowserNotifications();
 
                 // Binding event listeners
-                this.adapter.messageReceivedHandler = (user, msg) => this.onMessageReceived(user, msg);
-                this.adapter.friendsListChangedHandler = (userResponses) => this.onFriendsListChanged(userResponses);
+                this.adapter.messageReceivedHandler = (participant, msg) => this.onMessageReceived(participant, msg);
+                this.adapter.friendsListChangedHandler = (participantsResponse) => this.onFriendsListChanged(participantsResponse);
 
                 // Loading current users list
                 if (this.pollFriendsList){
@@ -367,11 +367,11 @@ export class NgChat implements OnInit, IChatController {
     {
         this.adapter.listFriends()
         .pipe(
-            map((userResponse: UserResponse[]) => {
-                this.usersResponse = userResponse;
+            map((participantsResponse: ParticipantResponse[]) => {
+                this.participantsResponse = participantsResponse;
 
-                this.users = userResponse.map((response: UserResponse) => {
-                    return response.User;
+                this.participants = participantsResponse.map((response: ParticipantResponse) => {
+                    return response.participant;
                 });
             })
         ).subscribe(() => {
@@ -433,26 +433,26 @@ export class NgChat implements OnInit, IChatController {
     }
 
     // Updates the friends list via the event handler
-    private onFriendsListChanged(usersResponse: UserResponse[]): void
+    private onFriendsListChanged(participantsResponse: ParticipantResponse[]): void
     {
-        if (usersResponse) 
+        if (participantsResponse) 
         {
-            this.usersResponse = usersResponse;
+            this.participantsResponse = participantsResponse;
 
-            this.users = usersResponse.map((response: UserResponse) => {
-                return response.User;
+            this.participants = participantsResponse.map((response: ParticipantResponse) => {
+                return response.participant;
             });
 
-            this.usersInteractedWith = [];
+            this.participantsInteractedWith = [];
         }
     }
 
     // Handles received messages by the adapter
-    private onMessageReceived(user: User, message: Message)
+    private onMessageReceived(participant: IChatParticipant, message: Message)
     {
-        if (user && message)
+        if (participant && message)
         {
-            let chatWindow = this.openChatWindow(user);
+            let chatWindow = this.openChatWindow(participant);
 
             this.assertMessageType(message);
 
@@ -625,11 +625,11 @@ export class NgChat implements OnInit, IChatController {
     {
         if (this.persistWindowsState)
         {
-            let usersIds = windows.map((w) => {
+            let participantIds = windows.map((w) => {
                 return w.participant.id;
             });
 
-            localStorage.setItem(this.localStorageKey, JSON.stringify(usersIds));
+            localStorage.setItem(this.localStorageKey, JSON.stringify(participantIds));
         }
     }
 
@@ -639,16 +639,16 @@ export class NgChat implements OnInit, IChatController {
         {
             if (this.persistWindowsState)
             {
-                let stringfiedUserIds = localStorage.getItem(this.localStorageKey);
+                let stringfiedParticipantIds = localStorage.getItem(this.localStorageKey);
 
-                if (stringfiedUserIds && stringfiedUserIds.length > 0)
+                if (stringfiedParticipantIds && stringfiedParticipantIds.length > 0)
                 {
-                    let userIds = <number[]>JSON.parse(stringfiedUserIds);
+                    let participantIds = <number[]>JSON.parse(stringfiedParticipantIds);
 
-                    let usersToRestore = this.users.filter(u => userIds.indexOf(u.id) >= 0);
+                    let participantsToRestore = this.participants.filter(u => participantIds.indexOf(u.id) >= 0);
 
-                    usersToRestore.forEach((user) => {
-                        this.openChatWindow(user);
+                    participantsToRestore.forEach((participant) => {
+                        this.openChatWindow(participant);
                     });
                 }
             }
@@ -708,19 +708,19 @@ export class NgChat implements OnInit, IChatController {
         return this.formatUnreadMessagesTotal(totalUnreadMessages);
     }
 
-    unreadMessagesTotalByUser(user: User): string
+    unreadMessagesTotalByParticipant(participant: IChatParticipant): string
     {
-        let openedWindow = this.windows.find(x => x.participant.id == user.id);
+        let openedWindow = this.windows.find(x => x.participant.id == participant.id);
 
         if (openedWindow){
             return this.unreadMessagesTotal(openedWindow);
         }
         else
         {
-            let totalUnreadMessages = this.usersResponse
-                .filter(x => x.User.id == user.id && !this.usersInteractedWith.find(u => u.id == user.id) && x.Metadata && x.Metadata.totalUnreadMessages > 0)
-                .map((userResponse) => {
-                    return userResponse.Metadata.totalUnreadMessages
+            let totalUnreadMessages = this.participantsResponse
+                .filter(x => x.participant.id == participant.id && !this.participantsInteractedWith.find(u => u.id == participant.id) && x.Metadata && x.Metadata.totalUnreadMessages > 0)
+                .map((participantResponse) => {
+                    return participantResponse.Metadata.totalUnreadMessages
                 })[0];
 
             return this.formatUnreadMessagesTotal(totalUnreadMessages);

@@ -1,4 +1,4 @@
-export class UserMetadata
+export class ParticipantMetadata
 {
     public totalUnreadMessages: number = 0;
 }

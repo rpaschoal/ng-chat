@@ -17,7 +17,7 @@
         </div>
         <input *ngIf="searchEnabled" id="ng-chat-search_friend" class="friends-search-bar" type="search" [placeholder]="localization.searchPlaceholder" [(ngModel)]="searchInput" />
         <ul id="ng-chat-users" *ngIf="!isCollapsed" [ngClass]="{'offset-search': searchEnabled}">
-            <li *ngFor="let user of filteredUsers">
+            <li *ngFor="let user of filteredParticipants">
                 <input 
                     *ngIf="isSelectingFromFriendsList" 
                     type="checkbox" 
@@ -31,7 +31,7 @@
                     <img *ngIf="user.avatar" alt="" class="avatar" height="30" width="30"  src="{{user.avatar}}"/>
                     <strong title="{{user.displayName}}">{{user.displayName}}</strong>
                     <span [ngClass]="{'ng-chat-user-status': true, 'online': user.status == UserStatus.Online, 'busy': user.status == UserStatus.Busy, 'away': user.status == UserStatus.Away, 'offline': user.status == UserStatus.Offline}" title="{{getStatusTitle(user.status)}}"></span>
-                    <span *ngIf="unreadMessagesTotalByUser(user).length > 0" class="ng-chat-unread-messages-count unread-messages-counter-container primary-text">{{unreadMessagesTotalByUser(user)}}</span>
+                    <span *ngIf="unreadMessagesTotalByParticipant(user).length > 0" class="ng-chat-unread-messages-count unread-messages-counter-container primary-text">{{unreadMessagesTotalByParticipant(user)}}</span>
                 </div>
             </li>
         </ul>
