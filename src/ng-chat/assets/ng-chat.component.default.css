@@ -67,7 +67,7 @@
         max-width: 85%;
         float:left;
     }
-    .ng-chat-title .ng-chat-title-visibility-toggle-area .ng-chat-user-status
+    .ng-chat-title .ng-chat-title-visibility-toggle-area .ng-chat-participant-status
     {
         float: left;
         margin-left: 5px;
@@ -164,11 +164,11 @@
             white-space: nowrap;
             text-overflow: ellipsis;
         }
-        #ng-chat-users li .ng-chat-friends-list-container > .ng-chat-user-status
+        #ng-chat-users li .ng-chat-friends-list-container > .ng-chat-participant-status
         {
             float: right;
         }
-.ng-chat-user-status
+.ng-chat-participant-status
 {
     display: inline-block;
     border-radius: 25px;
@@ -176,19 +176,19 @@
     height: 8px;
     margin-top:10px;
 }
-.ng-chat-user-status.online
+.ng-chat-participant-status.online
 {
     background-color: #92A400;
 }
-.ng-chat-user-status.busy
+.ng-chat-participant-status.busy
 {
     background-color: #F91C1E;
 }
-.ng-chat-user-status.away
+.ng-chat-participant-status.away
 {
     background-color: #F7D21B;
 }
-.ng-chat-user-status.offline
+.ng-chat-participant-status.offline
 {
     background-color: #BABABA;
 }

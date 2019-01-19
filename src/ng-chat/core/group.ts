@@ -1,6 +1,6 @@
 import { Guid } from "./guid";
 import { User } from "./user";
-import { UserStatus } from "./user-status.enum";
+import { ChatParticipantStatus } from "./chat-participant-status.enum";
 import { IChatParticipant } from "./chat-participant";
 import { ChatParticipantType } from "./chat-participant-type.enum";
 
@@ -16,7 +16,7 @@ export class Group implements IChatParticipant
 
     public readonly participantType: ChatParticipantType = ChatParticipantType.Group;
 
-    public status: UserStatus;
+    public status: ChatParticipantStatus;
     public avatar: string | null;
     public displayName: string;
 }

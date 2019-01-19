@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ChatAdapter, User, Message, UserStatus } from 'ng-chat';
+import { ChatAdapter, User, Message, ChatParticipantStatus } from 'ng-chat';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/from';

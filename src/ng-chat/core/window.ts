@@ -1,7 +1,7 @@
 import { Message } from "./message";
 import { User } from "./user";
 import { ChatParticipantType } from "./chat-participant-type.enum";
-import { UserStatus } from "./user-status.enum";
+import { ChatParticipantStatus } from "./chat-participant-status.enum";
 import { Group } from "./group";
 import { IChatParticipant } from "./chat-participant";
 

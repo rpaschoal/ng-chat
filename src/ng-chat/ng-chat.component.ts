@@ -10,7 +10,7 @@ import { Message } from "./core/message";
 import { FileMessage } from "./core/file-message";
 import { MessageType } from "./core/message-type.enum";
 import { Window } from "./core/window";
-import { UserStatus } from "./core/user-status.enum";
+import { ChatParticipantStatus } from "./core/chat-participant-status.enum";
 import { ScrollDirection } from "./core/scroll-direction.enum";
 import { Localization, StatusDescription } from './core/localization';
 import { IChatController } from './core/chat-controller';
@@ -43,7 +43,7 @@ export class NgChat implements OnInit, IChatController {
     constructor(public sanitizer: DomSanitizer, private _httpClient: HttpClient) { }
 
     // Exposes enums for the ng-template
-    public UserStatus = UserStatus;
+    public ChatParticipantStatus = ChatParticipantStatus;
     public MessageType = MessageType;
 
     @Input()
@@ -844,7 +844,7 @@ export class NgChat implements OnInit, IChatController {
     }
 
     // [Localized] Returns the status descriptive title
-    getStatusTitle(status: UserStatus) : any
+    getStatusTitle(status: ChatParticipantStatus) : any
     {
         let currentStatus = status.toString().toLowerCase();
 
