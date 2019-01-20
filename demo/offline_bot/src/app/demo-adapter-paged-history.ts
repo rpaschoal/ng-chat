@@ -76,6 +76,10 @@ export class DemoAdapterPagedHistory extends PagedHistoryChatAdapter implements 
     groupCreated(group: Group): void {
         DemoAdapter.mockerParticipants.push(group);
 
+        DemoAdapter.mockerParticipants = DemoAdapter.mockerParticipants.sort((first, second) => 
+            second.displayName > first.displayName ? -1 : 1
+        );
+
         // Trigger update of friends list
         this.listFriends().subscribe(response => {
             this.onFriendsListChanged(response);
