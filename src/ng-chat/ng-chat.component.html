@@ -7,7 +7,7 @@
                 {{localization.title}}
             </span>
         </a>
-        <div *ngIf="isSelectingFromFriendsList" class="ng-chat-people-actions" (click)="onFriendsListActionCancelClicked()">
+        <div *ngIf="currentActiveOption" class="ng-chat-people-actions" (click)="onFriendsListActionCancelClicked()">
             <a href="javascript:void(0);" class="ng-chat-people-action">
                 <i class="remove-icon"></i>
             </a>
@@ -19,12 +19,12 @@
         <ul id="ng-chat-users" *ngIf="!isCollapsed" [ngClass]="{'offset-search': searchEnabled}">
             <li *ngFor="let user of filteredParticipants">
                 <input 
-                    *ngIf="isSelectingFromFriendsList" 
+                    *ngIf="currentActiveOption && currentActiveOption.validateContext(user)" 
                     type="checkbox" 
                     class="ng-chat-users-checkbox" 
                     (change)="onFriendsListCheckboxChange(user, $event.target.checked)" 
                     [checked]="isUserSelectedFromFriendsList(user)"/>
-                <div [ngClass]="{'ng-chat-friends-list-selectable-offset': isSelectingFromFriendsList, 'ng-chat-friends-list-container': true}" (click)="openChatWindow(user, true, true)">
+                <div [ngClass]="{'ng-chat-friends-list-selectable-offset': currentActiveOption, 'ng-chat-friends-list-container': true}" (click)="openChatWindow(user, true, true)">
                     <div *ngIf="!user.avatar" class="icon-wrapper">
                         <i class="user-icon"></i>
                     </div>
@@ -59,7 +59,7 @@
                     <span *ngIf="unreadMessagesTotal(window).length > 0" class="ng-chat-unread-messages-count unread-messages-counter-container primary-text">{{unreadMessagesTotal(window)}}</span>    
                 </div>
                 <a href="javascript:void(0);" class="ng-chat-close primary-text" (click)="onCloseChatWindow(window)">X</a>
-                <ng-chat-options [ngClass]="'ng-chat-options-container'" [options]="defaultWindowOptions(window)" [chattingTo]="window"></ng-chat-options>
+                <ng-chat-options [ngClass]="'ng-chat-options-container'" [options]="defaultWindowOptions(window)" [chattingTo]="window" [(activeOptionTracker)]="currentActiveOption"></ng-chat-options>
             </div>
             <div #chatMessages class="ng-chat-messages primary-background">
                 <div *ngIf="window.isLoadingHistory" class="ng-chat-loading-wrapper">

@@ -167,7 +167,7 @@ export class NgChat implements OnInit, IChatController {
 
     private participantsInteractedWith: IChatParticipant[] = [];
 
-    public isSelectingFromFriendsList: boolean = false;
+    public currentActiveOption: IChatOption;
 
     protected selectedUsersFromFriendsList: User[] = [];
 
@@ -176,9 +176,13 @@ export class NgChat implements OnInit, IChatController {
         if (this.groupAdapter && currentWindow.participant.participantType == ChatParticipantType.User)
         {
             return [{
+                isActive: false,
                 action: (chattingWindow: Window) => {
+                    
                     this.selectedUsersFromFriendsList = this.selectedUsersFromFriendsList.concat(chattingWindow.participant as User);
-                    this.isSelectingFromFriendsList = !this.isSelectingFromFriendsList;
+                },
+                validateContext: (participant: IChatParticipant) => {
+                    return participant.participantType == ChatParticipantType.User;
                 },
                 displayLabel: 'Add People' // TODO: Localize this
             }];
@@ -911,7 +915,7 @@ export class NgChat implements OnInit, IChatController {
 
     onFriendsListActionCancelClicked(): void
     {
-        this.isSelectingFromFriendsList = false;
+        this.currentActiveOption = null;
         this.selectedUsersFromFriendsList = [];
     }
 
@@ -927,7 +931,7 @@ export class NgChat implements OnInit, IChatController {
         }
 
         this.selectedUsersFromFriendsList = [];
-        this.isSelectingFromFriendsList = false;
+        this.currentActiveOption = null;
     }
 
     isUserSelectedFromFriendsList(user: User) : boolean

@@ -57,8 +57,6 @@ export class DemoAdapterPagedHistory extends PagedHistoryChatAdapter implements 
     
     
     sendMessage(message: Message): void {
-        debugger;
-
         setTimeout(() => {
             let replyMessage = new Message();
             
