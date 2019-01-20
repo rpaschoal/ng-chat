@@ -23,10 +23,9 @@ describe('DefaultFileUploadAdapter', () => {
                 let subject = new DefaultFileUploadAdapter(uploadUlrMock, http);
                 
                 let fakeFile = new File([""], "filename", { type: 'text/html' });
-                let chattingTo = new User();
-                chattingTo.id = 88;
+                const chattingToId = 88;
 
-                subject.uploadFile(fakeFile, chattingTo).subscribe();
+                subject.uploadFile(fakeFile, chattingToId).subscribe();
 
                 const req = backend.expectOne({
                     url: uploadUlrMock,
@@ -36,14 +35,13 @@ describe('DefaultFileUploadAdapter', () => {
         )
     );
 
-    it('Must send destinatary id as part of the request when uploading a file', () => {
+    it('Must send participant id as part of the request when uploading a file', () => {
         let mockHttp = new MockableHttpClient(null);
         let fakeFile = new File([""], "filename", { type: 'text/html' });
-        let chattingTo = new User();
-        chattingTo.id = 88;
+        const chattingToId = 88;
 
         spyOn(MockableHttpClient.prototype, 'post').and.callFake((postUrl, sentFormData: any) => {
-            expect(sentFormData.get('ng-chat-destinatary-userid')).toBe(String(chattingTo.id));
+            expect(sentFormData.get('ng-chat-participant-id')).toBe(String(chattingToId));
             expect(postUrl).toBe(uploadUlrMock);
 
             return of(null);
@@ -51,7 +49,7 @@ describe('DefaultFileUploadAdapter', () => {
 
         let subject = new DefaultFileUploadAdapter(uploadUlrMock, mockHttp);
                 
-        subject.uploadFile(fakeFile, chattingTo).subscribe();
+        subject.uploadFile(fakeFile, chattingToId).subscribe();
 
         expect(MockableHttpClient.prototype.post).toHaveBeenCalledTimes(1);
     });

@@ -13,11 +13,11 @@ export class DefaultFileUploadAdapter implements IFileUploadAdapter
     constructor(private _serverEndpointUrl: string, private _http: HttpClient) {
     }
 
-    uploadFile(file: File, recipientId: any): Observable<Message> {
+    uploadFile(file: File, participantId: any): Observable<Message> {
         const formData: FormData = new FormData();
 
         //formData.append('ng-chat-sender-userid', currentUserId);
-        formData.append('ng-chat-recipient-id', recipientId);
+        formData.append('ng-chat-participant-id', participantId);
         formData.append('file', file, file.name);
 
         return this._http.post<Message>(this._serverEndpointUrl, formData);
