@@ -915,8 +915,12 @@ export class NgChat implements OnInit, IChatController {
 
     onFriendsListActionCancelClicked(): void
     {
-        this.currentActiveOption = null;
-        this.selectedUsersFromFriendsList = [];
+        if (this.currentActiveOption)
+        {
+            this.currentActiveOption.isActive = false;
+            this.currentActiveOption = null;
+            this.selectedUsersFromFriendsList = [];
+        }
     }
 
     onFriendsListActionConfirmClicked() : void
@@ -930,8 +934,8 @@ export class NgChat implements OnInit, IChatController {
             this.groupAdapter.groupCreated(newGroup);
         }
 
-        this.selectedUsersFromFriendsList = [];
-        this.currentActiveOption = null;
+        // Canceling current state
+        this.onFriendsListActionCancelClicked();
     }
 
     isUserSelectedFromFriendsList(user: User) : boolean

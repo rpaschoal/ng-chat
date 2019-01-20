@@ -15,6 +15,7 @@ import { Theme } from '../ng-chat/core/theme.enum';
 import { ChatParticipantType } from '../ng-chat/core/chat-participant-type.enum';
 import { ChatParticipantStatus } from '../ng-chat/core/chat-participant-status.enum';
 import { Group } from '../ng-chat/core/group';
+import { IChatOption } from '../ng-chat/core/chat-option';
 
 class MockableAdapter extends ChatAdapter {
     public listFriends(): Observable<ParticipantResponse[]> {
@@ -1622,5 +1623,99 @@ describe('NgChat', () => {
 
         expect(result).not.toBeNull();
         expect(result.length).toBe(0);
+    });
+
+    it('On check friends list during options action should push selected user', () => {
+        let mockedUser = new User();
+        mockedUser.id = 999;
+        
+        subject.selectedUsersFromFriendsList = [];
+
+        subject.onFriendsListCheckboxChange(mockedUser, true);
+
+        expect(subject.selectedUsersFromFriendsList).not.toBeNull();
+        expect(subject.selectedUsersFromFriendsList.length).toBe(1);
+        expect(subject.selectedUsersFromFriendsList[0]).toBe(mockedUser);
+        expect(subject.selectedUsersFromFriendsList[0].id).toBe(mockedUser.id);
+    });
+
+    it('On uncheck friends list during options action should remove selected user', () => {
+        let mockedUser = new User();
+        mockedUser.id = 999;
+        
+        subject.selectedUsersFromFriendsList = [mockedUser];
+
+        subject.onFriendsListCheckboxChange(mockedUser, false);
+
+        expect(subject.selectedUsersFromFriendsList).not.toBeNull();
+        expect(subject.selectedUsersFromFriendsList.length).toBe(0);
+    });
+
+    it('onFriendsListActionCancelClicked invoked should clear selection state', () => {
+        let mockedUser = new User();
+        mockedUser.id = 999;
+        
+        let mockedOption = {
+            isActive: false,
+            displayLabel: 'Test',
+            action: null,
+            validateContext: null
+        } as IChatOption;
+
+        subject.currentActiveOption = mockedOption;
+        
+        subject.selectedUsersFromFriendsList = [mockedUser];
+
+        subject.onFriendsListActionCancelClicked();
+
+        expect(subject.currentActiveOption).toBeNull();
+        expect(mockedOption.isActive).toBeFalsy();
+        expect(subject.selectedUsersFromFriendsList).not.toBeNull();
+        expect(subject.selectedUsersFromFriendsList.length).toBe(0);
+    });
+
+    it('onFriendsListActionConfirmClicked invoked exercise', () => {
+        let mockedFirstUser = new User();
+        let mockedSecondUser = new User();
+        let createdGroup: Group = null;
+
+        mockedFirstUser.id = 888;
+        mockedSecondUser.id = 999;
+
+        // To test sorting of the name
+        mockedFirstUser.displayName = "ZZZ";
+        mockedSecondUser.displayName = "AAA";
+
+        subject.selectedUsersFromFriendsList = [mockedFirstUser, mockedSecondUser];
+
+        spyOn(MockableGroupAdapter.prototype, 'groupCreated').and.callFake((group: Group) => {
+            createdGroup = group;
+        });
+
+        spyOn(subject, 'openChatWindow').and.returnValue([null, true]);
+
+        subject.onFriendsListActionConfirmClicked();
+
+        expect(createdGroup).not.toBeNull();
+        expect(createdGroup.chattingTo).not.toBeNull();
+        expect(createdGroup.chattingTo.length).toBe(2);
+        expect(createdGroup.chattingTo[0]).toBe(mockedFirstUser);
+        expect(createdGroup.chattingTo[1]).toBe(mockedSecondUser);
+        expect(createdGroup.displayName).toBe("AAA, ZZZ");
+        expect(MockableGroupAdapter.prototype.groupCreated).toHaveBeenCalledTimes(1);
+        expect(subject.openChatWindow).toHaveBeenCalledTimes(1);
+    });
+
+    it('isUserSelectedFromFriendsList exercise', () => {
+        let mockedFirstUser = new User();
+        let mockedSecondUser = new User();
+
+        mockedFirstUser.id = 888;
+        mockedSecondUser.id = 999;
+        
+        subject.selectedUsersFromFriendsList = [mockedSecondUser];
+
+        expect(subject.isUserSelectedFromFriendsList(mockedFirstUser)).toBeFalsy();
+        expect(subject.isUserSelectedFromFriendsList(mockedSecondUser)).toBeTruthy();
     });
 });
