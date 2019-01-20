@@ -1,9 +1,8 @@
 import { TestBed, getTestBed, async, inject } from '@angular/core/testing';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { Observable, of } from 'rxjs';
+import { of } from 'rxjs';
 import { DefaultFileUploadAdapter } from '../ng-chat/core/default-file-upload-adapter';
-import { User } from '../ng-chat/core/user';
 
 describe('DefaultFileUploadAdapter', () => {
     let uploadUlrMock: string = 'http://localhost/fileUpload';
