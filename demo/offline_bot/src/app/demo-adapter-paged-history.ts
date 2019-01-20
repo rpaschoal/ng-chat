@@ -1,10 +1,10 @@
-import { ChatAdapter, User, Message, UserStatus, PagedHistoryChatAdapter } from 'ng-chat';
+import { ChatAdapter, IChatGroupAdapter, Group, User, Message, ChatParticipantStatus, PagedHistoryChatAdapter, ParticipantResponse, ParticipantMetadata } from 'ng-chat';
 import { Observable, of } from 'rxjs';
 import { DemoAdapter } from './demo-adapter';
 import { delay } from "rxjs/operators";
 
-export class DemoAdapterPagedHistory extends PagedHistoryChatAdapter
-{   
+export class DemoAdapterPagedHistory extends PagedHistoryChatAdapter implements IChatGroupAdapter
+{
     private historyMessages: Message[] = [];
     
     constructor() {
@@ -14,32 +14,41 @@ export class DemoAdapterPagedHistory extends PagedHistoryChatAdapter
                 fromId: 1,
                 toId: 999,
                 message: `${20-i}. Hi there, just type any message bellow to test this Angular module.`,
-                seenOn: new Date()
+                dateSent: new Date()
             };
             
             this.historyMessages.push(msg);
         }
     }
 
-    listFriends(): Observable<User[]> {
-        return of(DemoAdapter.mockedUsers);
+    listFriends(): Observable<ParticipantResponse[]> {
+        return of(DemoAdapter.mockerParticipants.map(user => {
+            let participantResponse = new ParticipantResponse();
+
+            participantResponse.participant = user;
+            participantResponse.Metadata = {
+                totalUnreadMessages: 4 // Demo history page size
+            }
+
+            return participantResponse;
+        }));
     }
 
-    getMessageHistory(userId: any): Observable<Message[]> {
+    getMessageHistory(destinataryId: any): Observable<Message[]> {
        let mockedHistory: Array<Message>;
        mockedHistory = [
             {
                 fromId: 1,
                 toId: 999,
                 message: "Hi there, just type any message bellow to test this Angular module.",
-                seenOn: new Date()
+                dateSent: new Date()
             }
        ];
 
        return of(mockedHistory);
     }
     
-    public getMessageHistoryByPage(userId: any, size: number, page: number) : Observable<Message[]> {
+    public getMessageHistoryByPage(destinataryId: any, size: number, page: number) : Observable<Message[]> {
        let startPosition: number = (page - 1) * size;
        let endPosition: number = page * size;
        let mockedHistory: Array<Message> = this.historyMessages.slice(startPosition, endPosition);
@@ -54,10 +63,24 @@ export class DemoAdapterPagedHistory extends PagedHistoryChatAdapter
             replyMessage.fromId = message.toId;
             replyMessage.toId = message.fromId;
             replyMessage.message = "You have typed '" + message.message + "'";
+            replyMessage.dateSent = new Date();
             
-            let user = DemoAdapter.mockedUsers.find(x => x.id == replyMessage.fromId);
+            let user = DemoAdapter.mockerParticipants.find(x => x.id == replyMessage.fromId);
 
             this.onMessageReceived(user, replyMessage);
         }, 1000);
     }
+
+    groupCreated(group: Group): void {
+        DemoAdapter.mockerParticipants.push(group);
+
+        DemoAdapter.mockerParticipants = DemoAdapter.mockerParticipants.sort((first, second) => 
+            second.displayName > first.displayName ? -1 : 1
+        );
+
+        // Trigger update of friends list
+        this.listFriends().subscribe(response => {
+            this.onFriendsListChanged(response);
+        });
+    }   
 }

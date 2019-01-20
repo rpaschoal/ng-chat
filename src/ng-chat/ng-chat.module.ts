@@ -6,10 +6,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgChat } from './ng-chat.component';
 import { EmojifyPipe } from './pipes/emojify.pipe';
 import { LinkfyPipe } from './pipes/linkfy.pipe';
+import { NgChatOptionsComponent } from './components/ng-chat-options/ng-chat-options.component';
 
 @NgModule({
   imports: [CommonModule, FormsModule, HttpClientModule],
-  declarations: [NgChat, EmojifyPipe, LinkfyPipe],
+  declarations: [NgChat, EmojifyPipe, LinkfyPipe, NgChatOptionsComponent],
   exports: [NgChat]
 })
 export class NgChatModule {
