@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgChatOptionsComponent } from '../../ng-chat/components/ng-chat-options/ng-chat-options.component';
 import { IChatOption } from '../../ng-chat/core/chat-option';
 import { Window } from '../../ng-chat/core/window';
+import { IChatParticipant } from '../../ng-chat/core/chat-participant';
 
 describe('NgChatOptionsComponent', () => {
   let component: NgChatOptionsComponent;
@@ -29,6 +30,8 @@ describe('NgChatOptionsComponent', () => {
     component.chattingTo = mockedWindow;
 
     let option: IChatOption = {
+        isActive: false,
+        validateContext: (participant: IChatParticipant) => true,
         action: (participant: Window) => {
             actionInvoked = true;
             actionInvokedArgument = participant;
@@ -41,6 +44,7 @@ describe('NgChatOptionsComponent', () => {
     expect(actionInvoked).toBeTruthy();
     expect(actionInvokedArgument).not.toBeNull();
     expect(actionInvokedArgument).toBe(mockedWindow);
+    expect(option.isActive).toBeTruthy();
   });
 
   it('Should not invoke option action when option action is null or undefined', () => {
@@ -51,7 +55,9 @@ describe('NgChatOptionsComponent', () => {
     component.chattingTo = mockedWindow;
 
     let option: IChatOption = {
+        isActive: false,
         action: null,
+        validateContext: null,
         displayLabel: "Test Option"
     }
     
@@ -59,5 +65,6 @@ describe('NgChatOptionsComponent', () => {
 
     expect(actionInvoked).toBeFalsy();
     expect(actionInvokedArgument).toBeNull();
+    expect(option.isActive).toBeFalsy();
   });
 });
