@@ -3,6 +3,7 @@ import { User } from '../ng-chat/core/user';
 import { ParticipantResponse } from '../ng-chat/core/participant-response';
 import { Window } from '../ng-chat/core/window';
 import { ChatAdapter } from '../ng-chat/core/chat-adapter';
+import { IChatGroupAdapter } from '../ng-chat/core/chat-group-adapter';
 import { Observable, of } from 'rxjs';
 import { Message } from '../ng-chat/core/message';
 import { EventEmitter } from '@angular/core';
@@ -13,6 +14,7 @@ import { MessageType } from '../ng-chat/core/message-type.enum';
 import { Theme } from '../ng-chat/core/theme.enum';
 import { ChatParticipantType } from '../ng-chat/core/chat-participant-type.enum';
 import { ChatParticipantStatus } from '../ng-chat/core/chat-participant-status.enum';
+import { Group } from '../ng-chat/core/group';
 
 class MockableAdapter extends ChatAdapter {
     public listFriends(): Observable<ParticipantResponse[]> {
@@ -22,6 +24,12 @@ class MockableAdapter extends ChatAdapter {
         throw new Error("Method not implemented.");
     }
     public sendMessage(message: Message): void {
+        throw new Error("Method not implemented.");
+    }
+}
+
+class MockableGroupAdapter implements IChatGroupAdapter {
+    groupCreated(group: Group): void {
         throw new Error("Method not implemented.");
     }
 }
@@ -45,6 +53,7 @@ describe('NgChat', () => {
         subject = new NgChat(null, null); // HttpClient related methods are tested elsewhere
         subject.userId = 123;
         subject.adapter = new MockableAdapter();
+        subject.groupAdapter = new MockableGroupAdapter();
         subject.audioFile = new MockableHTMLAudioElement();
     });
 
@@ -1575,5 +1584,39 @@ describe('NgChat', () => {
         subject.theme = "invalid-theme";
 
         expect(() => subject.initializeTheme()).toThrow(new Error(`Invalid theme configuration for ng-chat. "${subject.theme}" is not a valid theme value.`));
+    });
+
+    it('Must return default chat options exercise', () => {
+        let chattingTo = new User();
+        let currentWindow = new Window(chattingTo, false, false);
+
+        let result = subject.defaultWindowOptions(currentWindow);
+
+        expect(result).not.toBeNull();
+        expect(result.length).toBeGreaterThanOrEqual(1);
+        expect(result[0].displayLabel).toBe("Add People");
+        expect(result[0].action).not.toBeNull();
+    });
+
+    it('Must return empty chat options when participant is not an user', () => {
+        let chattingTo = new Group([]);
+        let currentWindow = new Window(chattingTo, false, false);
+
+        let result = subject.defaultWindowOptions(currentWindow);
+
+        expect(result).not.toBeNull();
+        expect(result.length).toBe(0);
+    });
+
+    it('Must return empty chat options when group adapter is not supplied', () => {
+        let chattingTo = new User();
+        let currentWindow = new Window(chattingTo, false, false);
+
+        subject.groupAdapter = null;
+
+        let result = subject.defaultWindowOptions(currentWindow);
+
+        expect(result).not.toBeNull();
+        expect(result.length).toBe(0);
     });
 });

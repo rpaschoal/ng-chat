@@ -180,7 +180,7 @@ export class NgChat implements OnInit, IChatController {
                     this.selectedUsersFromFriendsList = this.selectedUsersFromFriendsList.concat(chattingWindow.participant as User);
                     this.isSelectingFromFriendsList = !this.isSelectingFromFriendsList;
                 },
-                displayLabel: 'Add People'
+                displayLabel: 'Add People' // TODO: Localize this
             }];
         }
 
