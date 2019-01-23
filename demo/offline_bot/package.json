@@ -27,6 +27,7 @@
     "ng-chat": "^2.0.0-rc.1"
   },
   "devDependencies": {
+    "@angular-devkit/build-angular": "^0.12.2",
     "@angular/cli": "^7.0.4",
     "@angular/compiler-cli": "^7.0.3",
     "@angular/language-service": "^7.0.3",
