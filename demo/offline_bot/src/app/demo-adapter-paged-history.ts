@@ -22,7 +22,7 @@ export class DemoAdapterPagedHistory extends PagedHistoryChatAdapter implements 
     }
 
     listFriends(): Observable<ParticipantResponse[]> {
-        return of(DemoAdapter.mockerParticipants.map(user => {
+        return of(DemoAdapter.mockedParticipants.map(user => {
             let participantResponse = new ParticipantResponse();
 
             participantResponse.participant = user;
@@ -59,22 +59,39 @@ export class DemoAdapterPagedHistory extends PagedHistoryChatAdapter implements 
     sendMessage(message: Message): void {
         setTimeout(() => {
             let replyMessage = new Message();
-            
-            replyMessage.fromId = message.toId;
-            replyMessage.toId = message.fromId;
+
             replyMessage.message = "You have typed '" + message.message + "'";
             replyMessage.dateSent = new Date();
             
-            let user = DemoAdapter.mockerParticipants.find(x => x.id == replyMessage.fromId);
+            if (isNaN(message.toId))
+            {
+                let group = DemoAdapter.mockedParticipants.find(x => x.id == message.toId) as Group;
 
-            this.onMessageReceived(user, replyMessage);
+                // Message to a group. Pick up any participant for this
+                let randomParticipantIndex = Math.floor(Math.random() * group.chattingTo.length);
+                replyMessage.fromId = group.chattingTo[randomParticipantIndex].id;
+
+                replyMessage.toId = message.toId;
+
+                this.onMessageReceived(group, replyMessage);
+            }
+            else
+            {
+                replyMessage.fromId = message.toId;
+                replyMessage.toId = message.fromId;
+                
+                let user = DemoAdapter.mockedParticipants.find(x => x.id == replyMessage.fromId);
+
+                this.onMessageReceived(user, replyMessage);
+            }
+            
         }, 1000);
     }
 
     groupCreated(group: Group): void {
-        DemoAdapter.mockerParticipants.push(group);
+        DemoAdapter.mockedParticipants.push(group);
 
-        DemoAdapter.mockerParticipants = DemoAdapter.mockerParticipants.sort((first, second) => 
+        DemoAdapter.mockedParticipants = DemoAdapter.mockedParticipants.sort((first, second) => 
             second.displayName > first.displayName ? -1 : 1
         );
 
