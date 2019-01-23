@@ -70,10 +70,13 @@
                 </div>
 
                 <div *ngFor="let message of window.messages; let i = index" [ngClass]="{'ng-chat-message': true, 'ng-chat-message-received': message.fromId != userId}">
-                    <div *ngIf="!window.participant.avatar && isAvatarVisible(window, message, i)" class="icon-wrapper">
-                        <i class="user-icon"></i>
-                    </div>
-                    <img *ngIf="window.participant.avatar && isAvatarVisible(window, message, i)" alt="" class="avatar" height="30" width="30" [src]="window.participant.avatar" />
+                    <ng-container *ngIf="isAvatarVisible(window, message, i)"> 
+                        <div *ngIf="!getChatWindowAvatar(window.participant, message)" class="icon-wrapper">
+                            <i class="user-icon"></i>
+                        </div>
+                        <img *ngIf="getChatWindowAvatar(window.participant, message)" alt="" class="avatar" height="30" width="30" [src]="getChatWindowAvatar(window.participant, message)" />
+                        <span *ngIf="window.participant.participantType == ChatParticipantType.Group" class="ng-chat-participant-name">{{window.participant | groupMessageDisplayName:message}}</span>
+                    </ng-container>
                     <ng-container [ngSwitch]="message.type">
                         <div *ngSwitchCase="MessageType.Text" [ngClass]="{'sent-chat-message-container': message.fromId == userId, 'received-chat-message-container': message.fromId != userId}">
                             <span>

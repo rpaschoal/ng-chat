@@ -43,6 +43,7 @@ export class NgChat implements OnInit, IChatController {
     constructor(public sanitizer: DomSanitizer, private _httpClient: HttpClient) { }
 
     // Exposes enums for the ng-template
+    public ChatParticipantType = ChatParticipantType;
     public ChatParticipantStatus = ChatParticipantStatus;
     public MessageType = MessageType;
 
@@ -823,6 +824,21 @@ export class NgChat implements OnInit, IChatController {
         }
 
         return false;
+    }
+
+    getChatWindowAvatar(participant: IChatParticipant, message: Message): string
+    {
+        if (participant.participantType == ChatParticipantType.User)
+        {
+            return participant.avatar;
+        }
+        else if (participant.participantType == ChatParticipantType.Group)
+        {
+            let group = participant as Group;
+            let userIndex = group.chattingTo.findIndex(x => x.id == message.fromId);
+
+            return group.chattingTo[userIndex >= 0 ? userIndex : 0].avatar;
+        }
     }
 
     // Toggles a window focus on the focus/blur of a 'newMessage' input

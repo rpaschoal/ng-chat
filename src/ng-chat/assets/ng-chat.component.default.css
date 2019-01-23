@@ -135,7 +135,7 @@
         {
             margin-left: 22px;
         }
-        #ng-chat-users li .ng-chat-friends-list-container > img, #ng-chat-users li .ng-chat-friends-list-container > .icon-wrapper
+        #ng-chat-users li .ng-chat-friends-list-container > img.avatar, #ng-chat-users li .ng-chat-friends-list-container > .icon-wrapper
         {
             float: left;
             margin-right: 5px;
@@ -281,11 +281,21 @@
         {
             clear: both;
         }
-        .ng-chat-window .ng-chat-messages .ng-chat-message > img, .ng-chat-window .ng-chat-messages .ng-chat-message > .icon-wrapper
+        .ng-chat-window .ng-chat-messages .ng-chat-message > img.avatar, .ng-chat-window .ng-chat-messages .ng-chat-message > .icon-wrapper
         {
             position: absolute;
             left: 10px;
             border-radius: 25px;
+        }
+        .ng-chat-window .ng-chat-messages .ng-chat-message .ng-chat-participant-name
+        {
+            display: inline-block;
+            margin-left: 40px;
+            padding-bottom: 5px;
+            font-weight: bold;
+            font-size: 0.8em;
+            text-overflow: ellipsis;
+            max-width: 180px;
         }
             .ng-chat-window .ng-chat-messages .ng-chat-message > .icon-wrapper
             {
