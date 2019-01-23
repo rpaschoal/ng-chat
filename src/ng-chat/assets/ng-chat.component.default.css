@@ -135,6 +135,16 @@
         {
             margin-left: 22px;
         }
+        #ng-chat-users li .ng-chat-friends-list-container
+        {
+            display: inline-block;
+            width: 100%;
+        }
+        #ng-chat-users li > .ng-chat-friends-list-selectable-offset.ng-chat-friends-list-container
+        {
+            display: block;
+            width: auto;
+        }
         #ng-chat-users li .ng-chat-friends-list-container > img.avatar, #ng-chat-users li .ng-chat-friends-list-container > .icon-wrapper
         {
             float: left;
