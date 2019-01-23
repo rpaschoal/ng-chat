@@ -717,9 +717,9 @@ export class NgChat implements OnInit, IChatController {
         else
         {
             let totalUnreadMessages = this.participantsResponse
-                .filter(x => x.participant.id == participant.id && !this.participantsInteractedWith.find(u => u.id == participant.id) && x.Metadata && x.Metadata.totalUnreadMessages > 0)
+                .filter(x => x.participant.id == participant.id && !this.participantsInteractedWith.find(u => u.id == participant.id) && x.metadata && x.metadata.totalUnreadMessages > 0)
                 .map((participantResponse) => {
-                    return participantResponse.Metadata.totalUnreadMessages
+                    return participantResponse.metadata.totalUnreadMessages
                 })[0];
 
             return this.formatUnreadMessagesTotal(totalUnreadMessages);

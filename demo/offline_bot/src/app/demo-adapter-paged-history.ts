@@ -26,7 +26,7 @@ export class DemoAdapterPagedHistory extends PagedHistoryChatAdapter implements 
             let participantResponse = new ParticipantResponse();
 
             participantResponse.participant = user;
-            participantResponse.Metadata = {
+            participantResponse.metadata = {
                 totalUnreadMessages: 4 // Demo history page size
             }
 

@@ -81,7 +81,7 @@ export class DemoAdapter extends ChatAdapter implements IChatGroupAdapter
             let participantResponse = new ParticipantResponse();
 
             participantResponse.participant = user;
-            participantResponse.Metadata = {
+            participantResponse.metadata = {
                 totalUnreadMessages: Math.floor(Math.random() * 10)
             }
 
