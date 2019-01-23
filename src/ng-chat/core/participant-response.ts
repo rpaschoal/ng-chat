@@ -5,5 +5,5 @@ import { IChatParticipant } from "./chat-participant";
 export class ParticipantResponse
 {
     public participant: IChatParticipant;
-    public Metadata: ParticipantMetadata;
+    public metadata: ParticipantMetadata;
 }
