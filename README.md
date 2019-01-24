@@ -41,7 +41,7 @@ import { NgChatModule } from 'ng-chat';
 })
 export class AppModule { }
 ```
-#### Add the component in your AppComponent template:
+#### Add the component to your AppComponent template:
 
 ```
 <ng-chat [adapter]="adapter" [userId]="userId"></ng-chat>
