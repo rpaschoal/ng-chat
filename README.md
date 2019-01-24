@@ -41,7 +41,7 @@ import { NgChatModule } from 'ng-chat';
 })
 export class AppModule { }
 ```
-#### Add the component directive in your AppComponent template:
+#### Add the component in your AppComponent template:
 
 ```
 <ng-chat [adapter]="adapter" [userId]="userId"></ng-chat>
