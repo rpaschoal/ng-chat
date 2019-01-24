@@ -145,7 +145,7 @@ If in doubt, I've provided 2 adapter implementations in this repo that can be fo
 An `IChatParticipant` can be a User or a Group but in order to enable group chat you must implement and supply to ng-chat an instance of `IChatGroupAdapter`. You will have to implement the following contract:
 
 ```
-groupCreated(group: Group) : void;
+groupCreated(group: Group): void;
 ```
 
 ng-chat generates a guid every time a new group is created and invokes the method above so you can handle it on your application to persist the newly generated Group (Id, Participants, etc).
