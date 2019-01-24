@@ -20,7 +20,7 @@ npm install ng-chat
 ```
 
 ### Setup
-#### Import the NgChatModule on your AppModule (EG: app.module.ts):
+#### Import NgChatModule on your AppModule (EG: app.module.ts):
 
 ```
 ...
@@ -41,7 +41,7 @@ import { NgChatModule } from 'ng-chat';
 })
 export class AppModule { }
 ```
-#### Add the component directive in your AppComponent template:
+#### Add the component to your AppComponent template:
 
 ```
 <ng-chat [adapter]="adapter" [userId]="userId"></ng-chat>
