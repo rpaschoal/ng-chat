@@ -94,6 +94,7 @@ __Additional Settings__
 * [customTheme]{string}: Source URL of the stylesheet asset to use for custom CSS styles. Works with assets relative to the project using ng-chat.
 * [showMessageDate]{boolean}: Shows the date in which a message was sent. Default is true.
 * [messageDatePipeFormat]{string}: The format for the pipe that is used when rendering the date in which a message was sent. Default is "short".
+* [groupAdapter]{IChatGroupAdapter}: A group adapter implementation to enable group chat.
 
 __Localization__
 * [messagePlaceholder]{string}: The placeholder that is displayed in the text input on each chat window. Default is "Type a message".
@@ -138,6 +139,22 @@ If in doubt, I've provided 2 adapter implementations in this repo that can be fo
 
 * [Offline Bot Adapter](https://github.com/rpaschoal/ng-chat/blob/master/demo/offline_bot/src/app/demo-adapter.ts)
 * [SignalR Adapter](https://github.com/rpaschoal/ng-chat/blob/master/demo/aspnetcore_signalr/angularApp/core/app.ngchat.signalr.adapter.ts)
+
+#### Add support for group chat:
+
+An `IChatParticipant` can be a User or a Group but in order to enable group chat you must implement and supply to ng-chat an instance of `IChatGroupAdapter`. You will have to implement the following contract:
+
+```
+groupCreated(group: Group) : void;
+```
+
+ng-chat generates a guid every time a new group is created and invokes the method above so you can handle it on your application to persist the newly generated Group (Id, Participants, etc).
+
+Once you have an implementation of `IChatGroupAdapter`, just supply it to your ng-chat instance:
+
+```
+<ng-chat [groupAdapter]="myGroupAdapterInstance" ... ></ng-chat>
+```
 
 #### File Upload:
 
