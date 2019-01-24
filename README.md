@@ -101,9 +101,9 @@ __Localization__
 * [localization]{Localization}: Contract defining all text that is rendered by this component. Supply your own object for full text localization/customization. Supplying this setting will override all  other localization settings.
 
 __Events__
-* (onUserClicked){User}: Event emitted every time a user is clicked on the chat window and a new chat window is opened.
-* (onUserChatOpened){User}: Event emitted every time a chat window is opened, regardless if it was due to a user click on the friends list or via new message received.
-* (onUserChatClosed){User}: Event emitted every time a chat window is closed.
+* (onParticipantClicked){IChatParticipant}: Event emitted every time a user/group is clicked on the chat window and a new chat window is opened.
+* (onParticipantChatOpened){IChatParticipant}: Event emitted every time a chat window is opened, regardless if it was due to a user/group click on the friends list or via new message received.
+* (onParticipantChatClosed){IChatParticipant}: Event emitted every time a chat window is closed.
 * (onMessagesSeen){Message[]}: Event emitted every time a chunk of unread messages are seen by a user.
 
 #### Implement your ChatAdapter:
