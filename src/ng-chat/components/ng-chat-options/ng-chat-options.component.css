@@ -1,0 +1,40 @@
+/* Dropdown Button */
+.ng-chat-options-activator {
+    background-color: unset;
+    color: white;
+    line-height: 28px;
+    border: none;
+    position: relative;
+}
+    .ng-chat-options-activator > span
+    {
+        position: relative;
+        top: -5px;
+        left: 0;
+    }
+.ng-chat-options {
+    position: relative;
+    display: inline-block;
+}
+    .ng-chat-options:hover .ng-chat-options-content {
+        display: block;
+    }
+    .ng-chat-options:hover .ng-chat-options-activator {
+        background-color: #ddd;
+    }
+.ng-chat-options-content {
+    display: none;
+    position: absolute;
+    min-width: 160px;
+    z-index: 1;
+}
+.ng-chat-options-content a:hover {
+    background-color: #ddd;
+}
+
+.ng-chat-options-content a {
+    padding: 6px 16px;
+    text-decoration: none;
+    display: block;
+}
+

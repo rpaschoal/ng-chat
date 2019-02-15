@@ -31,8 +31,9 @@ $text-color: #5C5C5C;
     {
         background-color: $primary-color;
     }
-    .unread-messages-counter-container
+    .unread-messages-counter-container, .ng-chat-people-action, .ng-chat-people-action > i
     {
+        color: $text-color;
         background-color: $secondary-color;
     }
     .load-history-action

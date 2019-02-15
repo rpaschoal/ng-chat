@@ -1,30 +1,32 @@
 import { Observable } from 'rxjs';
 import { Message } from "./message";
 import { User } from "./user";
+import { ParticipantResponse } from "./participant-response";
+import { IChatParticipant } from './chat-participant';
 
 export abstract class ChatAdapter
 {
     // ### Abstract adapter methods ###
 
-    public abstract listFriends(): Observable<User[]>;
+    public abstract listFriends(): Observable<ParticipantResponse[]>;
     
-    public abstract getMessageHistory(userId: any): Observable<Message[]>;
+    public abstract getMessageHistory(destinataryId: any): Observable<Message[]>;
 
     public abstract sendMessage(message: Message): void;
 
     // ### Adapter/Chat income/ingress events ###
 
-    public onFriendsListChanged(users: User[]): void
+    public onFriendsListChanged(participantsResponse: ParticipantResponse[]): void
     {
-        this.friendsListChangedHandler(users);
+        this.friendsListChangedHandler(participantsResponse);
     }
 
-    public onMessageReceived(user: User, message: Message): void
+    public onMessageReceived(participant: IChatParticipant, message: Message): void
     {
-        this.messageReceivedHandler(user, message);
+        this.messageReceivedHandler(participant, message);
     }
     
     // Event handlers
-    friendsListChangedHandler: (users: User[]) => void  = (users: User[]) => {};
-    messageReceivedHandler: (user: User, message: Message) => void = (user: User, message: Message) => {};
+    friendsListChangedHandler: (participantsResponse: ParticipantResponse[]) => void  = (participantsResponse: ParticipantResponse[]) => {};
+    messageReceivedHandler: (participant: IChatParticipant, message: Message) => void = (participant: IChatParticipant, message: Message) => {};
 }
