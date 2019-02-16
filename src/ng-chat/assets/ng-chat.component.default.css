@@ -374,7 +374,7 @@
                 {
                     width: 20px;
                     height: 35px;
-                    padding: 10px;
+                    padding: 10px 5px;
                     float: left;
                 }
                     .ng-chat-window .ng-chat-messages .ng-chat-message .file-message-container > .file-message-icon-container i
