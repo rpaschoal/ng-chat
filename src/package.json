@@ -19,7 +19,7 @@
     "gulp": "~4.0.0",
     "gulp-inline-ng2-template": "^5.0.1",
     "rollup": "^0.67.0",
-    "typescript": "^3.1.6",
+    "typescript": "~3.1.6",
     "uglify-js": "^3.4.9",
     "ng-packagr": "^4.4.0",
     "tsickle": "^0.33.1"
