@@ -354,7 +354,7 @@
             .ng-chat-window .ng-chat-messages .ng-chat-message .file-message-container
             {
                 float: right;
-                width: 196px;
+                width: 202px;
                 border-style: solid;
                 border-width: 3px;
                 border-radius: 5px;
@@ -363,12 +363,14 @@
                 display: block;
                 text-decoration: none;
                 font-size: 0.9em;
+                padding: 0;
+                box-sizing: border-box;
             }
             .ng-chat-window .ng-chat-messages .ng-chat-message .file-message-container.received
             {
                 float: left;
                 margin-left: 40px;
-                width: 202px;
+                width: 208px;
             }
                 .ng-chat-window .ng-chat-messages .ng-chat-message .file-message-container > .file-message-icon-container
                 {
