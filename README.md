@@ -9,7 +9,7 @@ A simple facebook/linkedin lookalike chat module for Angular applications.
 
 * [Online demo](https://ng-chat.azurewebsites.net)
 * [Online demo source code (ASP.NET core and Azure SignalR)](https://github.com/rpaschoal/ng-chat-netcoreapp)
-* [Node.js sample application](https://github.com/rpaschoal/ng-chat-nodejs)
+* [Node.js example](https://github.com/rpaschoal/ng-chat-nodejs)
 
 <a href="https://www.buymeacoffee.com/ixJwWB5bD" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
 
@@ -136,10 +136,10 @@ public onFriendsListChanged(participantsResponse: ParticipantResponse[]): void
 
 __Please note there is no need to override the 2 methods above. You must call them within your adapter implementation just to notify the module that a message was received or that the friends list was updated. The second one could be ignored if you decide to use the "pollFriendsList" feature.__
 
-If in doubt, I've provided 2 adapter implementations in this repo that can be found at the following links:
+If in doubt, here are 2 adapter example implementations:
 
-* [Offline Bot Adapter](https://github.com/rpaschoal/ng-chat/blob/master/demo/offline_bot/src/app/demo-adapter.ts)
-* [SignalR Adapter](https://github.com/rpaschoal/ng-chat/blob/master/demo/aspnetcore_signalr/angularApp/core/app.ngchat.signalr.adapter.ts)
+* [Offline Bot Adapter](https://github.com/rpaschoal/ng-chat-netcoreapp/blob/master/NgChatClient/ClientApp/src/app/demo-adapter.ts)
+* [SignalR Adapter](https://github.com/rpaschoal/ng-chat-netcoreapp/blob/master/NgChatClient/ClientApp/src/app/signalr-adapter.ts)
 
 #### Add support for group chat:
 
@@ -165,7 +165,9 @@ On your ng-chat instance make sure you provide a valid URI for the `fileUploadUr
 
 Along with a request form file ng-chat will also send a field named as `ng-chat-destinatary-userid` containing the id of the user in which the file will be sent to. Make sure you use this value to compose a response message as your API endpoint will have to return a `FileMessage`. This `FileMessage` instance will be sent to the destinatary user automatically by ng-chat as soon as the file upload ends successfully.
 
-You can check a sample backend file upload implementation here: [ng-chat-nodejs](https://github.com/rpaschoal/ng-chat-nodejs/blob/master/server.js)
+You can check some backend file upload implementation examples here:
+* [ng-chat-netcoreapp](https://github.com/rpaschoal/ng-chat-netcoreapp/blob/master/NgChatSignalR/Controllers/HomeController.cs)
+* [ng-chat-nodejs](https://github.com/rpaschoal/ng-chat-nodejs/blob/master/server.js) 
 
 #### Triggering ng-chat actions from elsewhere:
 
