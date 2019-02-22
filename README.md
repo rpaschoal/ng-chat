@@ -8,6 +8,7 @@
 A simple facebook/linkedin lookalike chat module for Angular applications.
 
 * [Online demo](https://ng-chat.azurewebsites.net)
+* [Online demo source code](https://github.com/rpaschoal/ng-chat-netcoreapp)
 * [Node.js sample application](https://github.com/rpaschoal/ng-chat-nodejs)
 
 <a href="https://www.buymeacoffee.com/ixJwWB5bD" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
