@@ -31,8 +31,9 @@ $text-color: #5C5C5C;
     {
         background-color: $primary-color;
     }
-    .unread-messages-counter-container
+    .unread-messages-counter-container, .ng-chat-people-action, .ng-chat-people-action > i
     {
+        color: $text-color;
         background-color: $secondary-color;
     }
     .load-history-action
@@ -43,21 +44,14 @@ $text-color: #5C5C5C;
     {
         background-color: $primary-color;   
     }
-    .sent-chat-message-container
+    .sent-chat-message-container,  .file-message-container
     {
         background-color:$secondary-color;
+        border-color: $secondary-color;
     }
-    .received-chat-message-container
+    .received-chat-message-container, .file-message-container.received
     {
         background-color:$primary-color;
         border-color: $secondary-color;
-    }
-    .file-message-container
-    {
-        border-color: $secondary-color;
-    }
-    .file-message-icon-container
-    {
-        background-color: $secondary-color;
     }
 }

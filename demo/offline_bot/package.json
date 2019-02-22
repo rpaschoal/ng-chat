@@ -24,7 +24,7 @@
     "core-js": "^2.5.7",
     "rxjs": "^6.3.3",
     "zone.js": "^0.8.26",
-    "ng-chat": "^1.2.0"
+    "ng-chat": "^2.0.0"
   },
   "devDependencies": {
     "@angular/cli": "^7.0.4",
@@ -45,6 +45,6 @@
     "protractor": "~5.4.1",
     "ts-node": "~7.0.1",
     "tslint": "~5.11.0",
-    "typescript": "^3.1.6"
+    "typescript": "~3.1.6"
   }
 }

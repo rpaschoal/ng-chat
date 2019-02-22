@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ChatAdapter, User, Message, UserStatus } from 'ng-chat';
+import { ChatAdapter, User, Message, ChatParticipantStatus } from 'ng-chat';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/from';
@@ -37,7 +37,7 @@ export class SignalRAdapter extends ChatAdapter {
         return this._dataService.ListFriends();
     }
 
-    getMessageHistory(userId: any): Observable<Message[]> {
+    getMessageHistory(destinataryId: any): Observable<Message[]> {
         return Observable.of([]); // TODO: History not necessary for the demo adapter (Could call an API endpoint here)
     }
 

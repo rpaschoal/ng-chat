@@ -92,6 +92,9 @@ __Additional Settings__
 * [fileUploadUrl]{string}: Defines a valid CORS enabled URL that can process a request form file and return a `FileMessage` for the destinatary user.
 * [theme]{ng-chat/core/theme.enum:Theme}: Defines the styling theme. There is a light (default) and a dark theme available. You can also supply this as a string.
 * [customTheme]{string}: Source URL of the stylesheet asset to use for custom CSS styles. Works with assets relative to the project using ng-chat.
+* [showMessageDate]{boolean}: Shows the date in which a message was sent. Default is true.
+* [messageDatePipeFormat]{string}: The format for the pipe that is used when rendering the date in which a message was sent. Default is "short".
+* [groupAdapter]{IChatGroupAdapter}: A group adapter implementation to enable group chat.
 
 __Localization__
 * [messagePlaceholder]{string}: The placeholder that is displayed in the text input on each chat window. Default is "Type a message".
@@ -99,14 +102,14 @@ __Localization__
 * [localization]{Localization}: Contract defining all text that is rendered by this component. Supply your own object for full text localization/customization. Supplying this setting will override all  other localization settings.
 
 __Events__
-* (onUserClicked){User}: Event emitted every time a user is clicked on the chat window and a new chat window is opened.
-* (onUserChatOpened){User}: Event emitted every time a chat window is opened, regardless if it was due to a user click on the friends list or via new message received.
-* (onUserChatClosed){User}: Event emitted every time a chat window is closed.
+* (onParticipantClicked){IChatParticipant}: Event emitted every time a user/group is clicked on the chat window and a new chat window is opened.
+* (onParticipantChatOpened){IChatParticipant}: Event emitted every time a chat window is opened, regardless if it was due to a user/group click on the friends list or via new message received.
+* (onParticipantChatClosed){IChatParticipant}: Event emitted every time a chat window is closed.
 * (onMessagesSeen){Message[]}: Event emitted every time a chunk of unread messages are seen by a user.
 
 #### Implement your ChatAdapter:
 
-In order to instruct this module in how to send and receive messages within your software, you will have to implement your own ChatAdapter. The class that you will be implementing is the one that you must provide as an instance to the [adapter] setting of the module discussed above.
+In order to instruct this module on how to send and receive messages within your software, you will have to implement your own ChatAdapter. The class that you will be implementing is the one that you must provide as an instance to the [adapter] setting of the module discussed above.
 
 This package exposes a ChatAdapter abstract class which you can import on your new class file definition:
 
@@ -117,25 +120,41 @@ import { ChatAdapter } from 'ng-chat';
 After importing it to your custom adapter implementation (EG: MyAdapter.ts), you must implement at least 3 methods which are abstract in the ChatAdapter base class which are:
 
 ```
-public abstract listFriends(): Observable<User[]>;
+public abstract listFriends(): Observable<ParticipantResponse[]>;
     
-public abstract getMessageHistory(userId: any): Observable<Message[]>;
+public abstract getMessageHistory(destinataryId: any): Observable<Message[]>;
 
 public abstract sendMessage(message: Message): void;
 ```
-These methods will be performed via the client integration. Apart from the client integration and actions, you must also instruct the adapter in how to receive push notifications from the server using the following methods:
+These methods will be performed via the client integration. Apart from the client integration and actions, you must also instruct the adapter on how to receive push notifications from the server using the following methods:
 
 ```
-public onMessageReceived(user: User, message: Message): void
-public onFriendsListChanged(users: User[]): void
+public onMessageReceived(participant: IChatParticipant, message: Message): void
+public onFriendsListChanged(participantsResponse: ParticipantResponse[]): void
 ```
 
 __Please note there is no need to override the 2 methods above. You must call them within your adapter implementation just to notify the module that a message was received or that the friends list was updated. The second one could be ignored if you decide to use the "pollFriendsList" feature.__
 
-If in doubt, I've provided 2 adapter implementations in this repo that can be found in the following links:
+If in doubt, I've provided 2 adapter implementations in this repo that can be found at the following links:
 
 * [Offline Bot Adapter](https://github.com/rpaschoal/ng-chat/blob/master/demo/offline_bot/src/app/demo-adapter.ts)
 * [SignalR Adapter](https://github.com/rpaschoal/ng-chat/blob/master/demo/aspnetcore_signalr/angularApp/core/app.ngchat.signalr.adapter.ts)
+
+#### Add support for group chat:
+
+An `IChatParticipant` can be a User or a Group but in order to enable group chat you must implement and supply to ng-chat an instance of `IChatGroupAdapter`. You will have to implement the following contract:
+
+```
+groupCreated(group: Group): void;
+```
+
+ng-chat generates a guid every time a new group is created and invokes the method above so you can handle it on your application to persist the newly generated Group (Id, Participants, etc).
+
+Once you have an implementation of `IChatGroupAdapter`, just supply it to your ng-chat instance:
+
+```
+<ng-chat [groupAdapter]="myGroupAdapterInstance" ... ></ng-chat>
+```
 
 #### File Upload:
 

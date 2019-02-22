@@ -9,5 +9,5 @@ import { ChatAdapter } from "./chat-adapter";
  */
 export abstract class PagedHistoryChatAdapter extends ChatAdapter
 {   
-    abstract getMessageHistoryByPage(userId: any, size: number, page: number) : Observable<Message[]>;
+    abstract getMessageHistoryByPage(destinataryId: any, size: number, page: number) : Observable<Message[]>;
 }
