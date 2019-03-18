@@ -168,7 +168,7 @@ export class NgChat implements OnInit, IChatController {
 
     private participantsInteractedWith: IChatParticipant[] = [];
 
-    public currentActiveOption: IChatOption;
+    public currentActiveOption: IChatOption | null;
 
     protected selectedUsersFromFriendsList: User[] = [];
 
@@ -826,7 +826,7 @@ export class NgChat implements OnInit, IChatController {
         return false;
     }
 
-    getChatWindowAvatar(participant: IChatParticipant, message: Message): string
+    getChatWindowAvatar(participant: IChatParticipant, message: Message): string | null
     {
         if (participant.participantType == ChatParticipantType.User)
         {
@@ -839,6 +839,8 @@ export class NgChat implements OnInit, IChatController {
 
             return group.chattingTo[userIndex >= 0 ? userIndex : 0].avatar;
         }
+
+        return null;
     }
 
     // Toggles a window focus on the focus/blur of a 'newMessage' input
