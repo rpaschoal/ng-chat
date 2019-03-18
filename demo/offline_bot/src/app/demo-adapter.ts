@@ -9,7 +9,7 @@ export class DemoAdapter extends ChatAdapter implements IChatGroupAdapter
         participantType: ChatParticipantType.User,
         id: 1,
         displayName: "Arya Stark",
-        avatar: "https://pbs.twimg.com/profile_images/894833370299084800/dXWuVSIb.jpg",
+        avatar: "https://66.media.tumblr.com/avatar_9dd9bb497b75_128.pnj",
         status: ChatParticipantStatus.Online
     },
     {
