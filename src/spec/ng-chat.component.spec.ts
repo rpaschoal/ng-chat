@@ -1336,7 +1336,7 @@ describe('NgChat', () => {
         expect(eventArgument).toBe(user);
     });
     
-    it('Must invoke onMessagesSeen event when a window gets focus', () => {
+    it('Must invoke onMessagesSeen event when a user window gets focus', () => {
         
         let spy = spyOn(subject.onMessagesSeen, 'emit');
         
@@ -1360,6 +1360,46 @@ describe('NgChat', () => {
             {
                 fromId: 999,
                 toId: 123,
+                message:'Hi'
+            }
+        ];
+        
+        let window: Window = new Window(user, false, false);
+        window.messages = messages;
+        
+        subject.windows.push(window);
+        
+        subject.toggleWindowFocus(window);
+
+        expect(spy).toHaveBeenCalled();
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(spy.calls.mostRecent().args.length).toBe(1);
+    });
+
+    it('Must invoke onMessagesSeen event when a chat group window gets focus', () => {
+        
+        let spy = spyOn(subject.onMessagesSeen, 'emit');
+        
+        subject.windows = [];
+        
+        let user: User = {
+            participantType: ChatParticipantType.Group,
+            id: 888,
+            displayName: 'Test user group',
+            status: 1,
+            avatar: ''
+        };
+        
+        let messages: Message[] = [
+            {
+                fromId: 1,
+                toId: 888,
+                message:'Hi',
+                dateSeen: new Date()
+            },
+            {
+                fromId: 1,
+                toId: 888,
                 message:'Hi'
             }
         ];
