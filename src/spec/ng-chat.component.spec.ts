@@ -1337,7 +1337,6 @@ describe('NgChat', () => {
     });
     
     it('Must invoke onMessagesSeen event when a user window gets focus', () => {
-        
         let spy = spyOn(subject.onMessagesSeen, 'emit');
         
         subject.windows = [];
@@ -1377,7 +1376,6 @@ describe('NgChat', () => {
     });
 
     it('Must invoke onMessagesSeen event when a chat group window gets focus', () => {
-        
         let spy = spyOn(subject.onMessagesSeen, 'emit');
         
         subject.windows = [];
@@ -1417,7 +1415,6 @@ describe('NgChat', () => {
     });
 
     it('Must not invoke onMessagesSeen event when a window gets focus but there are no new messages', () => {
-        
         spyOn(subject.onMessagesSeen, 'emit');
         spyOn(subject, 'markMessagesAsRead');
         
