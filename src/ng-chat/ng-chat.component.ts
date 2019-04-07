@@ -903,7 +903,6 @@ export class NgChat implements OnInit, IChatController {
 
         this.isUploadingFile = true;
 
-        // TODO: Handle failure
         this.fileUploadAdapter.uploadFile(file, window.participant.id)
             .subscribe(fileMessage => {
                 this.isUploadingFile = false;
@@ -919,6 +918,13 @@ export class NgChat implements OnInit, IChatController {
 
                 // Resets the file upload element
                 this.nativeFileInput.nativeElement.value = '';
+            }, (error) => {
+                this.isUploadingFile = false;
+
+                // Resets the file upload element
+                this.nativeFileInput.nativeElement.value = '';
+
+                // TODO: Invoke a file upload adapter error here
             });
     }
     
