@@ -3,7 +3,7 @@ $secondary-color: #444;
 $text-color: #FFF;
 
 %text-definition {
-    color: #FFF;
+    color: $text-color;
     font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -35,7 +35,7 @@ $text-color: #FFF;
     }
     .unread-messages-counter-container, .ng-chat-people-action, .ng-chat-people-action > i
     {
-        background-color: #FFF;
+        background-color: $text-color;
         color: $secondary-color;
     }
     .load-history-action
@@ -45,7 +45,7 @@ $text-color: #FFF;
     .chat-window-input
     {
         background-color: $secondary-color;
-        color: #FFF;
+        color: $text-color;
     }
     .sent-chat-message-container, .file-message-container
     {
@@ -60,5 +60,9 @@ $text-color: #FFF;
     .ng-chat-footer
     {
         background-color: $secondary-color;
+    }
+    .ng-chat-message a 
+    {
+        color: $text-color;
     }
 }
