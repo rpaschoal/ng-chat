@@ -1567,12 +1567,13 @@ describe('NgChat', () => {
         let fakeFileElement = {
             nativeElement:
             {
+                id: `ng-chat-file-upload-${chattingTo.id}`,
                 value: 'test',
                 files: [fakeFile]
             }
         }
 
-        subject.nativeFileInput = fakeFileElement;
+        subject.nativeFileInputs = [fakeFileElement];
         subject.fileUploadAdapter = new MockableFileUploadAdapter();
 
         subject.onFileChosen(chatWindow);
