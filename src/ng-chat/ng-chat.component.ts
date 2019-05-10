@@ -231,7 +231,7 @@ export class NgChat implements OnInit, IChatController {
 
     @ViewChildren('chatWindowInput') chatWindowInputs: any;
 
-    @ViewChild('nativeFileInput') nativeFileInput: ElementRef;
+    @ViewChildren('nativeFileInput') nativeFileInputs: ElementRef[];
 
     ngOnInit() { 
         this.bootstrapChat();
@@ -891,41 +891,61 @@ export class NgChat implements OnInit, IChatController {
         }
     }
 
-    // Triggers native file upload for file selection from the user
-    triggerNativeFileUpload(): void
+    // Generates a unique file uploader id for each participant
+    getUniqueFileUploadInstanceId(window: Window): string
     {
-        this.nativeFileInput.nativeElement.click();
+        if (window && window.participant)
+        {
+            return `ng-chat-file-upload-${window.participant.id}`;
+        }
+        
+        return 'ng-chat-file-upload';
+    }
+
+    // Triggers native file upload for file selection from the user
+    triggerNativeFileUpload(fileUploadInstanceId: string): void
+    {
+        const uploadElementRef = this.nativeFileInputs.filter(x => x.nativeElement.id === fileUploadInstanceId)[0];
+
+        if (uploadElementRef)
+        uploadElementRef.nativeElement.click();
     }
 
     // Handles file selection and uploads the selected file using the file upload adapter
     onFileChosen(window: Window): void {
-        const file: File = this.nativeFileInput.nativeElement.files[0];
+        const fileUploadInstanceId = this.getUniqueFileUploadInstanceId(window);
+        const uploadElementRef = this.nativeFileInputs.filter(x => x.nativeElement.id === fileUploadInstanceId)[0];
 
-        this.isUploadingFile = true;
+        if (uploadElementRef)
+        {
+            const file: File = uploadElementRef.nativeElement.files[0];
 
-        this.fileUploadAdapter.uploadFile(file, window.participant.id)
-            .subscribe(fileMessage => {
-                this.isUploadingFile = false;
+            this.isUploadingFile = true;
 
-                fileMessage.fromId = this.userId;
+            this.fileUploadAdapter.uploadFile(file, window.participant.id)
+                .subscribe(fileMessage => {
+                    this.isUploadingFile = false;
 
-                // Push file message to current user window   
-                window.messages.push(fileMessage);
-    
-                this.adapter.sendMessage(fileMessage);
-    
-                this.scrollChatWindow(window, ScrollDirection.Bottom);
+                    fileMessage.fromId = this.userId;
 
-                // Resets the file upload element
-                this.nativeFileInput.nativeElement.value = '';
-            }, (error) => {
-                this.isUploadingFile = false;
+                    // Push file message to current user window   
+                    window.messages.push(fileMessage);
+        
+                    this.adapter.sendMessage(fileMessage);
+        
+                    this.scrollChatWindow(window, ScrollDirection.Bottom);
 
-                // Resets the file upload element
-                this.nativeFileInput.nativeElement.value = '';
+                    // Resets the file upload element
+                    uploadElementRef.nativeElement.value = '';
+                }, (error) => {
+                    this.isUploadingFile = false;
 
-                // TODO: Invoke a file upload adapter error here
-            });
+                    // Resets the file upload element
+                    uploadElementRef.nativeElement.value = '';
+
+                    // TODO: Invoke a file upload adapter error here
+                });
+        }
     }
     
     onFriendsListCheckboxChange(selectedUser: User, isChecked: boolean): void

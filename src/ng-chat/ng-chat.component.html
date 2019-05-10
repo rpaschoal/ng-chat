@@ -108,10 +108,15 @@
 
                 <!-- File Upload -->
                 <ng-container *ngIf="fileUploadAdapter">
-                    <a *ngIf="!isUploadingFile" class="btn-add-file" (click)="triggerNativeFileUpload()">
+                    <a *ngIf="!isUploadingFile" class="btn-add-file" (click)="triggerNativeFileUpload(getUniqueFileUploadInstanceId(window))">
                         <i class="upload-icon"></i>
                     </a>
-                    <input type="file" #nativeFileInput style="display: none;" (change)="onFileChosen(window)" />
+                    <input 
+                        type="file" 
+                        #nativeFileInput 
+                        style="display: none;" 
+                        [attr.id]="getUniqueFileUploadInstanceId(window)" 
+                        (change)="onFileChosen(window)" />
                     <div *ngIf="isUploadingFile" class="loader"></div>
                 </ng-container>
             </div>
