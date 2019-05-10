@@ -1545,8 +1545,8 @@ describe('NgChat', () => {
         expect(spy).not.toHaveBeenCalled();
     });
 
-    it('Exercise for "onFileChosen" event', () => {
-        let mockedFileMessageServerResponse = new FileMessage();
+    it('Should filter by file instance id and upload file when a file upload "onFileChosen" event is triggered', () => {
+        const mockedFileMessageServerResponse = new FileMessage();
 
         spyOn(MockableFileUploadAdapter.prototype, 'uploadFile').and.callFake(() => {
             // At this stage the 'isUploadingFile' should be true
@@ -1555,16 +1555,16 @@ describe('NgChat', () => {
             return of(mockedFileMessageServerResponse);
         });
         spyOn(MockableAdapter.prototype, 'sendMessage');
-        let scrollSpy = spyOn(subject, 'scrollChatWindow');
+        const scrollSpy = spyOn(subject, 'scrollChatWindow');
 
-        let chattingTo = new User();
+        const chattingTo = new User();
         chattingTo.id = 88;
 
-        let chatWindow = new Window(chattingTo, false, false);
+        const chatWindow = new Window(chattingTo, false, false);
 
-        let fakeFile = new File([''], 'filename', { type: 'text/html' });
+        const fakeFile = new File([''], 'filename', { type: 'text/html' });
 
-        let fakeFileElement = {
+        const fakeFileElement = {
             nativeElement:
             {
                 id: `ng-chat-file-upload-${chattingTo.id}`,
@@ -1573,7 +1573,17 @@ describe('NgChat', () => {
             }
         }
 
-        subject.nativeFileInputs = [fakeFileElement];
+        // Should be filtered and ignored
+        const anotherFakeFileElement = { 
+            nativeElement:
+            {
+                id: `ng-chat-file-upload-${123}`,
+                value: 'test',
+                files: []
+            }
+        }
+
+        subject.nativeFileInputs = [anotherFakeFileElement, fakeFileElement];
         subject.fileUploadAdapter = new MockableFileUploadAdapter();
 
         subject.onFileChosen(chatWindow);
@@ -1586,6 +1596,7 @@ describe('NgChat', () => {
         expect(scrollSpy).toHaveBeenCalledTimes(1);
         expect(scrollSpy.calls.mostRecent().args[1]).toBe(ScrollDirection.Bottom);
         expect(fakeFileElement.nativeElement.value).toBe('');
+        expect(anotherFakeFileElement.nativeElement.value).toBe('test');
         expect(subject.isUploadingFile).toBeFalsy();
     });
 
