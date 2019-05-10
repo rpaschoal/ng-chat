@@ -1548,19 +1548,20 @@ describe('NgChat', () => {
     it('Should filter by file instance id and upload file when a file upload "onFileChosen" event is triggered', () => {
         const mockedFileMessageServerResponse = new FileMessage();
 
-        spyOn(MockableFileUploadAdapter.prototype, 'uploadFile').and.callFake(() => {
-            // At this stage the 'isUploadingFile' should be true
-            expect(subject.isUploadingFile).toBeTruthy();
-
-            return of(mockedFileMessageServerResponse);
-        });
-        spyOn(MockableAdapter.prototype, 'sendMessage');
-        const scrollSpy = spyOn(subject, 'scrollChatWindow');
-
         const chattingTo = new User();
         chattingTo.id = 88;
 
         const chatWindow = new Window(chattingTo, false, false);
+
+        spyOn(MockableFileUploadAdapter.prototype, 'uploadFile').and.callFake(() => {
+            // At this stage the 'isUploadingFile' should be true
+            expect(subject.isUploadingFile(chatWindow)).toBeTruthy();
+
+            return of(mockedFileMessageServerResponse);
+        });
+
+        spyOn(MockableAdapter.prototype, 'sendMessage');
+        const scrollSpy = spyOn(subject, 'scrollChatWindow');
 
         const fakeFile = new File([''], 'filename', { type: 'text/html' });
 
@@ -1597,7 +1598,7 @@ describe('NgChat', () => {
         expect(scrollSpy.calls.mostRecent().args[1]).toBe(ScrollDirection.Bottom);
         expect(fakeFileElement.nativeElement.value).toBe('');
         expect(anotherFakeFileElement.nativeElement.value).toBe('test');
-        expect(subject.isUploadingFile).toBeFalsy();
+        expect(subject.isUploadingFile(chatWindow)).toBeFalsy();
     });
 
     it('Assert message type must default to text when no message type is defined in a message instance', () => {

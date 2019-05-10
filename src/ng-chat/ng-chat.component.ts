@@ -220,7 +220,7 @@ export class NgChat implements OnInit, IChatController {
     public unsupportedViewport: boolean = false;
 
     // File upload state
-    public isUploadingFile = false;
+    public fileUploadersInUse: string[] = []; // Id bucket of uploaders in use
     public fileUploadAdapter: IFileUploadAdapter;
 
     windows: Window[] = [];
@@ -903,12 +903,32 @@ export class NgChat implements OnInit, IChatController {
     }
 
     // Triggers native file upload for file selection from the user
-    triggerNativeFileUpload(fileUploadInstanceId: string): void
+    triggerNativeFileUpload(window: Window): void
     {
-        const uploadElementRef = this.nativeFileInputs.filter(x => x.nativeElement.id === fileUploadInstanceId)[0];
+        if (window)
+        {
+            const fileUploadInstanceId = this.getUniqueFileUploadInstanceId(window);
+            const uploadElementRef = this.nativeFileInputs.filter(x => x.nativeElement.id === fileUploadInstanceId)[0];
 
-        if (uploadElementRef)
-        uploadElementRef.nativeElement.click();
+            if (uploadElementRef)
+            uploadElementRef.nativeElement.click();
+        }
+    }
+
+    private clearInUseFileUploader(fileUploadInstanceId: string): void
+    {
+        const uploaderInstanceIdIndex = this.fileUploadersInUse.indexOf(fileUploadInstanceId);
+
+        if (uploaderInstanceIdIndex > -1) {
+            this.fileUploadersInUse.splice(uploaderInstanceIdIndex, 1);
+        }
+    }
+
+    isUploadingFile(window: Window): boolean
+    {
+        const fileUploadInstanceId = this.getUniqueFileUploadInstanceId(window);
+
+        return this.fileUploadersInUse.indexOf(fileUploadInstanceId) > -1;
     }
 
     // Handles file selection and uploads the selected file using the file upload adapter
@@ -920,11 +940,11 @@ export class NgChat implements OnInit, IChatController {
         {
             const file: File = uploadElementRef.nativeElement.files[0];
 
-            this.isUploadingFile = true;
+            this.fileUploadersInUse.push(fileUploadInstanceId);
 
             this.fileUploadAdapter.uploadFile(file, window.participant.id)
                 .subscribe(fileMessage => {
-                    this.isUploadingFile = false;
+                    this.clearInUseFileUploader(fileUploadInstanceId);
 
                     fileMessage.fromId = this.userId;
 
@@ -938,7 +958,7 @@ export class NgChat implements OnInit, IChatController {
                     // Resets the file upload element
                     uploadElementRef.nativeElement.value = '';
                 }, (error) => {
-                    this.isUploadingFile = false;
+                    this.clearInUseFileUploader(fileUploadInstanceId);
 
                     // Resets the file upload element
                     uploadElementRef.nativeElement.value = '';
