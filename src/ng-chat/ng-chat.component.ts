@@ -218,7 +218,10 @@ export class NgChat implements OnInit, IChatController {
     
     // Set to true if there is no space to display at least one chat window and 'hideFriendsListOnUnsupportedViewport' is true
     public unsupportedViewport: boolean = false;
-
+    
+    // Set to true if you want to show chat components in mobile devices
+    public isViewportOnMobileEnabled: boolean = false;
+    
     // File upload state
     public fileUploadersInUse: string[] = []; // Id bucket of uploaders in use
     public fileUploadAdapter: IFileUploadAdapter;
@@ -256,10 +259,8 @@ export class NgChat implements OnInit, IChatController {
 
         this.updateWindowsState(this.windows);
 
-        // Viewport should have space for at least one chat window.
-        // this.unsupportedViewport = this.hideFriendsListOnUnsupportedViewport && maxSupportedOpenedWindows < 1;
-        // temporarily comment above line for making viewport to be available in mobile devices
-        this.unsupportedViewport = false;
+        // Viewport should have space for at least one chat window but should show in mobile if option is enabled.
+        this.unsupportedViewport = this.isViewportOnMobileEnabled? false : this.hideFriendsListOnUnsupportedViewport && maxSupportedOpenedWindows < 1;
     }
 
     // Initializes the chat plugin and the messaging adapter
@@ -514,12 +515,13 @@ export class NgChat implements OnInit, IChatController {
 
             this.windows.unshift(newChatWindow);
             
-            // Comment this line for now because it is hidden in mobile devices
-            // Is there enough space left in the view port ?
-            // if (this.windows.length * this.windowSizeFactor >= this.viewPortTotalArea - (!this.hideFriendsList ? this.friendsListWidth : 0))
-            // {                
-            //     this.windows.pop();
-            // }
+            // Is there enough space left in the view port ? but should show in mobile if option is enabled
+            if (!this.isViewportOnMobileEnabled) {
+              if (this.windows.length * this.windowSizeFactor >= this.viewPortTotalArea - (!this.hideFriendsList ? this.friendsListWidth : 0))
+              {                
+                  this.windows.pop();
+              }
+            }
             
             this.updateWindowsState(this.windows);
             
