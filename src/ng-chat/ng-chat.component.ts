@@ -257,7 +257,9 @@ export class NgChat implements OnInit, IChatController {
         this.updateWindowsState(this.windows);
 
         // Viewport should have space for at least one chat window.
-        this.unsupportedViewport = this.hideFriendsListOnUnsupportedViewport && maxSupportedOpenedWindows < 1;
+        // this.unsupportedViewport = this.hideFriendsListOnUnsupportedViewport && maxSupportedOpenedWindows < 1;
+        // temporarily comment above line for making viewport to be available in mobile devices
+        this.unsupportedViewport = false;
     }
 
     // Initializes the chat plugin and the messaging adapter
@@ -511,13 +513,14 @@ export class NgChat implements OnInit, IChatController {
             }
 
             this.windows.unshift(newChatWindow);
-
+            
+            // Comment this line for now because it is hidden in mobile devices
             // Is there enough space left in the view port ?
-            if (this.windows.length * this.windowSizeFactor >= this.viewPortTotalArea - (!this.hideFriendsList ? this.friendsListWidth : 0))
-            {                
-                this.windows.pop();
-            }
-
+            // if (this.windows.length * this.windowSizeFactor >= this.viewPortTotalArea - (!this.hideFriendsList ? this.friendsListWidth : 0))
+            // {                
+            //     this.windows.pop();
+            // }
+            
             this.updateWindowsState(this.windows);
             
             if (focusOnNewWindow && !collapseWindow) 

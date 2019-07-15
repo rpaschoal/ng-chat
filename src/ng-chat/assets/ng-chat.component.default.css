@@ -21,11 +21,11 @@
 #ng-chat-people
 {
     position: relative;
-    width: 240px;
-    height:360px;
+    width: 100%;
+    height:300px;
     border-width: 1px;
     border-style: solid;
-    margin-right:20px;
+    margin-right:0;
     box-shadow: 0 4px 8px rgba(0,0,0,.25);
     border-bottom:0;
 }
@@ -216,7 +216,6 @@
     height:360px;
     z-index:999;
     bottom:0;
-    position: fixed;
     width:300px;
     border-width: 1px;
     border-style: solid;
