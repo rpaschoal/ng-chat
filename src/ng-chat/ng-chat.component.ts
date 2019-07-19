@@ -133,7 +133,10 @@ export class NgChat implements OnInit, IChatController {
 
     @Input()
     public showMessageDate: boolean = true;
-
+    
+    @Input()
+    public isViewportOnMobileEnabled: boolean = false;
+     
     @Output()
     public onParticipantClicked: EventEmitter<IChatParticipant> = new EventEmitter<IChatParticipant>();
 
@@ -218,10 +221,7 @@ export class NgChat implements OnInit, IChatController {
     
     // Set to true if there is no space to display at least one chat window and 'hideFriendsListOnUnsupportedViewport' is true
     public unsupportedViewport: boolean = false;
-    
-    // Set to true if you want to show chat components in mobile devices
-    public isViewportOnMobileEnabled: boolean = false;
-    
+
     // File upload state
     public fileUploadersInUse: string[] = []; // Id bucket of uploaders in use
     public fileUploadAdapter: IFileUploadAdapter;
@@ -514,15 +514,14 @@ export class NgChat implements OnInit, IChatController {
             }
 
             this.windows.unshift(newChatWindow);
-            
-            // Is there enough space left in the view port ? but should show in mobile if option is enabled
+
+            // Is there enough space left in the view port ? but should be displayed in mobile if option is enabled
             if (!this.isViewportOnMobileEnabled) {
-              if (this.windows.length * this.windowSizeFactor >= this.viewPortTotalArea - (!this.hideFriendsList ? this.friendsListWidth : 0))
-              {                
-                  this.windows.pop();
-              }
+                if (this.windows.length * this.windowSizeFactor >= this.viewPortTotalArea - (!this.hideFriendsList ? this.friendsListWidth : 0)) {
+                    this.windows.pop();
+                }
             }
-            
+
             this.updateWindowsState(this.windows);
             
             if (focusOnNewWindow && !collapseWindow) 

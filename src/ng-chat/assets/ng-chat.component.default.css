@@ -22,7 +22,7 @@
 {
     position: relative;
     width: 240px;
-    height: 360px;
+    height:360px;
     border-width: 1px;
     border-style: solid;
     margin-right: 20px;
@@ -216,8 +216,8 @@
     height: 360px;
     z-index: 999;
     bottom: 0;
-    position: fixed;
     width: 300px;
+    position: fixed;
     border-width: 1px;
     border-style: solid;
     border-bottom: 0;
@@ -419,15 +419,15 @@
 }
 
 @media only screen and (max-width: 768px) { 
-    #ng-chat-people
-    {
-        width: 100%!important;
-        height: 360px!important;
-        margin-right: 0!important;
-    }
-    
-    .ng-chat-window
-    {
-        position: initial!important;
-    }
-}
+     #ng-chat-people
+     {
+         width: 270px;
+         height: 360px;
+         margin-right: 0;
+     }
+
+      .ng-chat-window
+     {
+         position: initial;
+     }
+ }
