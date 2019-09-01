@@ -419,7 +419,7 @@
 }
 
 /* Mobile viewport only */
-@media only screen and (max-width: 768px) { 
+@media only screen and (max-width: 581px) { 
     #ng-chat-people
     {
         width: 300px;
