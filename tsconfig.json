@@ -1,13 +1,12 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "downlevelIteration": true,
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es2015",
+    "target": "es5",
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -15,13 +14,13 @@
       "es2017",
       "dom"
     ],
-    "module": "esnext",
+    "module": "es2015",
     "baseUrl": "./"
   },
   "include": [
-    "**/*.spec.ts",
     "demo/offline_bot/src/**/*",
-    "demo/offline_bot/node_modules/ng-chat/**/*"
+    "demo/offline_bot/node_modules/ng-chat/**/*",
+    "src/spec/**/*"
   ],
   "files": [
     "test.ts"

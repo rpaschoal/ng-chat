@@ -12,28 +12,28 @@
   },
   "private": true,
   "dependencies": {
-    "@angular-devkit/build-angular": "^0.803.2",
-    "@angular/animations": "^8.2.4",
-    "@angular/common": "^8.2.4",
-    "@angular/compiler": "^8.2.4",
-    "@angular/core": "^8.2.4",
-    "@angular/forms": "^8.2.4",
-    "@angular/platform-browser": "^8.2.4",
-    "@angular/platform-browser-dynamic": "^8.2.4",
-    "@angular/router": "^8.2.4",
+    "@angular/animations": "^7.0.3",
+    "@angular/common": "^7.0.3",
+    "@angular/compiler": "^7.0.3",
+    "@angular/core": "^7.0.3",
+    "@angular/forms": "^7.0.3",
+    "@angular/http": "^7.0.3",
+    "@angular/platform-browser": "^7.0.3",
+    "@angular/platform-browser-dynamic": "^7.0.3",
+    "@angular/router": "^7.0.3",
     "core-js": "^2.5.7",
-    "ng-chat": "^2.0.4",
     "rxjs": "^6.5.2",
-    "zone.js": "~0.9.1"
+    "zone.js": "^0.8.26",
+    "ng-chat": "^2.0.4"
   },
   "devDependencies": {
-    "@angular/cli": "^8.3.2",
-    "@angular/compiler-cli": "^8.2.4",
-    "@angular/language-service": "^8.2.4",
+    "@angular/cli": "^7.0.4",
+    "@angular/compiler-cli": "^7.0.3",
+    "@angular/language-service": "^7.0.3",
     "@types/jasmine": "~2.8.11",
     "@types/jasminewd2": "~2.0.6",
     "@types/node": "~10.12.3",
-    "codelyzer": "^5.0.1",
+    "codelyzer": "~4.5.0",
     "jasmine-core": "~3.3.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~3.1.1",
@@ -45,6 +45,6 @@
     "protractor": "~5.4.1",
     "ts-node": "~7.0.1",
     "tslint": "~5.11.0",
-    "typescript": "~3.5.3"
+    "typescript": "~3.6.2"
   }
 }
