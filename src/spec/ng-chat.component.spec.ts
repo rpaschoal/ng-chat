@@ -97,7 +97,11 @@ describe('NgChat', () => {
     it('Persistent windows state must be enabled by default', () => {
         expect(subject.persistWindowsState).toBeTruthy();
     });
-
+    
+    it('Is viewport mobile case state must be disabled by default', () => {
+        expect(subject.isViewportOnMobileEnabled).toBeFalsy();
+    });
+    
     it('isCollapsed must be disabled by default', () => {
         expect(subject.isCollapsed).toBeFalsy();
     });

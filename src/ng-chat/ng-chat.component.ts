@@ -133,7 +133,10 @@ export class NgChat implements OnInit, IChatController {
 
     @Input()
     public showMessageDate: boolean = true;
-
+    
+    @Input()
+    public isViewportOnMobileEnabled: boolean = false;
+     
     @Output()
     public onParticipantClicked: EventEmitter<IChatParticipant> = new EventEmitter<IChatParticipant>();
 
@@ -256,8 +259,8 @@ export class NgChat implements OnInit, IChatController {
 
         this.updateWindowsState(this.windows);
 
-        // Viewport should have space for at least one chat window.
-        this.unsupportedViewport = this.hideFriendsListOnUnsupportedViewport && maxSupportedOpenedWindows < 1;
+        // Viewport should have space for at least one chat window but should show in mobile if option is enabled.
+        this.unsupportedViewport = this.isViewportOnMobileEnabled? false : this.hideFriendsListOnUnsupportedViewport && maxSupportedOpenedWindows < 1;
     }
 
     // Initializes the chat plugin and the messaging adapter
@@ -512,10 +515,11 @@ export class NgChat implements OnInit, IChatController {
 
             this.windows.unshift(newChatWindow);
 
-            // Is there enough space left in the view port ?
-            if (this.windows.length * this.windowSizeFactor >= this.viewPortTotalArea - (!this.hideFriendsList ? this.friendsListWidth : 0))
-            {                
-                this.windows.pop();
+            // Is there enough space left in the view port ? but should be displayed in mobile if option is enabled
+            if (!this.isViewportOnMobileEnabled) {
+                if (this.windows.length * this.windowSizeFactor >= this.viewPortTotalArea - (!this.hideFriendsList ? this.friendsListWidth : 0)) {
+                    this.windows.pop();
+                }
             }
 
             this.updateWindowsState(this.windows);
