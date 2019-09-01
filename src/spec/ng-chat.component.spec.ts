@@ -51,7 +51,7 @@ let subject: any = null;
 
 describe('NgChat', () => {
     beforeEach(() => {
-        subject = new NgChat(null, null); // HttpClient related methods are tested elsewhere
+        subject = new NgChat(null); // HttpClient related methods are tested elsewhere
         subject.userId = 123;
         subject.adapter = new MockableAdapter();
         subject.groupAdapter = new MockableGroupAdapter();
