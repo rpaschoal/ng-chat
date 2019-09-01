@@ -1,6 +1,5 @@
 import { Component, Input, OnInit, ViewChildren, ViewChild, HostListener, Output, EventEmitter, ElementRef, ViewEncapsulation } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { DomSanitizer } from '@angular/platform-browser';
 
 import { ChatAdapter } from './core/chat-adapter';
 import { IChatGroupAdapter } from './core/chat-group-adapter';
@@ -40,7 +39,7 @@ import { Observable } from 'rxjs';
 })
 
 export class NgChat implements OnInit, IChatController {
-    constructor(public sanitizer: DomSanitizer, private _httpClient: HttpClient) { }
+    constructor(private _httpClient: HttpClient) { }
 
     // Exposes enums for the ng-template
     public ChatParticipantType = ChatParticipantType;
