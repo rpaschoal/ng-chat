@@ -418,16 +418,17 @@
     margin-right: 5px;
 }
 
+/* Mobile viewport only */
 @media only screen and (max-width: 768px) { 
-     #ng-chat-people
-     {
-         width: 300px;
-         height: 360px;
-         margin-right: 0;
-     }
+    #ng-chat-people
+    {
+        width: 300px;
+        height: 360px;
+        margin-right: 0;
+    }
 
-     .ng-chat-window
-     {
-         position: initial;
-     }
- }
+    .ng-chat-window
+    {
+        position: initial;
+    }
+}
