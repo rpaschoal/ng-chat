@@ -317,6 +317,8 @@ export class NgChat implements OnInit, IChatController {
                     this.fileUploadAdapter = new DefaultFileUploadAdapter(this.fileUploadUrl, this._httpClient);
                 }
 
+                this.NormalizeWindows();
+
                 this.isBootstrapped = true;
             }
             catch(ex)
