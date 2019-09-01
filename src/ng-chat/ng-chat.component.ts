@@ -55,7 +55,6 @@ export class NgChat implements OnInit, IChatController {
       
     @Input()
     set isDisabled(value: boolean) {
-        console.log('called')
         this._isDisabled = value;
 
         if (value)
