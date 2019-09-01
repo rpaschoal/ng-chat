@@ -47,6 +47,28 @@ export class NgChat implements OnInit, IChatController {
     public ChatParticipantStatus = ChatParticipantStatus;
     public MessageType = MessageType;
 
+    private _isDisabled: boolean = false;
+
+    get isDisabled(): boolean {
+        return this._isDisabled;
+    }
+      
+    @Input()
+    set isDisabled(value: boolean) {
+        console.log('called')
+        this._isDisabled = value;
+
+        if (value)
+        {
+            // To address issue https://github.com/rpaschoal/ng-chat/issues/120
+            window.clearInterval(this.pollingIntervalWindowInstance)
+        }
+        else
+        {
+            this.activateFriendListFetch();
+        }
+    }
+
     @Input()
     public adapter: ChatAdapter;
 
@@ -175,6 +197,8 @@ export class NgChat implements OnInit, IChatController {
 
     protected selectedUsersFromFriendsList: User[] = [];
 
+    private pollingIntervalWindowInstance: number;
+
     public defaultWindowOptions(currentWindow: Window): IChatOption[]
     {
         if (this.groupAdapter && currentWindow.participant.participantType == ChatParticipantType.User)
@@ -282,17 +306,7 @@ export class NgChat implements OnInit, IChatController {
                 this.adapter.messageReceivedHandler = (participant, msg) => this.onMessageReceived(participant, msg);
                 this.adapter.friendsListChangedHandler = (participantsResponse) => this.onFriendsListChanged(participantsResponse);
 
-                // Loading current users list
-                if (this.pollFriendsList){
-                    // Setting a long poll interval to update the friends list
-                    this.fetchFriendsList(true);
-                    setInterval(() => this.fetchFriendsList(false), this.pollingInterval);
-                }
-                else
-                {
-                    // Since polling was disabled, a friends list update mechanism will have to be implemented in the ChatAdapter.
-                    this.fetchFriendsList(true);
-                }
+                this.activateFriendListFetch();
                 
                 this.bufferAudioFile();
 
@@ -324,6 +338,23 @@ export class NgChat implements OnInit, IChatController {
             {
                 console.error(`An exception has occurred while initializing ng-chat. Details: ${initializationException.message}`);
                 console.error(initializationException);
+            }
+        }
+    }
+
+    private activateFriendListFetch(): void {
+        if (this.adapter)
+        {
+            // Loading current users list
+            if (this.pollFriendsList){
+                // Setting a long poll interval to update the friends list
+                this.fetchFriendsList(true);
+                this.pollingIntervalWindowInstance = window.setInterval(() => this.fetchFriendsList(false), this.pollingInterval);
+            }
+            else
+            {
+                // Since polling was disabled, a friends list update mechanism will have to be implemented in the ChatAdapter.
+                this.fetchFriendsList(true);
             }
         }
     }
