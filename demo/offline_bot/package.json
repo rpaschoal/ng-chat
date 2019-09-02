@@ -22,7 +22,7 @@
     "@angular/platform-browser-dynamic": "^7.0.3",
     "@angular/router": "^7.0.3",
     "core-js": "^2.5.7",
-    "ng-chat": "^2.0.4",
+    "ng-chat": "^2.0.5",
     "rxjs": "^6.5.2",
     "zone.js": "^0.8.26"
   },

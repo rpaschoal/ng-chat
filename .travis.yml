@@ -12,7 +12,7 @@ before_script:
   - npm install
   - cd src
   - npm link
-  - npm install -g @angular-cli
+  - npm install -g @angular/cli
   - npm install -g karma
   - npm install
 script:

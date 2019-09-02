@@ -1,6 +1,6 @@
 {
   "name": "ng-chat",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "peerDependencies": {
     "@angular/common": "*",
     "@angular/core": "*",
