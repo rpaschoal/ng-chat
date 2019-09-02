@@ -29,7 +29,7 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome', 'ChromeCanary'],
+    browsers: ['Chrome'],
     customLaunchers: {
         Chrome_travis_ci: {
             base: 'Chrome',
@@ -40,6 +40,10 @@ module.exports = function (config) {
     mime: { 'text/x-typescript': ['ts','tsx'] },
     client: { captureConsole: true }
   };
+
+  if(process.env.TRAVIS){
+    configuration.browsers = ['Chrome_travis_ci'];
+  }
 
   config.set(configuration);
 };
