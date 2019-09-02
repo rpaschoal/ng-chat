@@ -1,6 +1,6 @@
-<link *ngIf="customTheme" rel="stylesheet" [href]='sanitizer.bypassSecurityTrustResourceUrl(customTheme)'>
+<link *ngIf="customTheme" rel="stylesheet" [href]='customTheme | sanitize'>
 
-<div id="ng-chat" *ngIf="isBootstrapped && !unsupportedViewport" [ngClass]="theme">
+<div id="ng-chat" *ngIf="!isDisabled && isBootstrapped && !unsupportedViewport" [ngClass]="theme">
     <div *ngIf="!hideFriendsList" id="ng-chat-people" [ngClass]="{'primary-outline-color': true, 'primary-background': true, 'ng-chat-people-collapsed': isCollapsed}">
         <a href="javascript:void(0);" class="ng-chat-title secondary-background shadowed" (click)="onChatTitleClicked($event)">
             <span>
@@ -28,7 +28,7 @@
                     <div *ngIf="!user.avatar" class="icon-wrapper">
                         <i class="user-icon"></i>
                     </div>
-                    <img *ngIf="user.avatar" alt="" class="avatar" height="30" width="30"  [src]="sanitizer.bypassSecurityTrustResourceUrl(user.avatar)"/>
+                    <img *ngIf="user.avatar" alt="" class="avatar" height="30" width="30"  [src]="user.avatar | sanitize"/>
                     <strong title="{{user.displayName}}">{{user.displayName}}</strong>
                     <span [ngClass]="{'ng-chat-participant-status': true, 'online': user.status == ChatParticipantStatus.Online, 'busy': user.status == ChatParticipantStatus.Busy, 'away': user.status == ChatParticipantStatus.Away, 'offline': user.status == ChatParticipantStatus.Offline}" title="{{getStatusTitle(user.status)}}"></span>
                     <span *ngIf="unreadMessagesTotalByParticipant(user).length > 0" class="ng-chat-unread-messages-count unread-messages-counter-container primary-text">{{unreadMessagesTotalByParticipant(user)}}</span>
@@ -74,7 +74,7 @@
                         <div *ngIf="!getChatWindowAvatar(window.participant, message)" class="icon-wrapper">
                             <i class="user-icon"></i>
                         </div>
-                        <img *ngIf="getChatWindowAvatar(window.participant, message)" alt="" class="avatar" height="30" width="30" [src]="sanitizer.bypassSecurityTrustResourceUrl(getChatWindowAvatar(window.participant, message))" />
+                        <img *ngIf="getChatWindowAvatar(window.participant, message)" alt="" class="avatar" height="30" width="30" [src]="getChatWindowAvatar(window.participant, message) | sanitize" />
                         <span *ngIf="window.participant.participantType == ChatParticipantType.Group" class="ng-chat-participant-name">{{window.participant | groupMessageDisplayName:message}}</span>
                     </ng-container>
                     <ng-container [ngSwitch]="message.type">

@@ -51,7 +51,7 @@ let subject: any = null;
 
 describe('NgChat', () => {
     beforeEach(() => {
-        subject = new NgChat(null, null); // HttpClient related methods are tested elsewhere
+        subject = new NgChat(null); // HttpClient related methods are tested elsewhere
         subject.userId = 123;
         subject.adapter = new MockableAdapter();
         subject.groupAdapter = new MockableGroupAdapter();
@@ -97,7 +97,11 @@ describe('NgChat', () => {
     it('Persistent windows state must be enabled by default', () => {
         expect(subject.persistWindowsState).toBeTruthy();
     });
-
+    
+    it('Is viewport mobile case state must be disabled by default', () => {
+        expect(subject.isViewportOnMobileEnabled).toBeFalsy();
+    });
+    
     it('isCollapsed must be disabled by default', () => {
         expect(subject.isCollapsed).toBeFalsy();
     });

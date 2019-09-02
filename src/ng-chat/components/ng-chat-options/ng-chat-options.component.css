@@ -38,3 +38,9 @@
     display: block;
 }
 
+/* Mobile viewport only */
+@media only screen and (max-width: 581px) { 
+    .ng-chat-options-content {
+        right: 0;
+    }
+}

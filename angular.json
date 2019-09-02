@@ -68,7 +68,7 @@
             "assets": [
               "demo/offline_bot/src/assets"
             ],
-            "tsConfig": "demo/offline_bot/src/../../../tsconfig.json",
+            "tsConfig": "demo/offline_bot/src/../../../tsconfig.json"
           }
         },
         "lint": {

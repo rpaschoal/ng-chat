@@ -1,6 +1,5 @@
 import { Component, Input, OnInit, ViewChildren, ViewChild, HostListener, Output, EventEmitter, ElementRef, ViewEncapsulation } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { DomSanitizer } from '@angular/platform-browser';
 
 import { ChatAdapter } from './core/chat-adapter';
 import { IChatGroupAdapter } from './core/chat-group-adapter';
@@ -40,12 +39,33 @@ import { Observable } from 'rxjs';
 })
 
 export class NgChat implements OnInit, IChatController {
-    constructor(public sanitizer: DomSanitizer, private _httpClient: HttpClient) { }
+    constructor(private _httpClient: HttpClient) { }
 
     // Exposes enums for the ng-template
     public ChatParticipantType = ChatParticipantType;
     public ChatParticipantStatus = ChatParticipantStatus;
     public MessageType = MessageType;
+
+    private _isDisabled: boolean = false;
+
+    get isDisabled(): boolean {
+        return this._isDisabled;
+    }
+      
+    @Input()
+    set isDisabled(value: boolean) {
+        this._isDisabled = value;
+
+        if (value)
+        {
+            // To address issue https://github.com/rpaschoal/ng-chat/issues/120
+            window.clearInterval(this.pollingIntervalWindowInstance)
+        }
+        else
+        {
+            this.activateFriendListFetch();
+        }
+    }
 
     @Input()
     public adapter: ChatAdapter;
@@ -133,7 +153,10 @@ export class NgChat implements OnInit, IChatController {
 
     @Input()
     public showMessageDate: boolean = true;
-
+    
+    @Input()
+    public isViewportOnMobileEnabled: boolean = false;
+     
     @Output()
     public onParticipantClicked: EventEmitter<IChatParticipant> = new EventEmitter<IChatParticipant>();
 
@@ -171,6 +194,8 @@ export class NgChat implements OnInit, IChatController {
     public currentActiveOption: IChatOption | null;
 
     protected selectedUsersFromFriendsList: User[] = [];
+
+    private pollingIntervalWindowInstance: number;
 
     public defaultWindowOptions(currentWindow: Window): IChatOption[]
     {
@@ -256,8 +281,8 @@ export class NgChat implements OnInit, IChatController {
 
         this.updateWindowsState(this.windows);
 
-        // Viewport should have space for at least one chat window.
-        this.unsupportedViewport = this.hideFriendsListOnUnsupportedViewport && maxSupportedOpenedWindows < 1;
+        // Viewport should have space for at least one chat window but should show in mobile if option is enabled.
+        this.unsupportedViewport = this.isViewportOnMobileEnabled? false : this.hideFriendsListOnUnsupportedViewport && maxSupportedOpenedWindows < 1;
     }
 
     // Initializes the chat plugin and the messaging adapter
@@ -279,17 +304,7 @@ export class NgChat implements OnInit, IChatController {
                 this.adapter.messageReceivedHandler = (participant, msg) => this.onMessageReceived(participant, msg);
                 this.adapter.friendsListChangedHandler = (participantsResponse) => this.onFriendsListChanged(participantsResponse);
 
-                // Loading current users list
-                if (this.pollFriendsList){
-                    // Setting a long poll interval to update the friends list
-                    this.fetchFriendsList(true);
-                    setInterval(() => this.fetchFriendsList(false), this.pollingInterval);
-                }
-                else
-                {
-                    // Since polling was disabled, a friends list update mechanism will have to be implemented in the ChatAdapter.
-                    this.fetchFriendsList(true);
-                }
+                this.activateFriendListFetch();
                 
                 this.bufferAudioFile();
 
@@ -299,6 +314,8 @@ export class NgChat implements OnInit, IChatController {
                 {
                     this.fileUploadAdapter = new DefaultFileUploadAdapter(this.fileUploadUrl, this._httpClient);
                 }
+
+                this.NormalizeWindows();
 
                 this.isBootstrapped = true;
             }
@@ -321,6 +338,23 @@ export class NgChat implements OnInit, IChatController {
             {
                 console.error(`An exception has occurred while initializing ng-chat. Details: ${initializationException.message}`);
                 console.error(initializationException);
+            }
+        }
+    }
+
+    private activateFriendListFetch(): void {
+        if (this.adapter)
+        {
+            // Loading current users list
+            if (this.pollFriendsList){
+                // Setting a long poll interval to update the friends list
+                this.fetchFriendsList(true);
+                this.pollingIntervalWindowInstance = window.setInterval(() => this.fetchFriendsList(false), this.pollingInterval);
+            }
+            else
+            {
+                // Since polling was disabled, a friends list update mechanism will have to be implemented in the ChatAdapter.
+                this.fetchFriendsList(true);
             }
         }
     }
@@ -512,10 +546,11 @@ export class NgChat implements OnInit, IChatController {
 
             this.windows.unshift(newChatWindow);
 
-            // Is there enough space left in the view port ?
-            if (this.windows.length * this.windowSizeFactor >= this.viewPortTotalArea - (!this.hideFriendsList ? this.friendsListWidth : 0))
-            {                
-                this.windows.pop();
+            // Is there enough space left in the view port ? but should be displayed in mobile if option is enabled
+            if (!this.isViewportOnMobileEnabled) {
+                if (this.windows.length * this.windowSizeFactor >= this.viewPortTotalArea - (!this.hideFriendsList ? this.friendsListWidth : 0)) {
+                    this.windows.pop();
+                }
             }
 
             this.updateWindowsState(this.windows);

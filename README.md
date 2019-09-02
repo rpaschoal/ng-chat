@@ -74,6 +74,7 @@ __Required Settings__
 
 __Additional Settings__
 * [title]{string}: The title to be displayed on the friends list. Default is "Friends".
+* [isDisabled]{boolean}: Indicates if ng-chat should be hidden. This stops poll requests to the friends list. Default is false.
 * [isCollapsed]{boolean}: If set to true the friends list will be rendered as collapsed by default. Default is false.
 * [pollFriendsList]{boolean}: If set to true the module will do a long poll on the "adapter.listFriends" method to keep the friends list updated. Default is false.
 * [pollingInterval]{number}: Configures the long poll interval in milliseconds. Default is 5000.
@@ -96,6 +97,7 @@ __Additional Settings__
 * [showMessageDate]{boolean}: Shows the date in which a message was sent. Default is true.
 * [messageDatePipeFormat]{string}: The format for the pipe that is used when rendering the date in which a message was sent. Default is "short".
 * [groupAdapter]{IChatGroupAdapter}: A group adapter implementation to enable group chat.
+* [isViewportOnMobileEnabled]{boolean}: Allow ng-chat to render and be displayed on mobile devices. Default is false.
 
 __Localization__
 * [messagePlaceholder]{string}: The placeholder that is displayed in the text input on each chat window. Default is "Type a message".

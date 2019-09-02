@@ -25,7 +25,7 @@
     height:360px;
     border-width: 1px;
     border-style: solid;
-    margin-right:20px;
+    margin-right: 20px;
     box-shadow: 0 4px 8px rgba(0,0,0,.25);
     border-bottom:0;
 }
@@ -212,15 +212,15 @@
 }
 .ng-chat-window
 {
-    right:260px;
-    height:360px;
-    z-index:999;
-    bottom:0;
+    right: 260px;
+    height: 360px;
+    z-index: 999;
+    bottom: 0;
+    width: 300px;
     position: fixed;
-    width:300px;
     border-width: 1px;
     border-style: solid;
-    border-bottom:0;
+    border-bottom: 0;
     box-shadow: 0 4px 8px rgba(0,0,0,.25);
 }
 .ng-chat-window-collapsed
@@ -416,4 +416,19 @@
 {
     float: right;
     margin-right: 5px;
+}
+
+/* Mobile viewport only */
+@media only screen and (max-width: 581px) { 
+    #ng-chat-people
+    {
+        width: 300px;
+        height: 360px;
+        margin-right: 0;
+    }
+
+    .ng-chat-window
+    {
+        position: initial;
+    }
 }
