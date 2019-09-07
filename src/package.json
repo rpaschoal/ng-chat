@@ -48,5 +48,6 @@
     "lib": {
       "entryFile": "index.ts"
     }
-  }
+  },
+  "dependencies": {}
 }
