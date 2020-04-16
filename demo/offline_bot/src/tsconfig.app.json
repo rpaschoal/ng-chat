@@ -10,6 +10,8 @@
     "polyfills.ts"
   ],
   "include": [
-    "src/**/*.d.ts"
+    "src/**/*.d.ts",
+    "../node_modules/ng-chat/*.ts",
+    "../node_modules/ng-chat/ng-chat/**/*.ts"
   ]
 }
