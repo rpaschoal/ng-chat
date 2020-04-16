@@ -14,15 +14,15 @@
     "@angular/core": "^9.1.2",
     "@angular/forms": "^9.1.2",
     "@angular/platform-browser": "^9.1.2",
-    "gulp": "~4.0.0",
+    "gulp": "~4.0.2",
     "gulp-inline-ng2-template": "^5.0.1",
-    "ng-packagr": "^4.4.0",
-    "rollup": "^0.67.0",
-    "rxjs": "^6.5.2",
-    "tsickle": "^0.33.1",
-    "typescript": "3.4.5",
-    "uglify-js": "^3.4.9",
-    "zone.js": "^0.8.26"
+    "ng-packagr": "^9.1.1",
+    "rollup": "^2.6.1",
+    "rxjs": "^6.5.5",
+    "tsickle": "^0.38.1",
+    "typescript": "~3.8.3",
+    "uglify-js": "^3.9.1",
+    "zone.js": "^0.10.3"
   },
   "scripts": {
     "templates": "gulp inline-templates",
