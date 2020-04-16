@@ -959,8 +959,7 @@ describe('NgChat', () => {
     it('Must bootstrap browser notifications when user permission is granted', async () => {
         subject.browserNotificationsBootstrapped = false;
 
-        // @ts-ignore
-        spyOn(Notification, 'requestPermission').and.returnValue(true);
+        spyOn(Notification, 'requestPermission').and.returnValue(Promise.resolve("granted"));
 
         await subject.initializeBrowserNotifications();
 
@@ -971,8 +970,7 @@ describe('NgChat', () => {
     it('Must not bootstrap browser notifications when user permission is not granted', async () => {
         subject.browserNotificationsBootstrapped = false;
 
-        // @ts-ignore
-        spyOn(Notification, 'requestPermission').and.returnValue(false);
+        spyOn(Notification, 'requestPermission').and.returnValue(Promise.resolve("denied"));
 
         await subject.initializeBrowserNotifications();
 
