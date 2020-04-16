@@ -1,29 +1,23 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "downlevelIteration": true,
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
+    "downlevelIteration": true,
     "experimentalDecorators": true,
-    "target": "es2015",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "es2017",
-      "dom"
-    ],
     "module": "esnext",
-    "baseUrl": "./"
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2015",
+    "lib": [
+      "es2018",
+      "dom"
+    ]
   },
-  "include": [
-    "demo/offline_bot/src/**/*",
-    "demo/offline_bot/node_modules/ng-chat/**/*",
-    "src/spec/**/*"
-  ],
-  "files": [
-    "test.ts"
-  ]
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
+  }
 }
