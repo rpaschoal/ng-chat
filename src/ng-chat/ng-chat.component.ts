@@ -364,7 +364,7 @@ export class NgChat implements OnInit, IChatController {
     {
         if (this.browserNotificationsEnabled && ("Notification" in window))
         {
-            if (await Notification.requestPermission())
+            if (await Notification.requestPermission() === "granted")
             {
                 this.browserNotificationsBootstrapped = true;
             }

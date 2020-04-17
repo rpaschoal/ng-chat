@@ -893,7 +893,9 @@ describe('NgChat', () => {
         spyOn(fakeChatInputs[1].nativeElement, 'focus');
         spyOn(subject.chatWindowInputs, 'toArray').and.returnValue(fakeChatInputs);
 
+        // @ts-ignore
         spyOn(window, 'setTimeout').and.callFake((fn) => {
+            // @ts-ignore
             fn();
         });
 
@@ -956,7 +958,8 @@ describe('NgChat', () => {
 
     it('Must bootstrap browser notifications when user permission is granted', async () => {
         subject.browserNotificationsBootstrapped = false;
-        spyOn(Notification, 'requestPermission').and.returnValue(true);
+
+        spyOn(Notification, 'requestPermission').and.returnValue(Promise.resolve("granted"));
 
         await subject.initializeBrowserNotifications();
 
@@ -966,7 +969,8 @@ describe('NgChat', () => {
 
     it('Must not bootstrap browser notifications when user permission is not granted', async () => {
         subject.browserNotificationsBootstrapped = false;
-        spyOn(Notification, 'requestPermission').and.returnValue(false);
+
+        spyOn(Notification, 'requestPermission').and.returnValue(Promise.resolve("denied"));
 
         await subject.initializeBrowserNotifications();
 
@@ -1173,7 +1177,6 @@ describe('NgChat', () => {
 
         spyOn(subject, 'updateWindowsState');
         spyOn(subject, 'focusOnWindow');
-        spyOn(subject, 'onParticipantChatOpened');
 
         subject.openChatWindow(newUser, false, true);
 
@@ -1220,7 +1223,6 @@ describe('NgChat', () => {
 
         spyOn(subject, 'updateWindowsState');
         spyOn(subject, 'focusOnWindow');
-        spyOn(subject, 'onParticipantChatOpened');
 
         subject.openChatWindow(newUser, false, true);
 
