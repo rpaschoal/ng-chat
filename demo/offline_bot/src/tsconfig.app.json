@@ -3,11 +3,15 @@
   "compilerOptions": {
     "outDir": "../out-tsc/app",
     "baseUrl": "./",
-    "module": "es2015",
     "types": []
   },
-  "exclude": [
-    "test.ts",
-    "**/*.spec.ts"
+  "files": [
+    "main.ts",
+    "polyfills.ts"
+  ],
+  "include": [
+    "src/**/*.d.ts",
+    "../node_modules/ng-chat/*.ts",
+    "../node_modules/ng-chat/ng-chat/**/*.ts"
   ]
 }
