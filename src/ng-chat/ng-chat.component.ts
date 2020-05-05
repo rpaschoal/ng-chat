@@ -219,17 +219,7 @@ export class NgChat implements OnInit, IChatController {
     private get localStorageKey(): string 
     {
         return `ng-chat-users-${this.userId}`; // Appending the user id so the state is unique per user in a computer.   
-    }; 
-
-    get filteredParticipants(): IChatParticipant[]
-    {
-        if (this.searchInput.length > 0){
-            // Searches in the friend list by the inputted search string
-            return this.participants.filter(x => x.displayName.toUpperCase().includes(this.searchInput.toUpperCase()));
-        }
-
-        return this.participants;
-    }
+    };
 
     // Defines the size of each opened window to calculate how many windows can be opened on the viewport at the same time.
     public windowSizeFactor: number = 320;
@@ -741,25 +731,6 @@ export class NgChat implements OnInit, IChatController {
         return this.formatUnreadMessagesTotal(totalUnreadMessages);
     }
 
-    unreadMessagesTotalByParticipant(participant: IChatParticipant): string
-    {
-        let openedWindow = this.windows.find(x => x.participant.id == participant.id);
-
-        if (openedWindow){
-            return this.unreadMessagesTotal(openedWindow);
-        }
-        else
-        {
-            let totalUnreadMessages = this.participantsResponse
-                .filter(x => x.participant.id == participant.id && !this.participantsInteractedWith.find(u => u.id == participant.id) && x.metadata && x.metadata.totalUnreadMessages > 0)
-                .map((participantResponse) => {
-                    return participantResponse.metadata.totalUnreadMessages
-                })[0];
-
-            return this.formatUnreadMessagesTotal(totalUnreadMessages);
-        }
-    }
-
     /*  Monitors pressed keys on a chat window
         - Dispatches a message when the ENTER key is pressed
         - Tabs between windows on TAB or SHIFT + TAB
@@ -827,12 +798,6 @@ export class NgChat implements OnInit, IChatController {
         this.updateWindowsState(this.windows);
 
         this.onParticipantChatClosed.emit(window.participant);
-    }
-
-    // Toggle friends list visibility
-    onChatTitleClicked(event: any): void
-    {
-        this.isCollapsed = !this.isCollapsed;
     }
 
     // Toggles a chat window visibility between maximized/minimized
@@ -1000,46 +965,5 @@ export class NgChat implements OnInit, IChatController {
                     // TODO: Invoke a file upload adapter error here
                 });
         }
-    }
-    
-    onFriendsListCheckboxChange(selectedUser: User, isChecked: boolean): void
-    {
-        if(isChecked) {
-            this.selectedUsersFromFriendsList.push(selectedUser);
-        } 
-        else 
-        {
-            this.selectedUsersFromFriendsList.splice(this.selectedUsersFromFriendsList.indexOf(selectedUser), 1);
-        }
-    }
-
-    onFriendsListActionCancelClicked(): void
-    {
-        if (this.currentActiveOption)
-        {
-            this.currentActiveOption.isActive = false;
-            this.currentActiveOption = null;
-            this.selectedUsersFromFriendsList = [];
-        }
-    }
-
-    onFriendsListActionConfirmClicked() : void
-    {
-        let newGroup = new Group(this.selectedUsersFromFriendsList);
-
-        this.openChatWindow(newGroup);
-
-        if (this.groupAdapter)
-        {
-            this.groupAdapter.groupCreated(newGroup);
-        }
-
-        // Canceling current state
-        this.onFriendsListActionCancelClicked();
-    }
-
-    isUserSelectedFromFriendsList(user: User) : boolean
-    {
-        return (this.selectedUsersFromFriendsList.filter(item => item.id == user.id)).length > 0
     }
 }

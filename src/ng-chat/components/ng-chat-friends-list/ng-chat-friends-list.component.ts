@@ -72,7 +72,7 @@ export class NgChatFriendsList implements OnInit {
     public searchInput: string = '';
 
     ngOnInit() {
-        this.restoreWindowsState();
+        //this.restoreWindowsState();
     }
 
     // Exposes enums for the ng-template
@@ -88,7 +88,13 @@ export class NgChatFriendsList implements OnInit {
         return this.participants;
     }
 
+    isUserSelectedFromFriendsList(user: User) : boolean
+    {
+        return (this.selectedUsersFromFriendsList.filter(item => item.id == user.id)).length > 0
+    }
+
     // [Localized] Returns the status descriptive title
+    // TODO: this is duplicated, find a way to reuse it
     getStatusTitle(status: ChatParticipantStatus) : any
     {
         let currentStatus = status.toString().toLowerCase();
@@ -96,42 +102,7 @@ export class NgChatFriendsList implements OnInit {
         return this.localization.statusDescription[currentStatus];
     }
 
-    private get localStorageKey(): string 
-    {
-        return `ng-chat-users-${this.userId}`; // Appending the user id so the state is unique per user in a computer.   
-    };
-
-    private restoreWindowsState(): void
-    {
-        try
-        {
-            if (this.persistWindowsState)
-            {
-                let stringfiedParticipantIds = localStorage.getItem(this.localStorageKey);
-
-                if (stringfiedParticipantIds && stringfiedParticipantIds.length > 0)
-                {
-                    let participantIds = <number[]>JSON.parse(stringfiedParticipantIds);
-
-                    let participantsToRestore = this.participants.filter(u => participantIds.indexOf(u.id) >= 0);
-
-                    participantsToRestore.forEach((participant) => {
-                        this.onParticipantOpen.emit({participant, shouldFocus: false ,invokedByUserClick: false});
-                    });
-                }
-            }
-        }
-        catch (ex)
-        {
-            console.error(`An error occurred while restoring ng-chat windows state. Details: ${ex}`);
-        }
-    }
-
-    isUserSelectedFromFriendsList(user: User) : boolean
-    {
-        return (this.selectedUsersFromFriendsList.filter(item => item.id == user.id)).length > 0
-    }
-
+    // TODO: this is duplicated, find a way to reuse it
     private formatUnreadMessagesTotal(totalUnreadMessages: number): string
     {
         if (totalUnreadMessages > 0){
@@ -146,6 +117,7 @@ export class NgChatFriendsList implements OnInit {
         return "";
     }
 
+    // TODO: this is duplicated, find a way to reuse it
     // Returns the total unread messages from a chat window. TODO: Could use some Angular pipes in the future 
     unreadMessagesTotal(window: Window): string
     {
