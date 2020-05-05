@@ -193,8 +193,6 @@ export class NgChat implements OnInit, IChatController {
 
     public currentActiveOption: IChatOption | null;
 
-    protected selectedUsersFromFriendsList: User[] = [];
-
     private pollingIntervalWindowInstance: number;
 
     public defaultWindowOptions(currentWindow: Window): IChatOption[]
@@ -203,9 +201,7 @@ export class NgChat implements OnInit, IChatController {
         {
             return [{
                 isActive: false,
-                action: (chattingWindow: Window) => {
-                    this.selectedUsersFromFriendsList = this.selectedUsersFromFriendsList.concat(chattingWindow.participant as User);
-                },
+                chattingTo: currentWindow,
                 validateContext: (participant: IChatParticipant) => {
                     return participant.participantType == ChatParticipantType.User;
                 },
@@ -505,6 +501,33 @@ export class NgChat implements OnInit, IChatController {
                 this.emitBrowserNotification(chatWindow[0], message);
             }
         }
+    }
+
+    onParticipantClickedFromFriendsList(participant: IChatParticipant): void {
+        this.openChatWindow(participant, true, true);
+    }
+
+    onOptionPromptCanceled(): void {
+        if (this.currentActiveOption)
+        {
+            this.currentActiveOption.isActive = false;
+            this.currentActiveOption = null;
+        }
+    }
+
+    // TODO: Check what option is being confirmed so we trigger the appropriate callback action
+    onOptionPromptConfirmed(event: any): void {
+        let newGroup = new Group(event);
+
+        this.openChatWindow(newGroup);
+
+        if (this.groupAdapter)
+        {
+            this.groupAdapter.groupCreated(newGroup);
+        }
+
+        // Canceling current state
+        this.onOptionPromptCanceled();
     }
 
     // Opens a new chat whindow. Takes care of available viewport

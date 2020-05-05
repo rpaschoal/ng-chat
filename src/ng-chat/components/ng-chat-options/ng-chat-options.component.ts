@@ -20,19 +20,17 @@ export class NgChatOptionsComponent implements OnInit {
   @Output()
   public activeOptionTrackerChange: EventEmitter<IChatOption> = new EventEmitter<IChatOption>();
 
-  @Input()
-  public chattingTo: Window;
-
   ngOnInit() {
   }
 
   onOptionClicked(option: IChatOption): void
   {
-      if (option.action)
-      {
-          option.isActive = true;
-          option.action(this.chattingTo);
-          this.activeOptionTrackerChange.emit(option);
-      }
+    option.isActive = true;
+    
+    if (option.action) {    
+        option.action(option.chattingTo);   
+    }
+
+    this.activeOptionTrackerChange.emit(option);
   }
 }
