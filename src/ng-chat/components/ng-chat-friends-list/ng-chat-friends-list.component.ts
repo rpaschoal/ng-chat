@@ -88,8 +88,6 @@ export class NgChatFriendsList implements OnChanges {
 
     isUserSelectedFromFriendsList(user: User) : boolean
     {
-        const currentOptionTriggeredBy = this.currentActiveOption && this.currentActiveOption.chattingTo.participant.id;
-
         return (this.selectedUsersFromFriendsList.filter(item => item.id == user.id)).length > 0
     }
 
