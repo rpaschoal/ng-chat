@@ -1,7 +1,7 @@
 <link *ngIf="customTheme" rel="stylesheet" [href]='customTheme | sanitize'>
 
 <div id="ng-chat" *ngIf="!isDisabled && isBootstrapped && !unsupportedViewport" [ngClass]="theme">
-    <div *ngIf="!hideFriendsList" id="ng-chat-people" [ngClass]="{'primary-outline-color': true, 'primary-background': true, 'ng-chat-people-collapsed': isCollapsed}">
+    <!-- <div *ngIf="!hideFriendsList" id="ng-chat-people" [ngClass]="{'primary-outline-color': true, 'primary-background': true, 'ng-chat-people-collapsed': isCollapsed}">
         <a href="javascript:void(0);" class="ng-chat-title secondary-background shadowed" (click)="onChatTitleClicked($event)">
             <span>
                 {{localization.title}}
@@ -35,7 +35,25 @@
                 </div>
             </li>
         </ul>
-    </div>
+    </div> -->
+
+    <ng-chat-friends-list
+        [localization]="localization"
+        [shouldDisplay]="!hideFriendsList"
+        [groupAdapter]="groupAdapter"
+        [userId]="userId"
+        [participants]="participants"
+        [participantsResponse]="participantsResponse"
+        [windows]="windows"
+        [isCollapsed]="isCollapsed"
+        [searchEnabled]="searchEnabled"
+        [persistWindowsState]="persistWindowsState"
+        [currentActiveOption]="currentActiveOption"
+        [selectedUsersFromFriendsList]="selectedUsersFromFriendsList"
+        (onParticipantOpen)="openChatWindow($event.participant, $event.shouldFocus, $event.invokedByUserClick)"
+    >
+    </ng-chat-friends-list>
+
     <div *ngFor="let window of windows; let i = index" [ngClass]="{'ng-chat-window': true, 'primary-outline-color': true, 'ng-chat-window-collapsed': window.isCollapsed}" [ngStyle]="{'right': (!hideFriendsList ? friendsListWidth : 0) + 20 + windowSizeFactor * i + 'px'}">
         <ng-container *ngIf="window.isCollapsed">
             <div class="ng-chat-title secondary-background">

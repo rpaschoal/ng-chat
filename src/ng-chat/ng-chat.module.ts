@@ -9,10 +9,11 @@ import { LinkfyPipe } from './pipes/linkfy.pipe';
 import { SanitizePipe } from './pipes/sanitize.pipe';
 import { GroupMessageDisplayNamePipe } from './pipes/group-message-display-name.pipe';
 import { NgChatOptionsComponent } from './components/ng-chat-options/ng-chat-options.component';
+import { NgChatFriendsList } from './components/ng-chat-friends-list/ng-chat-friends-list.component';
 
 @NgModule({
   imports: [CommonModule, FormsModule, HttpClientModule],
-  declarations: [NgChat, EmojifyPipe, LinkfyPipe, SanitizePipe, GroupMessageDisplayNamePipe, NgChatOptionsComponent],
+  declarations: [NgChat, EmojifyPipe, LinkfyPipe, SanitizePipe, GroupMessageDisplayNamePipe, NgChatOptionsComponent, NgChatFriendsList],
   exports: [NgChat]
 })
 export class NgChatModule {
