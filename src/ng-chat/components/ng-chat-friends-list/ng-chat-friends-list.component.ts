@@ -7,6 +7,7 @@ import { IChatParticipant } from "../../core/chat-participant";
 import { User } from "../../core/user";
 import { Window } from "../../core/window";
 import { ParticipantResponse } from "../../core/participant-response";
+import { MessageCounter } from "../../core/message-counter";
 
 @Component({
     selector: 'ng-chat-friends-list',
@@ -100,40 +101,12 @@ export class NgChatFriendsListComponent implements OnChanges {
         return this.localization.statusDescription[currentStatus];
     }
 
-    // TODO: this is duplicated, find a way to reuse it
-    private formatUnreadMessagesTotal(totalUnreadMessages: number): string
-    {
-        if (totalUnreadMessages > 0){
-
-            if (totalUnreadMessages > 99) 
-                return  "99+";
-            else
-                return String(totalUnreadMessages); 
-        }
-
-        // Empty fallback.
-        return "";
-    }
-
-    // TODO: this is duplicated, find a way to reuse it
-    // Returns the total unread messages from a chat window. TODO: Could use some Angular pipes in the future 
-    unreadMessagesTotal(window: Window): string
-    {
-        let totalUnreadMessages = 0;
-
-        if (window){
-            totalUnreadMessages = window.messages.filter(x => x.fromId != this.userId && !x.dateSeen).length;
-        }
-            
-        return this.formatUnreadMessagesTotal(totalUnreadMessages);
-    }
-
     unreadMessagesTotalByParticipant(participant: IChatParticipant): string
     {
         let openedWindow = this.windows.find(x => x.participant.id == participant.id);
 
         if (openedWindow){
-            return this.unreadMessagesTotal(openedWindow);
+            return MessageCounter.unreadMessagesTotal(openedWindow, this.userId);
         }
         else
         {
@@ -143,7 +116,7 @@ export class NgChatFriendsListComponent implements OnChanges {
                     return participantResponse.metadata.totalUnreadMessages
                 })[0];
 
-            return this.formatUnreadMessagesTotal(totalUnreadMessages);
+            return MessageCounter.formatUnreadMessagesTotal(totalUnreadMessages);
         }
     }
 

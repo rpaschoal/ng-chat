@@ -21,6 +21,7 @@ import { IChatOption } from './core/chat-option';
 import { Group } from "./core/group";
 import { ChatParticipantType } from "./core/chat-participant-type.enum";
 import { IChatParticipant } from "./core/chat-participant";
+import { MessageCounter } from "./core/message-counter";
 
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -728,30 +729,9 @@ export class NgChat implements OnInit, IChatController {
         }
     }
 
-    private formatUnreadMessagesTotal(totalUnreadMessages: number): string
-    {
-        if (totalUnreadMessages > 0){
-
-            if (totalUnreadMessages > 99) 
-                return  "99+";
-            else
-                return String(totalUnreadMessages); 
-        }
-
-        // Empty fallback.
-        return "";
-    }
-
-    // Returns the total unread messages from a chat window. TODO: Could use some Angular pipes in the future 
     unreadMessagesTotal(window: Window): string
-    {
-        let totalUnreadMessages = 0;
-
-        if (window){
-            totalUnreadMessages = window.messages.filter(x => x.fromId != this.userId && !x.dateSeen).length;
-        }
-            
-        return this.formatUnreadMessagesTotal(totalUnreadMessages);
+    {           
+        return MessageCounter.unreadMessagesTotal(window, this.userId);
     }
 
     /*  Monitors pressed keys on a chat window
