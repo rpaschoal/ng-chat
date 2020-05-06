@@ -186,9 +186,9 @@ export class NgChat implements OnInit, IChatController {
 
     public searchInput: string = '';
 
-    protected participants: IChatParticipant[];
+    public participants: IChatParticipant[];
 
-    protected participantsResponse: ParticipantResponse[];
+    public participantsResponse: ParticipantResponse[];
 
     private participantsInteractedWith: IChatParticipant[] = [];
 
