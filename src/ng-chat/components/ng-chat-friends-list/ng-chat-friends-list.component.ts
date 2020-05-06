@@ -14,7 +14,7 @@ import { ParticipantResponse } from "../../core/participant-response";
     styleUrls: ['./ng-chat-friends-list.component.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class NgChatFriendsList implements OnChanges {
+export class NgChatFriendsListComponent implements OnChanges {
     constructor() { }
 
     @Input()

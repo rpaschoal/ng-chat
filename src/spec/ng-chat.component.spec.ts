@@ -154,42 +154,6 @@ describe('NgChat', () => {
         expect(subject.customTheme).toBeUndefined();
     });
 
-    it('Exercise participants filter', () => {
-        subject.participants = [{
-            id: 1,
-            displayName: 'Test 1'
-        },
-        {
-            id: 2,
-            displayName: 'Test 2'
-        }];
-
-        subject.searchInput = 'Test 1';
-
-        const result = subject.filteredParticipants;
-
-        expect(subject.participants.length).toBe(2);
-        expect(result.length).toBe(1);
-    });
-
-    it('Exercise participants not found filter', () => {
-        subject.participants = [{
-            id: 1,
-            displayName: 'Test 1'
-        },
-        {
-            id: 2,
-            displayName: 'Test 2'
-        }];
-
-        subject.searchInput = 'Test 3';
-
-        const result = subject.filteredParticipants;
-
-        expect(subject.participants.length).toBe(2);
-        expect(result.length).toBe(0);
-    });
-
     it('Must display max visible windows on viewport', () => {
         subject.viewPortTotalArea = 960; // Just enough for 2 windows based on the default window size of 320
 
@@ -1681,33 +1645,7 @@ describe('NgChat', () => {
         expect(result.length).toBe(0);
     });
 
-    it('On check friends list during options action should push selected user', () => {
-        let mockedUser = new User();
-        mockedUser.id = 999;
-        
-        subject.selectedUsersFromFriendsList = [];
-
-        subject.onFriendsListCheckboxChange(mockedUser, true);
-
-        expect(subject.selectedUsersFromFriendsList).not.toBeNull();
-        expect(subject.selectedUsersFromFriendsList.length).toBe(1);
-        expect(subject.selectedUsersFromFriendsList[0]).toBe(mockedUser);
-        expect(subject.selectedUsersFromFriendsList[0].id).toBe(mockedUser.id);
-    });
-
-    it('On uncheck friends list during options action should remove selected user', () => {
-        let mockedUser = new User();
-        mockedUser.id = 999;
-        
-        subject.selectedUsersFromFriendsList = [mockedUser];
-
-        subject.onFriendsListCheckboxChange(mockedUser, false);
-
-        expect(subject.selectedUsersFromFriendsList).not.toBeNull();
-        expect(subject.selectedUsersFromFriendsList.length).toBe(0);
-    });
-
-    it('onFriendsListActionCancelClicked invoked should clear selection state', () => {
+    it('onOptionPromptCanceled invoked should clear selection state', () => {
         let mockedUser = new User();
         mockedUser.id = 999;
         
@@ -1719,18 +1657,14 @@ describe('NgChat', () => {
         } as IChatOption;
 
         subject.currentActiveOption = mockedOption;
-        
-        subject.selectedUsersFromFriendsList = [mockedUser];
 
-        subject.onFriendsListActionCancelClicked();
+        subject.onOptionPromptCanceled();
 
         expect(subject.currentActiveOption).toBeNull();
         expect(mockedOption.isActive).toBeFalsy();
-        expect(subject.selectedUsersFromFriendsList).not.toBeNull();
-        expect(subject.selectedUsersFromFriendsList.length).toBe(0);
     });
 
-    it('onFriendsListActionConfirmClicked invoked exercise', () => {
+    it('onOptionPromptConfirmed invoked exercise', () => {
         let mockedFirstUser = new User();
         let mockedSecondUser = new User();
         let createdGroup: Group = null;
@@ -1742,7 +1676,7 @@ describe('NgChat', () => {
         mockedFirstUser.displayName = "ZZZ";
         mockedSecondUser.displayName = "AAA";
 
-        subject.selectedUsersFromFriendsList = [mockedFirstUser, mockedSecondUser];
+        const participants = [mockedFirstUser, mockedSecondUser];
 
         spyOn(MockableGroupAdapter.prototype, 'groupCreated').and.callFake((group: Group) => {
             createdGroup = group;
@@ -1750,7 +1684,7 @@ describe('NgChat', () => {
 
         spyOn(subject, 'openChatWindow').and.returnValue([null, true]);
 
-        subject.onFriendsListActionConfirmClicked();
+        subject.onOptionPromptConfirmed(participants);
 
         expect(createdGroup).not.toBeNull();
         expect(createdGroup.chattingTo).not.toBeNull();
@@ -1760,18 +1694,5 @@ describe('NgChat', () => {
         expect(createdGroup.displayName).toBe("AAA, ZZZ");
         expect(MockableGroupAdapter.prototype.groupCreated).toHaveBeenCalledTimes(1);
         expect(subject.openChatWindow).toHaveBeenCalledTimes(1);
-    });
-
-    it('isUserSelectedFromFriendsList exercise', () => {
-        let mockedFirstUser = new User();
-        let mockedSecondUser = new User();
-
-        mockedFirstUser.id = 888;
-        mockedSecondUser.id = 999;
-        
-        subject.selectedUsersFromFriendsList = [mockedSecondUser];
-
-        expect(subject.isUserSelectedFromFriendsList(mockedFirstUser)).toBeFalsy();
-        expect(subject.isUserSelectedFromFriendsList(mockedSecondUser)).toBeTruthy();
     });
 });
