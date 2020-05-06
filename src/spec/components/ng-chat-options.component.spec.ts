@@ -25,12 +25,11 @@ describe('NgChatOptionsComponent', () => {
   it('Should invoke option action when option is clicked', () => {
     let actionInvoked = false;
     let actionInvokedArgument: Window = null;
-    let mockedWindow = new Window(null, false, false);
-    
-    component.chattingTo = mockedWindow;
+    const mockedWindow = new Window(null, false, false);
 
-    let option: IChatOption = {
+    const option: IChatOption = {
         isActive: false,
+        chattingTo: mockedWindow,
         validateContext: (participant: IChatParticipant) => true,
         action: (participant: Window) => {
             actionInvoked = true;
@@ -50,12 +49,11 @@ describe('NgChatOptionsComponent', () => {
   it('Should not invoke option action when option action is null or undefined', () => {
     let actionInvoked = false;
     let actionInvokedArgument: Window = null;
-    let mockedWindow = new Window(null, false, false);
-    
-    component.chattingTo = mockedWindow;
+    const mockedWindow = new Window(null, false, false);
 
-    let option: IChatOption = {
+    const option: IChatOption = {
         isActive: false,
+        chattingTo: mockedWindow,
         action: null,
         validateContext: null,
         displayLabel: "Test Option"
@@ -65,6 +63,6 @@ describe('NgChatOptionsComponent', () => {
 
     expect(actionInvoked).toBeFalsy();
     expect(actionInvokedArgument).toBeNull();
-    expect(option.isActive).toBeFalsy();
+    expect(option.isActive).toBeTruthy();
   });
 });
