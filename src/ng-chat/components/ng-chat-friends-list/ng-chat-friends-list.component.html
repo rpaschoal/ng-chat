@@ -1,0 +1,35 @@
+<div *ngIf="shouldDisplay" id="ng-chat-people" [ngClass]="{'primary-outline-color': true, 'primary-background': true, 'ng-chat-people-collapsed': isCollapsed}">
+	<a href="javascript:void(0);" class="ng-chat-title secondary-background shadowed" (click)="onChatTitleClicked()">
+		<span>
+			{{localization.title}}
+		</span>
+	</a>
+	<div *ngIf="currentActiveOption" class="ng-chat-people-actions" (click)="onFriendsListActionCancelClicked()">
+		<a href="javascript:void(0);" class="ng-chat-people-action">
+			<i class="remove-icon"></i>
+		</a>
+		<a href="javascript:void(0);" class="ng-chat-people-action" (click)="onFriendsListActionConfirmClicked()">
+			<i class="check-icon"></i>
+		</a>
+	</div>
+	<input *ngIf="searchEnabled" id="ng-chat-search_friend" class="friends-search-bar" type="search" [placeholder]="localization.searchPlaceholder" [(ngModel)]="searchInput" />
+	<ul id="ng-chat-users" *ngIf="!isCollapsed" [ngClass]="{'offset-search': searchEnabled}">
+		<li *ngFor="let user of filteredParticipants">
+			<input 
+				*ngIf="currentActiveOption && currentActiveOption.validateContext(user)" 
+				type="checkbox" 
+				class="ng-chat-users-checkbox" 
+				(change)="onFriendsListCheckboxChange(user, $event.target.checked)" 
+				[checked]="isUserSelectedFromFriendsList(user)"/>
+			<div [ngClass]="{'ng-chat-friends-list-selectable-offset': currentActiveOption, 'ng-chat-friends-list-container': true}" (click)="onUserClick(user)">
+				<div *ngIf="!user.avatar" class="icon-wrapper">
+					<i class="user-icon"></i>
+				</div>
+				<img *ngIf="user.avatar" alt="" class="avatar" height="30" width="30"  [src]="user.avatar | sanitize"/>
+				<strong title="{{user.displayName}}">{{user.displayName}}</strong>
+				<span [ngClass]="{'ng-chat-participant-status': true, 'online': user.status == ChatParticipantStatus.Online, 'busy': user.status == ChatParticipantStatus.Busy, 'away': user.status == ChatParticipantStatus.Away, 'offline': user.status == ChatParticipantStatus.Offline}" title="{{chatParticipantStatusDescriptor(user.status, localization)}}"></span>
+				<span *ngIf="unreadMessagesTotalByParticipant(user).length > 0" class="ng-chat-unread-messages-count unread-messages-counter-container primary-text">{{unreadMessagesTotalByParticipant(user)}}</span>
+			</div>
+		</li>
+	</ul>
+</div>
