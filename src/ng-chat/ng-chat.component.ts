@@ -188,7 +188,7 @@ export class NgChat implements OnInit, IChatController {
 
     public participantsResponse: ParticipantResponse[];
 
-    private participantsInteractedWith: IChatParticipant[] = [];
+    public participantsInteractedWith: IChatParticipant[] = [];
 
     public currentActiveOption: IChatOption | null;
 
