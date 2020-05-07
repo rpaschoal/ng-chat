@@ -194,23 +194,6 @@ export class NgChat implements OnInit, IChatController {
 
     private pollingIntervalWindowInstance: number;
 
-    public defaultWindowOptions(currentWindow: Window): IChatOption[]
-    {
-        if (this.groupAdapter && currentWindow.participant.participantType == ChatParticipantType.User)
-        {
-            return [{
-                isActive: false,
-                chattingTo: currentWindow,
-                validateContext: (participant: IChatParticipant) => {
-                    return participant.participantType == ChatParticipantType.User;
-                },
-                displayLabel: 'Add People' // TODO: Localize this
-            }];
-        }
-
-        return [];
-    }
-
     private get localStorageKey(): string 
     {
         return `ng-chat-users-${this.userId}`; // Appending the user id so the state is unique per user in a computer.   
@@ -255,7 +238,8 @@ export class NgChat implements OnInit, IChatController {
         const maxSupportedOpenedWindows = Math.floor((this.viewPortTotalArea - (!this.hideFriendsList ? this.friendsListWidth : 0)) / this.windowSizeFactor);
         const difference = this.windows.length - maxSupportedOpenedWindows;
 
-        if (difference >= 0){
+        if (difference >= 0)
+        {
             this.windows.splice(this.windows.length - difference);
         }
 

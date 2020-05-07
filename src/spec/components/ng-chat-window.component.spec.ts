@@ -9,6 +9,7 @@ import { ScrollDirection } from '../../ng-chat/core/scroll-direction.enum';
 import { IFileUploadAdapter } from '../../ng-chat/core/file-upload-adapter';
 import { FileMessage } from '../../ng-chat/core/file-message';
 import { ChatParticipantType } from '../../ng-chat/core/chat-participant-type.enum';
+import { Group } from '../../ng-chat/core/group';
 
 class MockableFileUploadAdapter implements IFileUploadAdapter {
     uploadFile(file: File, userTo: User): Observable<Message> {
@@ -258,5 +259,47 @@ describe('NgChatWindowComponent', () => {
         expect(fakeFileElement.nativeElement.value).toBe('');
         expect(anotherFakeFileElement.nativeElement.value).toBe('test');
         expect(subject.isUploadingFile(chatWindow)).toBeFalsy();
-	});
+    });
+    
+    it('Must return default chat options exercise', () => {
+        let chattingTo = new User();
+        let currentWindow = new Window(chattingTo, false, false);
+
+        subject.showOptions = true;
+
+        let result = subject.defaultWindowOptions(currentWindow);
+
+        expect(result).not.toBeNull();
+        expect(result.length).toBeGreaterThanOrEqual(1);
+        expect(result[0].displayLabel).toBe("Add People");
+        expect(result[0].action).not.toBeNull();
+        expect(result[0].validateContext).not.toBeNull();
+
+        expect(result[0].validateContext(chattingTo)).toBeTruthy();
+        expect(result[0].validateContext(new Group([]))).toBeFalsy();
+    });
+
+    it('Must return empty chat options when participant is not an user', () => {
+        let chattingTo = new Group([]);
+        let currentWindow = new Window(chattingTo, false, false);
+
+        subject.showOptions = true;
+
+        let result = subject.defaultWindowOptions(currentWindow);
+
+        expect(result).not.toBeNull();
+        expect(result.length).toBe(0);
+    });
+
+    it('Must return empty chat options when showOptions is set to false', () => {
+        let chattingTo = new User();
+        let currentWindow = new Window(chattingTo, false, false);
+
+        subject.showOptions = false;
+
+        let result = subject.defaultWindowOptions(currentWindow);
+
+        expect(result).not.toBeNull();
+        expect(result.length).toBe(0);
+    });
 });
