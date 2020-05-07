@@ -302,4 +302,25 @@ describe('NgChatWindowComponent', () => {
         expect(result).not.toBeNull();
         expect(result.length).toBe(0);
     });
+
+    it('Must emit onLoadHistoryTriggered when fetchMessageHistory is invoked', () => {
+        const spy = spyOn(subject.onLoadHistoryTriggered, 'emit');
+        
+        const user: User = {
+            participantType: ChatParticipantType.Group,
+            id: 888,
+            displayName: 'Test user group',
+            status: 1,
+            avatar: ''
+        };
+        
+        const window: Window = new Window(user, false, false);
+        
+        subject.fetchMessageHistory(window);
+
+        expect(spy).toHaveBeenCalled();
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(spy.calls.mostRecent().args.length).toBe(1);
+        expect(spy.calls.mostRecent().args[0]).toBe(window);
+	});
 });

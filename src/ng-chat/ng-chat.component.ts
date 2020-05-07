@@ -182,8 +182,6 @@ export class NgChat implements OnInit, IChatController {
 
     private audioFile: HTMLAudioElement;
 
-    public searchInput: string = '';
-
     public participants: IChatParticipant[];
 
     public participantsResponse: ParticipantResponse[];
@@ -211,12 +209,10 @@ export class NgChat implements OnInit, IChatController {
     // Set to true if there is no space to display at least one chat window and 'hideFriendsListOnUnsupportedViewport' is true
     public unsupportedViewport: boolean = false;
 
-    // File upload state
-    public fileUploadersInUse: string[] = []; // Id bucket of uploaders in use
+    // File upload adapter
     public fileUploadAdapter: IFileUploadAdapter;
 
     windows: Window[] = [];
-
     isBootstrapped: boolean = false;
 
     @ViewChildren('chatWindow') chatWindows: QueryList<NgChatWindowComponent>;
@@ -484,7 +480,7 @@ export class NgChat implements OnInit, IChatController {
         this.openChatWindow(participant, true, true);
     }
 
-    onOptionPromptCanceled(): void {
+    private cancelOptionPrompt(): void {
         if (this.currentActiveOption)
         {
             this.currentActiveOption.isActive = false;
@@ -492,9 +488,20 @@ export class NgChat implements OnInit, IChatController {
         }
     }
 
-    // TODO: Check what option is being confirmed so we trigger the appropriate callback action
+    onOptionPromptCanceled(): void {
+        this.cancelOptionPrompt();
+    }
+
     onOptionPromptConfirmed(event: any): void {
-        const newGroup = new Group(event);
+        // For now this is fine as there is only one option available. Introduce option types and type checking if a new option is added.
+        this.confirmNewGroup(event);
+
+        // Canceling current state
+        this.cancelOptionPrompt();
+    }
+
+    private confirmNewGroup(users: User[]): void {
+        const newGroup = new Group(users);
 
         this.openChatWindow(newGroup);
 
@@ -502,15 +509,12 @@ export class NgChat implements OnInit, IChatController {
         {
             this.groupAdapter.groupCreated(newGroup);
         }
-
-        // Canceling current state
-        this.onOptionPromptCanceled();
     }
 
     // Opens a new chat whindow. Takes care of available viewport
     // Works for opening a chat window for an user or for a group
     // Returns => [Window: Window object reference, boolean: Indicates if this window is a new chat window]
-    openChatWindow(participant: IChatParticipant, focusOnNewWindow: boolean = false, invokedByUserClick: boolean = false): [Window, boolean]
+    private openChatWindow(participant: IChatParticipant, focusOnNewWindow: boolean = false, invokedByUserClick: boolean = false): [Window, boolean]
     {
         // Is this window opened?
         const openedWindow = this.windows.find(x => x.participant.id == participant.id);
@@ -578,6 +582,14 @@ export class NgChat implements OnInit, IChatController {
                 callback(); 
             });
         } 
+    }
+
+    private assertMessageType(message: Message): void {
+        // Always fallback to "Text" messages to avoid rendenring issues
+        if (!message.type)
+        {
+            message.type = MessageType.Text;
+        }
     }
 
     // Marks all messages provided as read with the current time.
@@ -679,16 +691,7 @@ export class NgChat implements OnInit, IChatController {
         }
     }
 
-    private assertMessageType(message: Message): void {
-        // Always fallback to "Text" messages to avoid rendenring issues
-        if (!message.type)
-        {
-            message.type = MessageType.Text;
-        }
-    }
-
-    // Closes a chat window via the close 'X' button
-    closeWindow(window: Window): void 
+    private closeWindow(window: Window): void 
     {
         const index = this.windows.indexOf(window);
 

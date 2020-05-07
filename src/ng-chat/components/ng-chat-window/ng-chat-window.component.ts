@@ -56,9 +56,6 @@ export class NgChatWindowComponent {
     @Input()
     public hasPagedHistory: boolean = true;
 
-    @Input()
-    public fetchMessageHistory: (window: Window) => void;
-
     @Output()
     public onChatWindowClosed: EventEmitter<{ closedWindow: Window, closedViaEscapeKey: boolean}> = new EventEmitter();
 
@@ -73,6 +70,9 @@ export class NgChatWindowComponent {
 
     @Output()
     public onOptionTriggered: EventEmitter<IChatOption> = new EventEmitter();
+
+    @Output()
+    public onLoadHistoryTriggered: EventEmitter<Window> = new EventEmitter();
 
     @ViewChild('chatMessages') chatMessages: any;
     @ViewChild('nativeFileInput') nativeFileInput: ElementRef;
@@ -208,6 +208,10 @@ export class NgChatWindowComponent {
     markMessagesAsRead(messages: Message[]): void 
     {
         this.onMessagesSeen.emit(messages);
+    }
+
+    fetchMessageHistory(window: Window): void {
+        this.onLoadHistoryTriggered.emit(window);
     }
 
     // Closes a chat window via the close 'X' button
