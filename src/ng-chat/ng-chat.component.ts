@@ -252,8 +252,8 @@ export class NgChat implements OnInit, IChatController {
     // Checks if there are more opened windows than the view port can display
     private NormalizeWindows(): void
     {
-        let maxSupportedOpenedWindows = Math.floor((this.viewPortTotalArea - (!this.hideFriendsList ? this.friendsListWidth : 0)) / this.windowSizeFactor);
-        let difference = this.windows.length - maxSupportedOpenedWindows;
+        const maxSupportedOpenedWindows = Math.floor((this.viewPortTotalArea - (!this.hideFriendsList ? this.friendsListWidth : 0)) / this.windowSizeFactor);
+        const difference = this.windows.length - maxSupportedOpenedWindows;
 
         if (difference >= 0){
             this.windows.splice(this.windows.length - difference);
@@ -469,7 +469,7 @@ export class NgChat implements OnInit, IChatController {
     {
         if (participant && message)
         {
-            let chatWindow = this.openChatWindow(participant);
+            const chatWindow = this.openChatWindow(participant);
 
             this.assertMessageType(message);
 
@@ -510,7 +510,7 @@ export class NgChat implements OnInit, IChatController {
 
     // TODO: Check what option is being confirmed so we trigger the appropriate callback action
     onOptionPromptConfirmed(event: any): void {
-        let newGroup = new Group(event);
+        const newGroup = new Group(event);
 
         this.openChatWindow(newGroup);
 
@@ -529,7 +529,7 @@ export class NgChat implements OnInit, IChatController {
     public openChatWindow(participant: IChatParticipant, focusOnNewWindow: boolean = false, invokedByUserClick: boolean = false): [Window, boolean]
     {
         // Is this window opened?
-        let openedWindow = this.windows.find(x => x.participant.id == participant.id);
+        const openedWindow = this.windows.find(x => x.participant.id == participant.id);
 
         if (!openedWindow)
         {
@@ -539,9 +539,9 @@ export class NgChat implements OnInit, IChatController {
             }
 
             // Refer to issue #58 on Github 
-            let collapseWindow = invokedByUserClick ? false : !this.maximizeWindowOnNewMessage;
+            const collapseWindow = invokedByUserClick ? false : !this.maximizeWindowOnNewMessage;
 
-            let newChatWindow: Window = new Window(participant, this.historyEnabled, collapseWindow);
+            const newChatWindow: Window = new Window(participant, this.historyEnabled, collapseWindow);
 
             // Loads the chat history via an RxJs Observable
             if (this.historyEnabled)
@@ -580,13 +580,13 @@ export class NgChat implements OnInit, IChatController {
     // Focus on the input element of the supplied window
     private focusOnWindow(window: Window, callback: Function = () => {}) : void
     {
-        let windowIndex = this.windows.indexOf(window);
+        const windowIndex = this.windows.indexOf(window);
         if (windowIndex >= 0)
         {
             setTimeout(() => {
                 if (this.chatWindows)
                 {
-                    let chatWindowToFocus = this.chatWindows.toArray()[windowIndex];
+                    const chatWindowToFocus = this.chatWindows.toArray()[windowIndex];
 
                     chatWindowToFocus.chatWindowInput.nativeElement.focus();
                 }
@@ -599,7 +599,7 @@ export class NgChat implements OnInit, IChatController {
     // Marks all messages provided as read with the current time.
     public markMessagesAsRead(messages: Message[]): void
     {
-        let currentDate = new Date();
+        const currentDate = new Date();
 
         messages.forEach((msg)=>{
             msg.dateSeen = currentDate;
@@ -630,7 +630,7 @@ export class NgChat implements OnInit, IChatController {
     private emitBrowserNotification(window: Window, message: Message): void
     {       
         if (this.browserNotificationsBootstrapped && !window.hasFocus && message) {
-            let notification = new Notification(`${this.localization.browserNotificationTitle} ${window.participant.displayName}`, {
+            const notification = new Notification(`${this.localization.browserNotificationTitle} ${window.participant.displayName}`, {
                 'body': message.message,
                 'icon': this.browserNotificationIconSource
             });
@@ -646,7 +646,7 @@ export class NgChat implements OnInit, IChatController {
     {
         if (this.persistWindowsState)
         {
-            let participantIds = windows.map((w) => {
+            const participantIds = windows.map((w) => {
                 return w.participant.id;
             });
 
@@ -660,13 +660,13 @@ export class NgChat implements OnInit, IChatController {
         {
             if (this.persistWindowsState)
             {
-                let stringfiedParticipantIds = localStorage.getItem(this.localStorageKey);
+                const stringfiedParticipantIds = localStorage.getItem(this.localStorageKey);
 
                 if (stringfiedParticipantIds && stringfiedParticipantIds.length > 0)
                 {
-                    let participantIds = <number[]>JSON.parse(stringfiedParticipantIds);
+                    const participantIds = <number[]>JSON.parse(stringfiedParticipantIds);
 
-                    let participantsToRestore = this.participants.filter(u => participantIds.indexOf(u.id) >= 0);
+                    const participantsToRestore = this.participants.filter(u => participantIds.indexOf(u.id) >= 0);
 
                     participantsToRestore.forEach((participant) => {
                         this.openChatWindow(participant);
@@ -683,7 +683,7 @@ export class NgChat implements OnInit, IChatController {
     // Gets closest open window if any. Most recent opened has priority (Right)
     private getClosestWindow(window: Window): Window | undefined
     {   
-        let index = this.windows.indexOf(window);
+        const index = this.windows.indexOf(window);
 
         if (index > 0)
         {
@@ -706,7 +706,7 @@ export class NgChat implements OnInit, IChatController {
     // Closes a chat window via the close 'X' button
     closeWindow(window: Window): void 
     {
-        let index = this.windows.indexOf(window);
+        const index = this.windows.indexOf(window);
 
         this.windows.splice(index, 1);
 
@@ -716,7 +716,7 @@ export class NgChat implements OnInit, IChatController {
     }
 
     private getChatWindowComponentInstance(targetWindow: Window): NgChatWindowComponent | null {
-        let windowIndex = this.windows.indexOf(targetWindow);
+        const windowIndex = this.windows.indexOf(targetWindow);
 
         if (this.chatWindows){
             let targetWindow = this.chatWindows.toArray()[windowIndex];
@@ -792,17 +792,19 @@ export class NgChat implements OnInit, IChatController {
     }
 
     triggerCloseChatWindow(userId: any): void {
-        let openedWindow = this.windows.find(x => x.participant.id == userId);
+        const openedWindow = this.windows.find(x => x.participant.id == userId);
 
-        if (openedWindow){
+        if (openedWindow) 
+        {
             this.closeWindow(openedWindow);
         }
     }
 
     triggerToggleChatWindowVisibility(userId: any): void {
-        let openedWindow = this.windows.find(x => x.participant.id == userId);
+        const openedWindow = this.windows.find(x => x.participant.id == userId);
 
-        if (openedWindow) {
+        if (openedWindow) 
+        {
             const chatWindow = this.getChatWindowComponentInstance(openedWindow);
 
             if (chatWindow){
