@@ -11,7 +11,7 @@ import { Theme } from '../ng-chat/core/theme.enum';
 import { ChatParticipantType } from '../ng-chat/core/chat-participant-type.enum';
 import { Group } from '../ng-chat/core/group';
 import { IChatOption } from '../ng-chat/core/chat-option';
-import { NgChatWindowComponent } from 'src/ng-chat/components/ng-chat-window/ng-chat-window.component';
+import { NgChatWindowComponent } from '../ng-chat/components/ng-chat-window/ng-chat-window.component';
 
 class MockableAdapter extends ChatAdapter {
     public listFriends(): Observable<ParticipantResponse[]> {
