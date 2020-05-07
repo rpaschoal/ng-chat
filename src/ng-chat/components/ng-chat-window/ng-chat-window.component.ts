@@ -47,6 +47,18 @@ export class NgChatWindowComponent {
     @Input()    
     public linkfyEnabled: boolean = true;
 
+    @Input()
+    public showMessageDate: boolean = true;
+
+    @Input()
+    public messageDatePipeFormat: string = "short";
+
+    @Input()
+    public hasPagedHistory: boolean = true;
+
+    @Input()
+    public fetchMessageHistory: (window: Window) => void;
+
     @Output()
     public onChatWindowClosed: EventEmitter<{ closedWindow: Window, closedViaEscapeKey: boolean}> = new EventEmitter();
 
@@ -75,7 +87,7 @@ export class NgChatWindowComponent {
     public MessageType = MessageType;
     public chatParticipantStatusDescriptor = chatParticipantStatusDescriptor;
 
-    public defaultWindowOptions(currentWindow: Window): IChatOption[]
+    defaultWindowOptions(currentWindow: Window): IChatOption[]
     {
         if (this.showOptions && currentWindow.participant.participantType == ChatParticipantType.User)
         {
@@ -151,7 +163,7 @@ export class NgChatWindowComponent {
     }
 
     // Scrolls a chat window message flow to the bottom
-    public scrollChatWindow(window: Window, direction: ScrollDirection): void
+    scrollChatWindow(window: Window, direction: ScrollDirection): void
     {
         if (!window.isCollapsed){
             setTimeout(() => {
@@ -191,6 +203,11 @@ export class NgChatWindowComponent {
                 this.onMessagesSeen.emit(unreadMessages);
             }
         }
+    }
+
+    markMessagesAsRead(messages: Message[]): void 
+    {
+        this.onMessagesSeen.emit(messages);
     }
 
     // Closes a chat window via the close 'X' button

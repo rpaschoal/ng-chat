@@ -510,7 +510,7 @@ export class NgChat implements OnInit, IChatController {
     // Opens a new chat whindow. Takes care of available viewport
     // Works for opening a chat window for an user or for a group
     // Returns => [Window: Window object reference, boolean: Indicates if this window is a new chat window]
-    public openChatWindow(participant: IChatParticipant, focusOnNewWindow: boolean = false, invokedByUserClick: boolean = false): [Window, boolean]
+    openChatWindow(participant: IChatParticipant, focusOnNewWindow: boolean = false, invokedByUserClick: boolean = false): [Window, boolean]
     {
         // Is this window opened?
         const openedWindow = this.windows.find(x => x.participant.id == participant.id);
@@ -581,7 +581,7 @@ export class NgChat implements OnInit, IChatController {
     }
 
     // Marks all messages provided as read with the current time.
-    public markMessagesAsRead(messages: Message[]): void
+    markMessagesAsRead(messages: Message[]): void
     {
         const currentDate = new Date();
 
