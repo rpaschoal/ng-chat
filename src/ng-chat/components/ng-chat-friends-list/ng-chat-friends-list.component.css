@@ -1,0 +1,131 @@
+#ng-chat-people
+{
+    position: relative;
+    width: 240px;
+    height:360px;
+    border-width: 1px;
+    border-style: solid;
+    margin-right: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,.25);
+    border-bottom:0;
+}
+    #ng-chat-people.ng-chat-people-collapsed
+    {
+        height:30px;
+    }
+#ng-chat-search_friend
+{
+    display: block;
+    padding: 7px 10px;
+    margin: 0 auto;
+    width: calc(100% - 20px);
+    margin-top: 10px;
+    font-size: 0.9em;
+    -webkit-appearance: searchfield;
+}
+#ng-chat-users
+{
+    padding: 0 10px;
+    list-style: none;
+    margin: 0;
+    overflow: auto;
+    position: absolute;
+    top: 42px;
+    bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+    #ng-chat-users.offset-search
+    {
+        top: 84px;
+    }
+    #ng-chat-users .ng-chat-users-checkbox
+    {
+        float: left;
+        margin-right: 5px;
+        margin-top: 8px;
+    }
+    #ng-chat-users li
+    {
+        clear: both;
+        margin-bottom: 10px;
+        overflow: hidden;
+        cursor: pointer;
+        max-height: 30px;
+    }
+        #ng-chat-users li > .ng-chat-friends-list-selectable-offset
+        {
+            margin-left: 22px;
+        }
+        #ng-chat-users li .ng-chat-friends-list-container
+        {
+            display: inline-block;
+            width: 100%;
+        }
+        #ng-chat-users li > .ng-chat-friends-list-selectable-offset.ng-chat-friends-list-container
+        {
+            display: block;
+            width: auto;
+        }
+        #ng-chat-users li .ng-chat-friends-list-container > img.avatar, #ng-chat-users li .ng-chat-friends-list-container > .icon-wrapper
+        {
+            float: left;
+            margin-right: 5px;
+            border-radius: 25px;
+        }
+        #ng-chat-users li .ng-chat-friends-list-container > .icon-wrapper
+        {
+            background-color: #BABABA;
+            overflow: hidden;
+            width: 30px;
+            height: 30px;
+        }
+            #ng-chat-users li .ng-chat-friends-list-container > .icon-wrapper > i
+            {
+                color: #FFF;
+                transform: scale(0.7);
+            }
+        #ng-chat-users li .ng-chat-friends-list-container > strong
+        {
+            float: left;
+            line-height: 30px;
+            font-size: 0.8em;
+            max-width: 57%;
+            max-height: 30px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        #ng-chat-users li .ng-chat-friends-list-container > .ng-chat-participant-status
+        {
+            float: right;
+        }
+.ng-chat-people-actions
+{
+    position: absolute;
+    top: 4px;
+    right: 5px;
+    margin: 0;
+    padding: 0;
+    z-index: 2;
+}
+.ng-chat-people-actions > a.ng-chat-people-action {
+    display: inline-block;
+    width: 21px;
+    height: 21px;
+    margin-right: 8px;
+    text-decoration: none;
+    border: none;
+    border-radius: 25px;
+    padding: 1px;
+}
+
+/* Mobile viewport only */
+@media only screen and (max-width: 581px) { 
+    #ng-chat-people
+    {
+        width: 300px;
+        height: 360px;
+        margin-right: 0;
+    }
+}
