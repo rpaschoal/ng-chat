@@ -25,6 +25,9 @@ export class NgChatFriendsListComponent implements OnChanges {
     public participantsResponse: ParticipantResponse[];
 
     @Input()
+    public participantsInteractedWith: IChatParticipant[] = [];
+
+    @Input()
     public windows: Window[];
 
     @Input()
@@ -63,8 +66,6 @@ export class NgChatFriendsListComponent implements OnChanges {
 
     // Exposes enums for the ng-template
     public ChatParticipantStatus = ChatParticipantStatus;
-
-    private participantsInteractedWith: IChatParticipant[] = [];
 
     ngOnChanges(changes: SimpleChanges) {
         if (this.currentActiveOption) {
