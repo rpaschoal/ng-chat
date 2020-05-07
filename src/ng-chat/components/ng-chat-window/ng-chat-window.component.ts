@@ -205,11 +205,11 @@ export class NgChatWindowComponent {
            case 9:
                event.preventDefault();
 
-               this.onTabTriggered.emit({ triggeringWindow: this.window, shiftKeyPressed: event.shiftKey });
+               this.onTabTriggered.emit({ triggeringWindow: window, shiftKeyPressed: event.shiftKey });
 
                break;
            case 27:
-               this.onChatWindowClosed.emit({ closedWindow: this.window, closedViaEscapeKey: true });
+               this.onChatWindowClosed.emit({ closedWindow: window, closedViaEscapeKey: true });
 
                break;
        }

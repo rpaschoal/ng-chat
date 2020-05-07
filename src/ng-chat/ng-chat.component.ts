@@ -781,7 +781,7 @@ export class NgChat implements OnInit, IChatController {
             windowToFocus = this.windows[currentWindowIndex > 0 ? 0 : this.chatWindows.length - 1]; 
         }
 
-        this.focusOnWindow(windowToFocus)
+        this.focusOnWindow(windowToFocus);
     }
 
     onWindowMessageSent(messageSent: Message): void {
