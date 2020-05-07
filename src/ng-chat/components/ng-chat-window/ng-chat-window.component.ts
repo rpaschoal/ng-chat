@@ -38,9 +38,6 @@ export class NgChatWindowComponent {
     @Input()
     public showOptions: boolean;
 
-    @Input()
-    public currentActiveOption: IChatOption | null;
-
     @Input()    
     public emojisEnabled: boolean = true;
 
