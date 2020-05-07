@@ -47,9 +47,6 @@ export class NgChatFriendsListComponent implements OnChanges {
     public searchEnabled: boolean;
 
     @Input()
-    public persistWindowsState: boolean;
-
-    @Input()
     public currentActiveOption: IChatOption | null;
 
     @Output()
