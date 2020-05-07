@@ -2,7 +2,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NgChatWindowComponent } from '../../ng-chat/components/ng-chat-window/ng-chat-window.component';
 import { User } from '../../ng-chat/core/user';
-import { ParticipantResponse } from '../../ng-chat/core/participant-response';
 import { Window } from '../../ng-chat/core/window';
 import { Observable, of } from 'rxjs';
 import { Message } from '../../ng-chat/core/message';
@@ -10,7 +9,6 @@ import { ScrollDirection } from '../../ng-chat/core/scroll-direction.enum';
 import { IFileUploadAdapter } from '../../ng-chat/core/file-upload-adapter';
 import { FileMessage } from '../../ng-chat/core/file-message';
 import { ChatParticipantType } from '../../ng-chat/core/chat-participant-type.enum';
-import { ChatAdapter } from 'src/ng-chat/core/chat-adapter';
 
 class MockableFileUploadAdapter implements IFileUploadAdapter {
     uploadFile(file: File, userTo: User): Observable<Message> {
