@@ -145,6 +145,29 @@ export class NgChatWindowComponent {
         return 'ng-chat-file-upload';
     }
 
+    unreadMessagesTotal(window: Window): string
+    {           
+        return MessageCounter.unreadMessagesTotal(window, this.userId);
+    }
+
+    // Scrolls a chat window message flow to the bottom
+    public scrollChatWindow(window: Window, direction: ScrollDirection): void
+    {
+        if (!window.isCollapsed){
+            setTimeout(() => {
+                if (this.chatMessages){
+                    let element = this.chatMessages.nativeElement;
+                    let position = ( direction === ScrollDirection.Top ) ? 0 : element.scrollHeight;
+                    element.scrollTop = position;
+                }
+            }); 
+        }
+    }
+
+    activeOptionTrackerChange(option: IChatOption): void {
+        this.onOptionTriggered.emit(option);
+    }
+
     // Triggers native file upload for file selection from the user
     triggerNativeFileUpload(window: Window): void
     {
@@ -152,12 +175,6 @@ export class NgChatWindowComponent {
         {
             if (this.nativeFileInput) this.nativeFileInput.nativeElement.click();
         }
-    }
-
-    // Closes a chat window via the close 'X' button
-    onCloseChatWindow(): void 
-    {
-        this.onChatWindowClosed.emit({ closedWindow: this.window, closedViaEscapeKey: false });
     }
 
     // Toggles a window focus on the focus/blur of a 'newMessage' input
@@ -174,6 +191,12 @@ export class NgChatWindowComponent {
                 this.onMessagesSeen.emit(unreadMessages);
             }
         }
+    }
+
+    // Closes a chat window via the close 'X' button
+    onCloseChatWindow(): void 
+    {
+        this.onChatWindowClosed.emit({ closedWindow: this.window, closedViaEscapeKey: false });
     }
 
     /*  Monitors pressed keys on a chat window
@@ -268,28 +291,5 @@ export class NgChatWindowComponent {
                     // TODO: Invoke a file upload adapter error here
                 });
         }
-    }
-
-    unreadMessagesTotal(window: Window): string
-    {           
-        return MessageCounter.unreadMessagesTotal(window, this.userId);
-    }
-
-    // Scrolls a chat window message flow to the bottom
-    public scrollChatWindow(window: Window, direction: ScrollDirection): void
-    {
-        if (!window.isCollapsed){
-            setTimeout(() => {
-                if (this.chatMessages){
-                    let element = this.chatMessages.nativeElement;
-                    let position = ( direction === ScrollDirection.Top ) ? 0 : element.scrollHeight;
-                    element.scrollTop = position;
-                }
-            }); 
-        }
-    }
-
-    activeOptionTrackerChange(option: IChatOption): void {
-        this.onOptionTriggered.emit(option);
     }
 }
