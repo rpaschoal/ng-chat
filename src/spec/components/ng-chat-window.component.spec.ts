@@ -322,5 +322,172 @@ describe('NgChatWindowComponent', () => {
         expect(spy).toHaveBeenCalledTimes(1);
         expect(spy.calls.mostRecent().args.length).toBe(1);
         expect(spy.calls.mostRecent().args[0]).toBe(window);
+    });
+    
+    it('Avatar should not be displayed for messages sent by the current user', () => {
+        subject.userId = 1;
+
+        const user: User = {
+            participantType: ChatParticipantType.User,
+            id: subject.userId,
+            displayName: 'Test User',
+            status: 1,
+            avatar: ''
+        };
+        
+        const window: Window = new Window(user, false, false);
+        
+        const message: Message = {
+            fromId: user.id,
+            toId: 123,
+            message: 'Test'
+        };
+
+        const isVisible = subject.isAvatarVisible(window, message, 0);
+
+        expect(isVisible).toBeFalse();
+    });
+    
+    it('Avatar should be displayed for first messages sent by another user', () => {
+        subject.userId = 1;
+
+        const user: User = {
+            participantType: ChatParticipantType.User,
+            id: 123,
+            displayName: 'Test User',
+            status: 1,
+            avatar: ''
+        };
+        
+        const window: Window = new Window(user, false, false);
+        
+        const message: Message = {
+            fromId: user.id,
+            toId: 123,
+            message: 'Test'
+        };
+
+        const isVisible = subject.isAvatarVisible(window, message, 0);
+
+        expect(isVisible).toBeTrue();
+    });
+    
+    it('Avatar should be displayed for messages sent by another user if previous message wasnt from him', () => {
+        subject.userId = 1;
+
+        const user: User = {
+            participantType: ChatParticipantType.User,
+            id: 123,
+            displayName: 'Test User',
+            status: 1,
+            avatar: ''
+        };
+
+        const previousMessage: Message = {
+            fromId: subject.userId,
+            toId: user.id,
+            message: 'Test'
+        };
+
+        const message: Message = {
+            fromId: user.id,
+            toId: subject.userId,
+            message: 'Test'
+        };     
+        
+        const window: Window = new Window(user, false, false);
+        
+        window.messages.push(previousMessage)
+
+        const isVisible = subject.isAvatarVisible(window, message, 1);
+
+        expect(isVisible).toBeTrue();
+    });
+    
+    it('Avatar should not be displayed for messages sent by another user if they are stacked', () => {
+        subject.userId = 1;
+
+        const user: User = {
+            participantType: ChatParticipantType.User,
+            id: 123,
+            displayName: 'Test User',
+            status: 1,
+            avatar: ''
+        };
+
+        const previousMessage: Message = {
+            fromId: user.id,
+            toId: subject.userId,
+            message: 'Test'
+        };
+
+        const message: Message = {
+            fromId: user.id,
+            toId: subject.userId,
+            message: 'Test'
+        };     
+        
+        const window: Window = new Window(user, false, false);
+        
+        window.messages.push(previousMessage)
+
+        const isVisible = subject.isAvatarVisible(window, message, 1);
+
+        expect(isVisible).toBeFalse();
+    });
+    
+    it('getChatWindowAvatar must return a users avatar when requested', () => {
+        subject.userId = 1;
+        const testAvatar = 'test';
+
+        const user: User = {
+            participantType: ChatParticipantType.User,
+            id: 123,
+            displayName: 'Test User',
+            status: 1,
+            avatar: testAvatar
+        };
+
+        const message: Message = {
+            fromId: user.id,
+            toId: subject.userId,
+            message: 'Test'
+        };     
+
+        const returnedAvatar = subject.getChatWindowAvatar(user, message);
+
+        expect(returnedAvatar).toBe(testAvatar);
+    });
+    
+    it('getChatWindowAvatar must return a users avatar from a group when requested', () => {
+        subject.userId = 1;
+        const testAvatar = 'test';
+
+        const user: User = {
+            participantType: ChatParticipantType.User,
+            id: 123,
+            displayName: 'Test User',
+            status: 1,
+            avatar: testAvatar
+        };
+
+        const group: Group = {
+            participantType: ChatParticipantType.Group,
+            chattingTo: [user],
+            displayName: 'Test User Group',
+            status: 1,
+            id: '1',
+            avatar: ''
+        };
+
+        const message: Message = {
+            fromId: user.id,
+            toId: subject.userId,
+            message: 'Test'
+        };     
+
+        const returnedAvatar = subject.getChatWindowAvatar(group, message);
+
+        expect(returnedAvatar).toBe(testAvatar);
 	});
 });
