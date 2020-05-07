@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChildren, ViewChild, HostListener, Output, EventEmitter, ElementRef, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, ViewChildren, QueryList, HostListener, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { ChatAdapter } from './core/chat-adapter';
@@ -6,7 +6,6 @@ import { IChatGroupAdapter } from './core/chat-group-adapter';
 import { User } from "./core/user";
 import { ParticipantResponse } from "./core/participant-response";
 import { Message } from "./core/message";
-import { FileMessage } from "./core/file-message";
 import { MessageType } from "./core/message-type.enum";
 import { Window } from "./core/window";
 import { ChatParticipantStatus } from "./core/chat-participant-status.enum";
@@ -21,10 +20,9 @@ import { IChatOption } from './core/chat-option';
 import { Group } from "./core/group";
 import { ChatParticipantType } from "./core/chat-participant-type.enum";
 import { IChatParticipant } from "./core/chat-participant";
-import { MessageCounter } from "./core/message-counter";
 
 import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { NgChatWindowComponent } from './components/ng-chat-window/ng-chat-window.component';
 
 @Component({
     selector: 'ng-chat',
@@ -238,11 +236,7 @@ export class NgChat implements OnInit, IChatController {
 
     isBootstrapped: boolean = false;
 
-    @ViewChildren('chatMessages') chatMessageClusters: any;
-
-    @ViewChildren('chatWindowInput') chatWindowInputs: any;
-
-    @ViewChildren('nativeFileInput') nativeFileInputs: ElementRef[];
+    @ViewChildren('chatWindow') chatWindows: QueryList<NgChatWindowComponent>;
 
     ngOnInit() { 
         this.bootstrapChat();
@@ -452,7 +446,6 @@ export class NgChat implements OnInit, IChatController {
             const unseenMessages = messages.filter(m => !m.dateSeen);
 
             this.markMessagesAsRead(unseenMessages);
-            this.onMessagesSeen.emit(unseenMessages);
         }
     }
 
@@ -488,7 +481,6 @@ export class NgChat implements OnInit, IChatController {
                 if (chatWindow[0].hasFocus)
                 {
                     this.markMessagesAsRead([message]);
-                    this.onMessagesSeen.emit([message]);
                 }
             }
 
@@ -592,36 +584,16 @@ export class NgChat implements OnInit, IChatController {
         if (windowIndex >= 0)
         {
             setTimeout(() => {
-                if (this.chatWindowInputs)
+                if (this.chatWindows)
                 {
-                    let messageInputToFocus = this.chatWindowInputs.toArray()[windowIndex];
-                
-                    messageInputToFocus.nativeElement.focus(); 
+                    let chatWindowToFocus = this.chatWindows.toArray()[windowIndex];
+
+                    chatWindowToFocus.chatWindowInput.nativeElement.focus();
                 }
 
                 callback(); 
             });
         } 
-    }
-
-    // Scrolls a chat window message flow to the bottom
-    private scrollChatWindow(window: Window, direction: ScrollDirection): void
-    {
-        if (!window.isCollapsed){
-            let windowIndex = this.windows.indexOf(window);
-            setTimeout(() => {
-                if (this.chatMessageClusters){
-                    let targetWindow = this.chatMessageClusters.toArray()[windowIndex];
-
-                    if (targetWindow)
-                    {
-                        let element = this.chatMessageClusters.toArray()[windowIndex].nativeElement;
-                        let position = ( direction === ScrollDirection.Top ) ? 0 : element.scrollHeight;
-                        element.scrollTop = position;
-                    }
-                }
-            }); 
-        }
     }
 
     // Marks all messages provided as read with the current time.
@@ -632,6 +604,8 @@ export class NgChat implements OnInit, IChatController {
         messages.forEach((msg)=>{
             msg.dateSeen = currentDate;
         });
+
+        this.onMessagesSeen.emit(messages);
     }
 
     // Buffers audio file (For component's bootstrapping)
@@ -729,70 +703,8 @@ export class NgChat implements OnInit, IChatController {
         }
     }
 
-    unreadMessagesTotal(window: Window): string
-    {           
-        return MessageCounter.unreadMessagesTotal(window, this.userId);
-    }
-
-    /*  Monitors pressed keys on a chat window
-        - Dispatches a message when the ENTER key is pressed
-        - Tabs between windows on TAB or SHIFT + TAB
-        - Closes the current focused window on ESC
-    */
-    onChatInputTyped(event: any, window: Window): void
-    {
-        switch (event.keyCode)
-        {
-            case 13:
-                if (window.newMessage && window.newMessage.trim() != "")
-                {
-                    let message = new Message();
-             
-                    message.fromId = this.userId;
-                    message.toId = window.participant.id;
-                    message.message = window.newMessage;
-                    message.dateSent = new Date();
-        
-                    window.messages.push(message);
-        
-                    this.adapter.sendMessage(message);
-        
-                    window.newMessage = ""; // Resets the new message input
-        
-                    this.scrollChatWindow(window, ScrollDirection.Bottom);
-                }
-                break;
-            case 9:
-                event.preventDefault();
-                
-                let currentWindowIndex = this.windows.indexOf(window);
-                let messageInputToFocus = this.chatWindowInputs.toArray()[currentWindowIndex + (event.shiftKey ? 1 : -1)]; // Goes back on shift + tab
-
-                if (!messageInputToFocus)
-                {
-                    // Edge windows, go to start or end
-                    messageInputToFocus = this.chatWindowInputs.toArray()[currentWindowIndex > 0 ? 0 : this.chatWindowInputs.length - 1]; 
-                }
-
-                messageInputToFocus.nativeElement.focus();
-
-                break;
-            case 27:
-                let closestWindow = this.getClosestWindow(window);
-
-                if (closestWindow)
-                {
-                    this.focusOnWindow(closestWindow, () => { this.onCloseChatWindow(window); });
-                }
-                else
-                {
-                    this.onCloseChatWindow(window);
-                }
-        }
-    }
-
     // Closes a chat window via the close 'X' button
-    onCloseChatWindow(window: Window): void 
+    closeWindow(window: Window): void 
     {
         let index = this.windows.indexOf(window);
 
@@ -803,62 +715,25 @@ export class NgChat implements OnInit, IChatController {
         this.onParticipantChatClosed.emit(window.participant);
     }
 
-    // Toggles a chat window visibility between maximized/minimized
-    onChatWindowClicked(window: Window): void
-    {
-        window.isCollapsed = !window.isCollapsed;
-        this.scrollChatWindow(window, ScrollDirection.Bottom);
-    }
+    private getChatWindowComponentInstance(targetWindow: Window): NgChatWindowComponent | null {
+        let windowIndex = this.windows.indexOf(targetWindow);
 
-    // Asserts if a user avatar is visible in a chat cluster
-    isAvatarVisible(window: Window, message: Message, index: number): boolean
-    {
-        if (message.fromId != this.userId){
-            if (index == 0){
-                return true; // First message, good to show the thumbnail
-            }
-            else{
-                // Check if the previous message belongs to the same user, if it belongs there is no need to show the avatar again to form the message cluster
-                if (window.messages[index - 1].fromId != message.fromId){
-                    return true;
-                }
-            }
-        }
+        if (this.chatWindows){
+            let targetWindow = this.chatWindows.toArray()[windowIndex];
 
-        return false;
-    }
-
-    getChatWindowAvatar(participant: IChatParticipant, message: Message): string | null
-    {
-        if (participant.participantType == ChatParticipantType.User)
-        {
-            return participant.avatar;
-        }
-        else if (participant.participantType == ChatParticipantType.Group)
-        {
-            let group = participant as Group;
-            let userIndex = group.chattingTo.findIndex(x => x.id == message.fromId);
-
-            return group.chattingTo[userIndex >= 0 ? userIndex : 0].avatar;
+            return targetWindow;
         }
 
         return null;
     }
 
-    // Toggles a window focus on the focus/blur of a 'newMessage' input
-    toggleWindowFocus(window: Window): void
+    // Scrolls a chat window message flow to the bottom
+    private scrollChatWindow(window: Window, direction: ScrollDirection): void
     {
-        window.hasFocus = !window.hasFocus;
-        if(window.hasFocus) {
-            const unreadMessages = window.messages
-                .filter(message => message.dateSeen == null 
-                    && (message.toId == this.userId || window.participant.participantType === ChatParticipantType.Group));
-            
-            if (unreadMessages && unreadMessages.length > 0)
-            {
-                this.markMessagesAsRead(unreadMessages);
-                this.onMessagesSeen.emit(unreadMessages);
-            }
+        const chatWindow = this.getChatWindowComponentInstance(window);
+
+        if (chatWindow){
+            chatWindow.scrollChatWindow(window, direction);
         }
     }
 
@@ -868,6 +743,53 @@ export class NgChat implements OnInit, IChatController {
         let currentStatus = status.toString().toLowerCase();
 
         return this.localization.statusDescription[currentStatus];
+    }
+
+    onWindowMessagesSeen(messagesSeen: Message[]): void {
+        this.markMessagesAsRead(messagesSeen);
+    }
+
+    onWindowChatClosed(payload: { closedWindow: Window, closedViaEscapeKey: boolean }): void {
+        const { closedWindow, closedViaEscapeKey } = payload;
+
+        if (closedViaEscapeKey) {
+            let closestWindow = this.getClosestWindow(closedWindow);
+
+            if (closestWindow)
+            {
+                this.focusOnWindow(closestWindow, () => { this.closeWindow(closedWindow); });
+            }
+            else
+            {
+                this.closeWindow(closedWindow);
+            }
+        }
+        else { 
+            this.closeWindow(closedWindow);
+        }
+    }
+
+    onWindowTabTriggered(payload: { triggeringWindow: Window, shiftKeyPressed: boolean }): void {
+        const { triggeringWindow, shiftKeyPressed } = payload;
+
+        const currentWindowIndex = this.windows.indexOf(triggeringWindow);
+        let windowToFocus = this.windows[currentWindowIndex + (shiftKeyPressed ? 1 : -1)]; // Goes back on shift + tab
+
+        if (!windowToFocus)
+        {
+            // Edge windows, go to start or end
+            windowToFocus = this.windows[currentWindowIndex > 0 ? 0 : this.chatWindows.length - 1]; 
+        }
+
+        this.focusOnWindow(windowToFocus)
+    }
+
+    onWindowMessageSent(messageSent: Message): void {
+        this.adapter.sendMessage(messageSent);
+    }
+    
+    onWindowOptionTriggered(option: IChatOption): void {
+        this.currentActiveOption = option;
     }
 
     triggerOpenChatWindow(user: User): void {
@@ -881,92 +803,19 @@ export class NgChat implements OnInit, IChatController {
         let openedWindow = this.windows.find(x => x.participant.id == userId);
 
         if (openedWindow){
-            this.onCloseChatWindow(openedWindow);
+            this.closeWindow(openedWindow);
         }
     }
 
     triggerToggleChatWindowVisibility(userId: any): void {
         let openedWindow = this.windows.find(x => x.participant.id == userId);
 
-        if (openedWindow){
-            this.onChatWindowClicked(openedWindow);
-        }
-    }
+        if (openedWindow) {
+            const chatWindow = this.getChatWindowComponentInstance(openedWindow);
 
-    // Generates a unique file uploader id for each participant
-    getUniqueFileUploadInstanceId(window: Window): string
-    {
-        if (window && window.participant)
-        {
-            return `ng-chat-file-upload-${window.participant.id}`;
-        }
-        
-        return 'ng-chat-file-upload';
-    }
-
-    // Triggers native file upload for file selection from the user
-    triggerNativeFileUpload(window: Window): void
-    {
-        if (window)
-        {
-            const fileUploadInstanceId = this.getUniqueFileUploadInstanceId(window);
-            const uploadElementRef = this.nativeFileInputs.filter(x => x.nativeElement.id === fileUploadInstanceId)[0];
-
-            if (uploadElementRef)
-            uploadElementRef.nativeElement.click();
-        }
-    }
-
-    private clearInUseFileUploader(fileUploadInstanceId: string): void
-    {
-        const uploaderInstanceIdIndex = this.fileUploadersInUse.indexOf(fileUploadInstanceId);
-
-        if (uploaderInstanceIdIndex > -1) {
-            this.fileUploadersInUse.splice(uploaderInstanceIdIndex, 1);
-        }
-    }
-
-    isUploadingFile(window: Window): boolean
-    {
-        const fileUploadInstanceId = this.getUniqueFileUploadInstanceId(window);
-
-        return this.fileUploadersInUse.indexOf(fileUploadInstanceId) > -1;
-    }
-
-    // Handles file selection and uploads the selected file using the file upload adapter
-    onFileChosen(window: Window): void {
-        const fileUploadInstanceId = this.getUniqueFileUploadInstanceId(window);
-        const uploadElementRef = this.nativeFileInputs.filter(x => x.nativeElement.id === fileUploadInstanceId)[0];
-
-        if (uploadElementRef)
-        {
-            const file: File = uploadElementRef.nativeElement.files[0];
-
-            this.fileUploadersInUse.push(fileUploadInstanceId);
-
-            this.fileUploadAdapter.uploadFile(file, window.participant.id)
-                .subscribe(fileMessage => {
-                    this.clearInUseFileUploader(fileUploadInstanceId);
-
-                    fileMessage.fromId = this.userId;
-
-                    // Push file message to current user window   
-                    window.messages.push(fileMessage);
-        
-                    this.adapter.sendMessage(fileMessage);
-        
-                    this.scrollChatWindow(window, ScrollDirection.Bottom);
-
-                    // Resets the file upload element
-                    uploadElementRef.nativeElement.value = '';
-                }, (error) => {
-                    this.clearInUseFileUploader(fileUploadInstanceId);
-
-                    // Resets the file upload element
-                    uploadElementRef.nativeElement.value = '';
-
-                    // TODO: Invoke a file upload adapter error here
-                });
+            if (chatWindow){
+                chatWindow.onChatWindowClicked(openedWindow);
+            }
         }
     }
 }
