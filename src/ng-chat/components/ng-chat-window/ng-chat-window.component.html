@@ -4,7 +4,7 @@
 			<strong title="{{window.participant.displayName}}">
 				{{window.participant.displayName}}
 			</strong>
-			<span [ngClass]="{'ng-chat-participant-status': true, 'online': window.participant.status == ChatParticipantStatus.Online, 'busy': window.participant.status == ChatParticipantStatus.Busy, 'away': window.participant.status == ChatParticipantStatus.Away, 'offline': window.participant.status == ChatParticipantStatus.Offline}" title="{{getStatusTitle(window.participant.status)}}"></span>
+			<span [ngClass]="{'ng-chat-participant-status': true, 'online': window.participant.status == ChatParticipantStatus.Online, 'busy': window.participant.status == ChatParticipantStatus.Busy, 'away': window.participant.status == ChatParticipantStatus.Away, 'offline': window.participant.status == ChatParticipantStatus.Offline}" title="{{chatParticipantStatusDescriptor(window.participant.status, localization)}}"></span>
 			<span *ngIf="unreadMessagesTotal(window).length > 0" class="ng-chat-unread-messages-count unread-messages-counter-container primary-text">{{unreadMessagesTotal(window)}}</span>
 		</div>
 		<a href="javascript:void(0);" class="ng-chat-close primary-text" (click)="onCloseChatWindow()">X</a>
@@ -16,7 +16,7 @@
 			<strong title="{{window.participant.displayName}}">
 				{{window.participant.displayName}}
 			</strong>
-			<span [ngClass]="{'ng-chat-participant-status': true, 'online': window.participant.status == ChatParticipantStatus.Online, 'busy': window.participant.status == ChatParticipantStatus.Busy, 'away': window.participant.status == ChatParticipantStatus.Away, 'offline': window.participant.status == ChatParticipantStatus.Offline}" title="{{getStatusTitle(window.participant.status)}}"></span>
+			<span [ngClass]="{'ng-chat-participant-status': true, 'online': window.participant.status == ChatParticipantStatus.Online, 'busy': window.participant.status == ChatParticipantStatus.Busy, 'away': window.participant.status == ChatParticipantStatus.Away, 'offline': window.participant.status == ChatParticipantStatus.Offline}" title="{{chatParticipantStatusDescriptor(window.participant.status, localization)}}"></span>
 			<span *ngIf="unreadMessagesTotal(window).length > 0" class="ng-chat-unread-messages-count unread-messages-counter-container primary-text">{{unreadMessagesTotal(window)}}</span>    
 		</div>
 		<a href="javascript:void(0);" class="ng-chat-close primary-text" (click)="onCloseChatWindow()">X</a>

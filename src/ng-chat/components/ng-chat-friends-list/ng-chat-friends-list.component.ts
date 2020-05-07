@@ -8,6 +8,7 @@ import { User } from "../../core/user";
 import { Window } from "../../core/window";
 import { ParticipantResponse } from "../../core/participant-response";
 import { MessageCounter } from "../../core/message-counter";
+import { chatParticipantStatusDescriptor } from '../../core/chat-participant-status-descriptor';
 
 @Component({
     selector: 'ng-chat-friends-list',
@@ -64,8 +65,9 @@ export class NgChatFriendsListComponent implements OnChanges {
 
     public searchInput: string = '';
 
-    // Exposes enums for the ng-template
+    // Exposes enums and functions for the ng-template
     public ChatParticipantStatus = ChatParticipantStatus;
+    public chatParticipantStatusDescriptor = chatParticipantStatusDescriptor;
 
     ngOnChanges(changes: SimpleChanges) {
         if (this.currentActiveOption) {
@@ -91,15 +93,6 @@ export class NgChatFriendsListComponent implements OnChanges {
     isUserSelectedFromFriendsList(user: User) : boolean
     {
         return (this.selectedUsersFromFriendsList.filter(item => item.id == user.id)).length > 0
-    }
-
-    // [Localized] Returns the status descriptive title
-    // TODO: this is duplicated, find a way to reuse it
-    getStatusTitle(status: ChatParticipantStatus) : any
-    {
-        let currentStatus = status.toString().toLowerCase();
-
-        return this.localization.statusDescription[currentStatus];
     }
 
     unreadMessagesTotalByParticipant(participant: IChatParticipant): string

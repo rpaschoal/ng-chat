@@ -12,6 +12,7 @@ import { Group } from "../../core/group";
 import { ChatParticipantType } from "../../core/chat-participant-type.enum";
 import { IChatParticipant } from "../../core/chat-participant";
 import { MessageCounter } from "../../core/message-counter";
+import { chatParticipantStatusDescriptor } from '../../core/chat-participant-status-descriptor';
 
 @Component({
     selector: 'ng-chat-window',
@@ -68,10 +69,11 @@ export class NgChatWindowComponent {
     // File upload state
     public fileUploadersInUse: string[] = []; // Id bucket of uploaders in use
 
-    // Exposes enums for the ng-template
+    // Exposes enums and functions for the ng-template
     public ChatParticipantType = ChatParticipantType;
     public ChatParticipantStatus = ChatParticipantStatus;
     public MessageType = MessageType;
+    public chatParticipantStatusDescriptor = chatParticipantStatusDescriptor;
 
     public defaultWindowOptions(currentWindow: Window): IChatOption[]
     {
@@ -285,14 +287,6 @@ export class NgChatWindowComponent {
                 }
             }); 
         }
-    }
-
-    // [Localized] Returns the status descriptive title
-    getStatusTitle(status: ChatParticipantStatus) : any
-    {
-        let currentStatus = status.toString().toLowerCase();
-
-        return this.localization.statusDescription[currentStatus];
     }
 
     activeOptionTrackerChange(option: IChatOption): void {

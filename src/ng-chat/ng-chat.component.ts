@@ -737,14 +737,6 @@ export class NgChat implements OnInit, IChatController {
         }
     }
 
-    // [Localized] Returns the status descriptive title
-    getStatusTitle(status: ChatParticipantStatus) : any
-    {
-        let currentStatus = status.toString().toLowerCase();
-
-        return this.localization.statusDescription[currentStatus];
-    }
-
     onWindowMessagesSeen(messagesSeen: Message[]): void {
         this.markMessagesAsRead(messagesSeen);
     }
