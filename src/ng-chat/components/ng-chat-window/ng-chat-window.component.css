@@ -54,7 +54,7 @@
             position: absolute;
             right: 14px;
             bottom: 8px;
-        }    
+        }
     .ng-chat-window .ng-chat-load-history
     {
         height: 30px;
@@ -203,9 +203,15 @@
                     }
 
 /* Mobile viewport only */
-@media only screen and (max-width: 581px) { 
+@media only screen and (max-width: 581px) {
     .ng-chat-window
     {
         position: initial;
     }
+}
+
+
+.responsive-image {
+  width: 100%;
+  height: auto;
 }

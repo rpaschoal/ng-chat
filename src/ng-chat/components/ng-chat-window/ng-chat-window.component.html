@@ -45,7 +45,7 @@
 				</div>
         <div *ngSwitchCase="MessageType.Image" [ngClass]="{'sent-chat-message-container': message.fromId == userId, 'received-chat-message-container': message.fromId != userId}">
 
-          <img src="{{message.message}}" class="thumbnail" height="100" width="100" />
+          <img src="{{message.message}}" class="responsive-image" />
 
 					<span *ngIf="showMessageDate && message.dateSent" class="message-sent-date">{{message.dateSent | date:messageDatePipeFormat}}</span>
 				</div>
