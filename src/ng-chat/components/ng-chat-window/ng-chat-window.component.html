@@ -45,12 +45,12 @@
 				</div>
         <div *ngSwitchCase="MessageType.Image" [ngClass]="{'sent-chat-message-container': message.fromId == userId, 'received-chat-message-container': message.fromId != userId}">
 
-          <img src="{{message.message}}" class="responsive-image" />
+          <img src="{{message.message}}" class="image-message" />
 
 					<span *ngIf="showMessageDate && message.dateSent" class="message-sent-date">{{message.dateSent | date:messageDatePipeFormat}}</span>
 				</div>
 				<div *ngSwitchCase="MessageType.File" [ngClass]="{'file-message-container': true, 'received': message.fromId != userId}">
-					<div class="file-message-icon-container">ø
+					<div class="file-message-icon-container">
 						<i class="paperclip-icon"></i>
 					</div>
 					<a class="file-details" [attr.href]="message.downloadUrl" target="_blank" rel="noopener noreferrer" (click)="this.markMessagesAsRead([message])" download>

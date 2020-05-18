@@ -1,6 +1,7 @@
 import { ChatAdapter, IChatGroupAdapter, User, Group, Message, ChatParticipantStatus, ParticipantResponse, ParticipantMetadata, ChatParticipantType, IChatParticipant } from 'ng-chat';
 import { Observable, of } from 'rxjs';
 import { delay } from "rxjs/operators";
+import { MessageType } from 'ng-chat/ng-chat/core/message-type.enum';
 
 export class DemoAdapter extends ChatAdapter implements IChatGroupAdapter
 {
@@ -117,7 +118,6 @@ export class DemoAdapter extends ChatAdapter implements IChatGroupAdapter
 
             replyMessage.message = "You have typed '" + message.message + "'";
             replyMessage.dateSent = new Date();
-
             if (isNaN(message.toId))
             {
                 let group = DemoAdapter.mockedParticipants.find(x => x.id == message.toId) as Group;

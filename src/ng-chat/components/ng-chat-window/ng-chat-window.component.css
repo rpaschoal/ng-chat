@@ -201,6 +201,10 @@
                         font-size: 0.8em;
                         margin-top:5px;
                     }
+                    .ng-chat-window .image-message {
+                      width: 100%;
+                      height: auto;
+                    }
 
 /* Mobile viewport only */
 @media only screen and (max-width: 581px) {
@@ -211,7 +215,4 @@
 }
 
 
-.responsive-image {
-  width: 100%;
-  height: auto;
-}
+
