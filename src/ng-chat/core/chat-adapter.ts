@@ -27,6 +27,8 @@ export abstract class ChatAdapter
     }
     
     // Event handlers
+    /** @internal */
     friendsListChangedHandler: (participantsResponse: ParticipantResponse[]) => void  = (participantsResponse: ParticipantResponse[]) => {};
+    /** @internal */
     messageReceivedHandler: (participant: IChatParticipant, message: Message) => void = (participant: IChatParticipant, message: Message) => {};
 }
