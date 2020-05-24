@@ -21,7 +21,7 @@
     "@angular/platform-browser-dynamic": "^9.1.2",
     "@angular/router": "^9.1.2",
     "core-js": "^2.5.7",
-    "ng-chat": "^3.0.1",
+    "ng-chat": "^3.0.2",
     "rxjs": "^6.5.5",
     "tslib": "^1.11.1",
     "zone.js": "~0.10.3"
