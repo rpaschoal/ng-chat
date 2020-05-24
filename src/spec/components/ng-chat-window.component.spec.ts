@@ -15,8 +15,7 @@ import { ChatParticipantType } from '../../ng-chat/core/chat-participant-type.en
 import { Group } from '../../ng-chat/core/group';
 import { By } from '@angular/platform-browser';
 import { EmojifyPipe } from '../../ng-chat/pipes/emojify.pipe';
-import { inject } from '@angular/core/testing';
-import { ChatParticipantStatus } from 'src';
+import { ChatParticipantStatus } from '../../ng-chat/core/chat-participant-status.enum';
 import { Localization, StatusDescription } from './../../ng-chat/core/localization';
 
 class MockableFileUploadAdapter implements IFileUploadAdapter {
@@ -497,56 +496,53 @@ describe('NgChatWindowComponent', () => {
         const returnedAvatar = subject.getChatWindowAvatar(group, message);
 
         expect(returnedAvatar).toBe(testAvatar);
-  });
+    });
 
-const statusDescriptionTestValues: StatusDescription = {
-    online: 'Online',
-    busy: 'Busy',
-    away: 'Away',
-    offline: 'Offline'
-};
+    it('An image message must be rendered ', () => {
+        const statusDescriptionTestValues: StatusDescription = {
+            online: 'Online',
+            busy: 'Busy',
+            away: 'Away',
+            offline: 'Offline'
+        };
+    
+        const localizationStub: Localization = {
+            statusDescription: statusDescriptionTestValues,
+            title: 'title',
+            messagePlaceholder: 'messagePlaceholder',
+            searchPlaceholder: 'searchPlaceholder',
+            browserNotificationTitle: 'browserNotificationTitle',
+            loadMessageHistoryPlaceholder: 'loadMessageHistoryPlaceholder'
+        };
+        const chatParticipantStatusDescriptor = (status: ChatParticipantStatus) => {
+            const currentStatus = ChatParticipantStatus[status].toString().toLowerCase();
+            return localizationStub.statusDescription[currentStatus];
+        };
 
-const localizationStub: Localization = {
-    statusDescription: statusDescriptionTestValues,
-    title: 'title',
-    messagePlaceholder: 'messagePlaceholder',
-    searchPlaceholder: 'searchPlaceholder',
-    browserNotificationTitle: 'browserNotificationTitle',
-    loadMessageHistoryPlaceholder: 'loadMessageHistoryPlaceholder'
-};
-function chatParticipantStatusDescriptor(status: ChatParticipantStatus) {
-  const currentStatus = ChatParticipantStatus[status].toString().toLowerCase();
-  return localizationStub.statusDescription[currentStatus];
-};
+        const chattingToUser: IChatParticipant = {
+            participantType: ChatParticipantType.User,
+            id: '1',
+            status: ChatParticipantStatus.Online,
+            avatar: null,
+            displayName: 'name'
+        };
+        const imgUrl = 'https://66.media.tumblr.com/avatar_9dd9bb497b75_128.pnj';
+        let message: Message = {
+            fromId: 1,
+            toId: 99,
+            message:  imgUrl,
+            type: 3
+        }
+        const currentWindow = new Window(chattingToUser, false, false);
 
-it('An image message must be rendered ', () => {
-  const chattingToUser: IChatParticipant = {
-    participantType: ChatParticipantType.User,
-    id: '1',
-    status: ChatParticipantStatus.Online,
-    avatar: null,
-    displayName: 'name'
-  };
-  const imgUrl = 'https://66.media.tumblr.com/avatar_9dd9bb497b75_128.pnj';
-  let message: Message = {
-    fromId: 1,
-    toId: 99,
-    message:  imgUrl,
-    type: 3
-  }
-  const currentWindow = new Window(chattingToUser, false, false);
+        subject.chatParticipantStatusDescriptor = chatParticipantStatusDescriptor
+        subject.localization = localizationStub;
 
-  subject.chatParticipantStatusDescriptor = chatParticipantStatusDescriptor
-  subject.localization = localizationStub;
+        subject.window = currentWindow
+        currentWindow.messages.push(message);
 
-  subject.window = currentWindow
-  currentWindow.messages.push(message);
-
-  fixture.detectChanges();
-  let img = fixture.debugElement.query(By.css('.image-message'));
-  expect(img.attributes['src']).toBe(imgUrl);
-});
-
-
-
+        fixture.detectChanges();
+        let img = fixture.debugElement.query(By.css('.image-message'));
+        expect(img.attributes['src']).toBe(imgUrl);
+    });
 });

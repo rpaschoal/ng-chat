@@ -95,18 +95,24 @@ export class DemoAdapter extends ChatAdapter implements IChatGroupAdapter
 
         mockedHistory = [
             {
-                fromId: 1,
+                fromId: MessageType.Text,
                 toId: 999,
-                message: "Hi there, just type any message bellow to test this Angular module.",
+                message: "Hi there, here is a sample image type message:",
                 dateSent: new Date()
             },
             {
               fromId: 1,
               toId: 999,
-              type: 3,
+              type: MessageType.Image,
               message: "https://66.media.tumblr.com/avatar_9dd9bb497b75_128.pnj",
               dateSent: new Date()
-          }
+            },
+            {
+                fromId: MessageType.Text,
+                toId: 999,
+                message: "Type any message bellow to test this Angular module.",
+                dateSent: new Date()
+            },
         ];
 
         return of(mockedHistory).pipe(delay(2000));
