@@ -14,5 +14,6 @@ export * from './ng-chat/core/group';
 export * from './ng-chat/core/chat-participant';
 export * from './ng-chat/core/chat-group-adapter';
 export * from './ng-chat/core/chat-participant-type.enum';
+export * from './ng-chat/core/message-type.enum';
 
 export { NgChatModule } from './ng-chat/ng-chat.module';
