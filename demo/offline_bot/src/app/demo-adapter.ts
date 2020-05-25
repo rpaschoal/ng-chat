@@ -1,6 +1,7 @@
 import { ChatAdapter, IChatGroupAdapter, User, Group, Message, ChatParticipantStatus, ParticipantResponse, ParticipantMetadata, ChatParticipantType, IChatParticipant } from 'ng-chat';
 import { Observable, of } from 'rxjs';
 import { delay } from "rxjs/operators";
+import { MessageType } from 'ng-chat/ng-chat/core/message-type.enum';
 
 export class DemoAdapter extends ChatAdapter implements IChatGroupAdapter
 {
@@ -94,23 +95,35 @@ export class DemoAdapter extends ChatAdapter implements IChatGroupAdapter
 
         mockedHistory = [
             {
-                fromId: 1,
+                fromId: MessageType.Text,
                 toId: 999,
-                message: "Hi there, just type any message bellow to test this Angular module.",
+                message: "Hi there, here is a sample image type message:",
                 dateSent: new Date()
-            }
+            },
+            {
+              fromId: 1,
+              toId: 999,
+              type: MessageType.Image,
+              message: "https://66.media.tumblr.com/avatar_9dd9bb497b75_128.pnj",
+              dateSent: new Date()
+            },
+            {
+                fromId: MessageType.Text,
+                toId: 999,
+                message: "Type any message bellow to test this Angular module.",
+                dateSent: new Date()
+            },
         ];
 
         return of(mockedHistory).pipe(delay(2000));
     }
-    
+
     sendMessage(message: Message): void {
         setTimeout(() => {
             let replyMessage = new Message();
 
             replyMessage.message = "You have typed '" + message.message + "'";
             replyMessage.dateSent = new Date();
-            
             if (isNaN(message.toId))
             {
                 let group = DemoAdapter.mockedParticipants.find(x => x.id == message.toId) as Group;
@@ -127,7 +140,7 @@ export class DemoAdapter extends ChatAdapter implements IChatGroupAdapter
             {
                 replyMessage.fromId = message.toId;
                 replyMessage.toId = message.fromId;
-                
+
                 let user = DemoAdapter.mockedParticipants.find(x => x.id == replyMessage.fromId);
 
                 this.onMessageReceived(user, replyMessage);
@@ -138,7 +151,7 @@ export class DemoAdapter extends ChatAdapter implements IChatGroupAdapter
     groupCreated(group: Group): void {
         DemoAdapter.mockedParticipants.push(group);
 
-        DemoAdapter.mockedParticipants = DemoAdapter.mockedParticipants.sort((first, second) => 
+        DemoAdapter.mockedParticipants = DemoAdapter.mockedParticipants.sort((first, second) =>
             second.displayName > first.displayName ? -1 : 1
         );
 
@@ -146,5 +159,5 @@ export class DemoAdapter extends ChatAdapter implements IChatGroupAdapter
         this.listFriends().subscribe(response => {
             this.onFriendsListChanged(response);
         });
-    }   
+    }
 }

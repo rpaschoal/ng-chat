@@ -194,11 +194,25 @@ You can now trigger some ng-chat actions such as opening a chat window from else
 this.ngChatInstance.triggerOpenChatWindow(user);
 ```
 
-#### Paged History Chat Adapter (BETA):
+#### Paged History Chat Adapter:
 
 This adapter is similar to `ChatAdapter` but provides a pagination button to load older messages from your message history. You have to implement one additional method: `getMessageHistoryByPage`. You can check a sample implementation for this under the demo project with the `DemoAdapterPagedHistory` class.
 
 If you like this feature and believe it should be the default behavior and implementation for ng-chat, please open an issue and vote for it here so we can potentially introduce it as the default chat adapter on subsequent versions of ng-chat.
+
+#### Showing an image as a message:
+
+If you'd like to display an image thumbnail on a chat window message just set the message type to `Image`. The content of the message should point to a valid image URL:
+
+```
+const imageMessage: Message = {
+    fromId: 1,
+    toId: 999,
+    type: MessageType.Image,
+    message: "https://valid.url/image.jpg",
+    dateSent: new Date()
+};
+```
 
 # Troubleshooting
 

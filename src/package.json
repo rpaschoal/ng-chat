@@ -1,6 +1,6 @@
 {
   "name": "ng-chat",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "peerDependencies": {
     "@angular/common": "*",
     "@angular/core": "*",
@@ -8,6 +8,7 @@
     "rxjs": "*"
   },
   "devDependencies": {
+    "@angular-devkit/build-angular": "^0.901.6",
     "@angular/common": "^9.1.2",
     "@angular/compiler": "^9.1.2",
     "@angular/compiler-cli": "^9.1.2",
