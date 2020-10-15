@@ -69,7 +69,7 @@ export class AppComponent {
 ```
 
 __Required Settings__
-* [adapter]{string}: This will point to your adapter implementation ('MyAdapter' in the example above).
+* [adapter]{object}: This will point to your adapter implementation ('MyAdapter' in the example above).
 * [userId]{any}: The unique id of the user that will be using the chat instance.
 
 __Additional Settings__
