@@ -1,4 +1,4 @@
-import { TestBed, getTestBed, async, inject } from '@angular/core/testing';
+import { TestBed, getTestBed, inject, waitForAsync } from '@angular/core/testing';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { of } from 'rxjs';
@@ -17,7 +17,7 @@ describe('DefaultFileUploadAdapter', () => {
       });
     });
 
-    it('File upload test bed exercise', async(inject([HttpClient, HttpTestingController],  
+    it('File upload test bed exercise', waitForAsync(inject([HttpClient, HttpTestingController],  
         (http: HttpClient, backend: HttpTestingController) => {
                 let subject = new DefaultFileUploadAdapter(uploadUlrMock, http);
                 

@@ -157,7 +157,7 @@ export class NgChat implements OnInit, IChatController {
     public isViewportOnMobileEnabled: boolean = false;
 
     @Input()
-    public fileUploadAdapter: IFileUploadAdapter; // File upload adapter
+    public fileUploadAdapter: IFileUploadAdapter;
 
     @Output()
     public onParticipantClicked: EventEmitter<IChatParticipant> = new EventEmitter<IChatParticipant>();

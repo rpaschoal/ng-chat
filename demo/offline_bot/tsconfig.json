@@ -6,7 +6,6 @@
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es2015",
     "typeRoots": [
@@ -16,7 +15,7 @@
       "es2017",
       "dom"
     ],
-    "module": "esnext",
+    "module": "es2020",
     "baseUrl": "./"
   },
   "include": [

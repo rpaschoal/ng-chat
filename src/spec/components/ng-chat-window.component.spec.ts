@@ -1,7 +1,7 @@
 
 import { IChatParticipant } from './../../ng-chat/core/chat-participant';
 import { LinkfyPipe } from './../../ng-chat/pipes/linkfy.pipe';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { NgChatWindowComponent } from '../../ng-chat/components/ng-chat-window/ng-chat-window.component';
 import { User } from '../../ng-chat/core/user';
@@ -28,7 +28,7 @@ describe('NgChatWindowComponent', () => {
 	let subject: NgChatWindowComponent;
 	let fixture: ComponentFixture<NgChatWindowComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
       declarations: [ LinkfyPipe, EmojifyPipe, NgChatWindowComponent ]
 		})

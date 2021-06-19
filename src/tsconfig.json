@@ -6,7 +6,7 @@
     "experimentalDecorators": true,
     "strictNullChecks": true,
     "noImplicitAny": true,
-    "module": "es2015",
+    "module": "es2020",
     "moduleResolution": "node",
     "paths": {
       "@angular/core": ["node_modules/@angular/core"],

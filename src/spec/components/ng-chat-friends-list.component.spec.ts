@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { NgChatFriendsListComponent } from '../../ng-chat/components/ng-chat-friends-list/ng-chat-friends-list.component';
 import { User } from '../../ng-chat/core/user';
@@ -18,7 +18,7 @@ describe('NgChatOptionsComponent', () => {
 	let subject: NgChatFriendsListComponent;
 	let fixture: ComponentFixture<NgChatFriendsListComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [ NgChatFriendsListComponent ]
 		})
