@@ -91,6 +91,7 @@ __Additional Settings__
 * [maximizeWindowOnNewMessage]{boolean}: If set to false new chat windows will render as collapsed when receiving new messages. Default is true.
 * [hideFriendsList]{boolean}: Hides the friends list. Chat windows can still be opened, closed and toggled by using `IChatController`. Default is false.
 * [hideFriendsListOnUnsupportedViewport]{boolean}: Hides the friends list if there isn't enough space for at least one chat window on the current viewport. Default is true.
+* [fileUploadAdapter]{IFileUploadAdapter}: Your custom implementation of IFileUploadAdapter for file uploads.
 * [fileUploadUrl]{string}: Defines a valid CORS enabled URL that can process a request form file and return a `FileMessage` for the destinatary user.
 * [theme]{ng-chat/core/theme.enum:Theme}: Defines the styling theme. There is a light (default) and a dark theme available. You can also supply this as a string.
 * [customTheme]{string}: Source URL of the stylesheet asset to use for custom CSS styles. Works with assets relative to the project using ng-chat.
