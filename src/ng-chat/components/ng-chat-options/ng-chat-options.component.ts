@@ -29,4 +29,8 @@ export class NgChatOptionsComponent {
 
 		this.activeOptionTrackerChange.emit(option);
 	}
+
+	trackByFn(index: number, options: IChatOption[]): IChatOption {
+		return options[index];
+	}
 }
