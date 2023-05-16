@@ -1,3 +1,5 @@
+# This project has been archived and is no longer maintained
+
 # ng-chat
 
 [![npm](https://img.shields.io/npm/v/ng-chat.svg)](https://www.npmjs.com/package/ng-chat)
